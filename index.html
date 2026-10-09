@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>ระบบลางานออนไลน์ | ခွင့်တင်စနစ်</title>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;600;700&family=Noto+Sans+Myanmar:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F3EADF; --card:#FFFBF6; --line:#E2D3BF;
+  --mocha:#6F4E37; --mocha-d:#4A3222; --mocha-l:#A58467;
+  --beige:#E8DCC8; --beige-d:#D7C4A9;
+  --txt:#3B2B20; --muted:#8A7665;
+  --go:#2E7D4F; --go-d:#1F5C39; --done:#9E9186;
+  --warn:#B07A1E; --bad:#B4553F;
+  --r:14px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;overflow-x:hidden;max-width:100%}
+body{background:var(--bg);color:var(--txt);font-family:'Noto Sans Thai','Noto Sans Myanmar',system-ui,sans-serif;
+  font-size:16px;line-height:1.6;font-variant-numeric:tabular-nums}
+h1,h2,h3{font-size:17px;font-weight:700;margin:0 0 10px}
+.wrap{max-width:1060px;margin:0 auto;padding:0 12px 80px}
+header{background:var(--mocha);color:#FBF5ED;position:sticky;top:0;z-index:50;box-shadow:0 2px 10px rgba(74,50,34,.22)}
+.hbar{max-width:1060px;margin:0 auto;padding:10px 12px;display:flex;align-items:center;gap:8px}
+.logo{font-weight:700;font-size:16px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hbtn{background:rgba(255,255,255,.14);color:#FBF5ED;border:1px solid rgba(255,255,255,.3);border-radius:10px;padding:7px 11px;font:inherit;font-size:15px;cursor:pointer;white-space:nowrap}
+.hbtn:active{background:rgba(255,255,255,.3)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin:12px 0;box-shadow:0 1px 4px rgba(111,78,55,.06)}
+.grid{display:grid;gap:10px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(175px,1fr))}
+.row{display:flex;gap:9px;flex-wrap:wrap;align-items:center}
+.sp{flex:1}
+hr{border:0;border-top:1px solid var(--line);margin:13px 0}
+label{display:block;font-size:15px;color:var(--muted);margin:0 0 4px}
+input,select,textarea,button{font:inherit;font-size:16px;max-width:100%}
+input[type=text],input[type=number],input[type=date],input[type=password],select,textarea{
+  width:100%;padding:10px 11px;border:1px solid var(--beige-d);border-radius:10px;background:#fff;color:var(--txt);outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--mocha-l);box-shadow:0 0 0 3px rgba(165,132,103,.18)}
+.field{margin-bottom:11px}
+.btn{background:var(--mocha);color:#FFF8EF;border:0;border-radius:11px;padding:11px 17px;cursor:pointer;font-weight:600;min-height:46px}
+.btn:active{background:var(--mocha-d)}
+.btn.sec{background:var(--beige);color:var(--mocha-d);border:1px solid var(--beige-d)}
+.btn.go{background:var(--go);box-shadow:0 3px 0 var(--go-d);font-size:17px}
+.btn.go:active{background:var(--go-d);box-shadow:none;transform:translateY(2px)}
+.btn.done{background:var(--done);box-shadow:none}
+.btn.bad{background:var(--bad)}
+.btn.sm{padding:7px 12px;min-height:38px;border-radius:9px;font-size:15px;font-weight:400}
+.btn[disabled]{opacity:.5;cursor:not-allowed;box-shadow:none}
+.filebox{border:2px dashed var(--beige-d);border-radius:12px;padding:15px;text-align:center;background:#FDF8F1;cursor:pointer;display:block}
+.filebox input{display:none}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:4px;-webkit-overflow-scrolling:touch}
+.tab{background:var(--beige);border:1px solid var(--beige-d);color:var(--mocha-d);border-radius:10px;padding:9px 13px;cursor:pointer;white-space:nowrap;font-size:15px}
+.tab.on{background:var(--mocha);color:#FFF8EF;border-color:var(--mocha)}
+.tblwrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:#fff}
+table{border-collapse:collapse;width:100%}
+th,td{padding:9px 11px;text-align:left;border-bottom:1px solid var(--line);font-size:16px}
+th{background:var(--beige);color:var(--mocha-d);font-weight:600}
+tr:last-child td{border-bottom:0}
+td.num,th.num{text-align:right}
+.pill{display:inline-block;padding:2px 10px;border-radius:999px;font-size:15px;border:1px solid}
+.p-wait{background:#FBF2E0;color:#8A6520;border-color:#E6D3A8}
+.p-ok{background:#E6F0E8;color:#2E7D4F;border-color:#BBD6C2}
+.p-no{background:#F8E7E2;color:#8E3B29;border-color:#E6C1B6}
+.p-cancel{background:#EEE8E0;color:#7A6A5C;border-color:#DACCBC}
+.p-edit{background:#EAE4F3;color:#5A4785;border-color:#CFC4E4}
+.p-sh{background:#E5EDF2;color:#3C5F77;border-color:#C2D5E0}
+.qcard{background:#FDF8F1;border:1px solid var(--beige-d);border-radius:12px;padding:11px}
+.qname{font-weight:600;margin-bottom:5px;font-size:16px}
+.qbig{font-size:17px;font-weight:700;color:var(--mocha)}
+.bar{height:7px;background:var(--beige);border-radius:99px;overflow:hidden;margin-top:7px}
+.bar>i{display:block;height:100%;background:var(--mocha-l)}
+.avatar{width:52px;height:52px;border-radius:50%;object-fit:cover;background:var(--beige);border:2px solid var(--beige-d);flex:none}
+.avatar.big{width:76px;height:76px}
+.muted{color:var(--muted);font-size:15px}
+.note{background:#FDF8F1;border-left:4px solid var(--mocha-l);padding:9px 12px;border-radius:0 10px 10px 0;font-size:15px}
+.alert{border-radius:10px;padding:10px 12px;font-size:15px;margin:8px 0}
+.a-warn{background:#FCF3E2;border:1px solid #E6D3A8;color:#8A6520}
+.a-bad{background:#F8E7E2;border:1px solid #E6C1B6;color:#8E3B29}
+.a-info{background:#EAF1F5;border:1px solid #C2D5E0;color:#3C5F77}
+.err{color:var(--bad)}.good{color:var(--go)}
+details.other{border:1px dashed var(--beige-d);border-radius:11px;padding:9px 12px;background:#FBF6EF}
+details.other summary{cursor:pointer;color:var(--muted);font-size:15px}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--mocha-d);color:#FFF8EF;padding:11px 18px;border-radius:12px;z-index:999;box-shadow:0 6px 20px rgba(0,0,0,.25);max-width:92vw;text-align:center}
+.hide{display:none!important}
+@media(max-width:760px){
+  .wrap{padding:0 10px 80px}
+  .tblwrap{overflow:visible;border:0;background:transparent;border-radius:0}
+  table.rt,table.rt tbody,table.rt tr,table.rt td{display:block;width:100%}
+  table.rt thead{display:none}
+  table.rt tr{background:#fff;border:1px solid var(--line);border-radius:12px;margin-bottom:9px;padding:6px 10px}
+  table.rt td{border:0;padding:5px 0;display:flex;justify-content:space-between;align-items:center;gap:10px;text-align:right;white-space:normal}
+  table.rt td:before{content:attr(data-l);color:var(--muted);font-size:15px;text-align:left;flex:0 0 40%}
+  table.rt td.act{justify-content:flex-end;flex-wrap:wrap}
+  table.rt td.act:before{flex:0 0 auto}
+  table.rt td input,table.rt td select{max-width:58%}
+  .btn{width:100%}
+  .row .btn,.row .btn.sm{width:auto}
+  .hbar{gap:6px}
+}
+[data-t]{cursor:pointer}[data-t].sel{background:var(--beige);outline:2px solid var(--mocha-l)}
+@media(min-width:761px){.wrap,.hbar{max-width:1440px}table.rt th,table.rt td{white-space:nowrap;font-size:14px;padding:7px 8px}table.rt .btn.sm{padding:4px 9px;min-height:32px;font-size:14px}table.rt input[type=checkbox]{width:18px!important;height:18px!important}}
+.cal{border:1px solid var(--line);border-radius:12px;padding:10px;background:#fff}
+.cal-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;font-weight:700}
+.cal-g{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
+.cd{padding:8px 0;border-radius:8px;background:#f6efe4;cursor:pointer;font-size:14px}
+.cd.off{background:repeating-linear-gradient(45deg,#e3d9c8,#e3d9c8 4px,#f1eadd 4px,#f1eadd 8px);color:#9a8c78;cursor:not-allowed}
+.cd.hol{background:#f3c4be;color:#8a2f25;cursor:not-allowed;font-weight:700}
+.cd.lv{background:#aecbe3;color:#1f4768;cursor:not-allowed;font-weight:700}
+.cd.pl{background:linear-gradient(135deg,#aecbe3 50%,#f6efe4 50%)}
+.cd.sel{background:#6b4a30!important;color:#fff!important;outline:2px solid #c9a27a}
+.cal-lg{display:flex;flex-wrap:wrap;gap:10px;font-size:12.5px;margin-top:8px;color:#6b5a48}
+.cal-lg i{display:inline-block;width:14px;height:14px;border-radius:4px;vertical-align:-3px;margin-right:4px}
+.dbar{display:flex;align-items:center;gap:8px;margin:5px 0;font-size:13px}.dbar>span{width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dbar>div{flex:1;background:#efe6d8;border-radius:6px;height:16px}.dbar>div>div{height:100%;border-radius:6px}.dbar>b{min-width:130px;text-align:right}
+.mcol{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;font-size:11px;min-width:34px}
+.tcal{border-collapse:collapse}.tcal td,.tcal th{border:1px solid #e6dccb;padding:0!important;text-align:center;font-size:11px;background:none}
+.tcal .tc{width:22px;min-width:22px;height:26px}.tcal .tn{position:sticky;left:0;background:#fffaf2;text-align:left;padding:3px 8px!important;min-width:160px;white-space:nowrap;z-index:1}
+.tcal .off{background:repeating-linear-gradient(45deg,#e3d9c8,#e3d9c8 4px,#f1eadd 4px,#f1eadd 8px)}.tcal .hol{background:#f3c4be}.tcal th{position:sticky;top:0;background:#efe6d8;z-index:2}.tcal th.we{background:#e3d6c0}.tcal th.tn{left:0;z-index:3;background:#efe6d8}.tcal .tn{box-sizing:border-box;width:160px;min-width:160px;max-width:160px;overflow:hidden;text-overflow:ellipsis}.tcal .tn2{position:sticky;left:160px;background:#fffaf2;text-align:left;padding:3px 8px!important;white-space:nowrap;min-width:190px;z-index:1;box-shadow:1px 0 0 #e6dccb}.tcal th.tn2{z-index:3;background:#efe6d8}
+.cmp .card{padding:10px 14px;margin-bottom:8px}.cmp h2{font-size:15px;margin:0 0 6px}
+.cmp .qcard{padding:6px 10px}.cmp .qbig{font-size:15px}.cmp .muted{font-size:12px}.cmp .field{margin-bottom:6px}
+.cmp label{margin-bottom:2px;font-size:12.5px}.cmp input:not([type=checkbox]),.cmp select{padding:6px 8px;min-height:34px;font-size:14px}
+.cmp select{background-position:right 6px center;padding-right:24px}
+.cmp .cal{padding:6px}.cmp .cal-h{margin-bottom:4px}.cmp .cd{padding:4px 0;font-size:13px}.cmp .cal-g{gap:3px}.cmp .cal-lg{font-size:11.5px;gap:6px;margin-top:4px}
+.cmp .btn{padding:8px 12px}.cmp .alert{padding:6px 10px;margin:0;font-size:13px}
+.qgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px}
+.reqgrid{display:grid;grid-template-columns:minmax(250px,320px) 1fr;gap:12px}
+.r3{display:grid;grid-template-columns:1fr 100px 1.2fr;gap:8px}.two{display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:start}
+@media(max-width:760px){.reqgrid,.two{grid-template-columns:1fr}.r3{grid-template-columns:1fr 100px}}
+@media print{
+  header,.tabs,.btn,.filebox,.noprint{display:none!important}
+  body{background:#fff}
+  .card{border:0;box-shadow:none;margin:0;padding:0}
+  th{background:#eee!important;-webkit-print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hbar">
+    <div class="logo" id="hTitle">ระบบลางานออนไลน์</div>
+    <button class="hbtn" id="langBtn" onclick="toggleLang()">မြန်မာ</button>
+    <button class="hbtn hide" id="outBtn" onclick="logout()">ออก</button>
+  </div>
+</header>
+
+<div class="wrap" id="app"></div>
+
+<script>
+/* ============================================================
+   1) ภาษา
+   ============================================================ */
+const L={
+th:{app:"ระบบลางานออนไลน์",login:"เข้าสู่ระบบ",emp:"พนักงาน",apv:"ผู้อนุมัติ",adm:"ผู้ดูแลระบบ",
+ empid:"รหัสพนักงาน",pwd:"รหัสผ่าน",enter:"เข้าใช้งาน",logout:"ออกจากระบบ",selApv:"เลือกชื่อผู้อนุมัติ",
+ notfound:"ไม่พบรหัสพนักงานนี้ กรุณาตรวจสอบอีกครั้ง",wrongpw:"รหัสผ่านไม่ถูกต้อง",
+ nodata:"ยังไม่มีข้อมูลพนักงาน — ผู้ดูแลระบบต้องนำเข้าไฟล์ก่อน",none:"ไม่มีรายการ",
+ div:"แผนก",unit:"หน่วยงาน",name:"ชื่อ",photo:"รูปภาพ",all:"ทั้งหมด",
+ shift:"กะทำงาน",wtime:"เวลาทำงาน",wdays:"วันทำงาน",perDay:"ชม./วัน",
+ offwarn:"วันที่เลือกเป็นวันหยุดของกะนี้ กรุณาเลือกวันทำงาน",
+ myright:"สิทธิ์การลาของฉัน",otherLv:"การลาอื่น ๆ (ใช้เมื่อจำเป็น)",
+ quota:"สิทธิ์",used:"ใช้ไป",avail:"คงเหลือ",day:"วัน",usedOnly:"บันทึกการใช้",
+ newreq:"ยื่นใบลา",type:"ประเภทการลา",from:"วันที่เริ่ม",to:"วันที่สิ้นสุด",
+ tFrom:"เวลาเริ่ม",tTo:"เวลาสิ้นสุด",
+ days:"จำนวนวัน",reason:"เหตุผล",send:"ส่งคำขอ",sending:"ส่งแล้ว ✓",
+ sent:"ส่งคำขอเรียบร้อย รอผู้อนุมัติพิจารณา",
+ myhist:"ประวัติการลาของฉัน",status:"สถานะ",date:"วันที่",action:"จัดการ",
+ wait:"รออนุมัติ",appr:"อนุมัติแล้ว",rej:"ไม่อนุมัติ",can:"ยกเลิกแล้ว",
+ cancel:"ยกเลิก",approve:"อนุมัติ",reject:"ไม่อนุมัติ",note:"หมายเหตุ",
+ pending:"คำขอรออนุมัติ",team:"ข้อมูลทีมของฉัน",allreq:"คำขอทั้งหมด",
+ scope:"ขอบเขตการอนุมัติ",overview:"ภาพรวม",emplist:"ทะเบียนพนักงาน",
+ imp:"นำเข้าข้อมูล",exp:"ส่งออกข้อมูล",types:"ประเภทการลา",apvmgr:"จัดการผู้อนุมัติ",sys:"ตั้งค่าระบบ",
+ impEmp:"นำเข้าไฟล์พนักงาน + สิทธิ์การลา (Excel/CSV)",impPhoto:"นำเข้ารูปภาพพนักงาน (ชื่อไฟล์ = รหัสพนักงาน)",
+ pick:"แตะเพื่อเลือกไฟล์",impOK:"นำเข้าสำเร็จ",expXls:"ส่งออก Excel",expTxt:"ส่งออก Text",print:"พิมพ์รายงาน",
+ search:"ค้นหา",add:"เพิ่ม",save:"บันทึก",del:"ลบ",edit:"แก้ไข",close:"ปิด",
+ saved:"บันทึกเรียบร้อย",deleted:"ลบเรียบร้อย",confirm:"ยืนยันการทำรายการนี้หรือไม่?",
+ wipeAll:"ลบข้อมูลทั้งระบบ",wipeEmp:"ลบเฉพาะทะเบียนพนักงาน",wipeReq:"ลบเฉพาะใบลา",
+ wipeWarn:"ลบแล้วกู้คืนไม่ได้ ควรส่งออกข้อมูลเก็บไว้ก่อน",
+ chgAdm:"เปลี่ยนรหัสผู้ดูแลระบบ",newpw:"รหัสผ่านใหม่",oldpw:"รหัสผ่านเดิม",
+ totalEmp:"พนักงานทั้งหมด",totalWait:"รออนุมัติ",totalAppr:"อนุมัติเดือนนี้",
+ addType:"เพิ่มประเภทการลา",nameTh:"ชื่อ (ไทย)",nameMy:"ชื่อ (พม่า)",defQ:"สิทธิ์เริ่มต้น (วัน)",
+ allowOver:"ลาเกินสิทธิ์ได้",hideQ:"ซ่อนสิทธิ์ (แสดงเฉพาะใช้ไป)",warnMsg:"ข้อความเตือน",
+ setQuota:"กำหนดสิทธิ์",allUnits:"ทั้งแผนก (ทุกหน่วยงาน)",
+ reqBy:"ผู้ขอ",period:"ช่วงวันที่",noScope:"ยังไม่ได้กำหนดขอบเขต",
+ quotaOut:"สิทธิ์การลาหมดแล้ว ไม่สามารถยื่นใบลาประเภทนี้ได้",
+ deduct:"หมายเหตุ: การลาประเภทนี้จะถูกหักเงินในวันที่ลา",
+ overQ:"เกินสิทธิ์คงเหลือ",pickType:"กรุณาเลือกประเภทการลา",pickDate:"กรุณาเลือกวันที่",
+ hello:"สวัสดี",id:"รหัส",addEmp:"เพิ่มพนักงานใหม่",reqNo:"เลขที่",
+ storage:"พื้นที่จัดเก็บ",edited:"แก้ไขแล้ว",editLog:"ประวัติการแก้ไข",
+ filter:"ตัวกรองรายงาน",dFrom:"ตั้งแต่วันที่",dTo:"ถึงวันที่",clear:"ล้างตัวกรอง",
+ found:"พบ",items:"รายการ",report:"รายงานการลา",editReq:"แก้ไขใบลา",
+hol:"วันหยุดประเพณี",dur:"ระยะเวลาลา",hrs:"ชม.",mins:"นาที",startD:"วันที่เริ่มลา",nDays:"วัน",nHours:"ชม.",nMins:"นาที",
+sumL:"สรุปการลา",after:"คงเหลือหลังลา",skipHol:"ข้ามวันหยุดประเพณี",zeroDur:"กรุณาระบุจำนวนวัน หรือชม./นาทีที่ลา",
+startOff:"วันที่เริ่มลาเป็นวันหยุด (วันหยุดของกะ หรือวันหยุดประเพณี) กรุณาเลือกวันทำงาน",
+year:"ปี",wd:"วัน",holName:"ชื่อวันหยุด",holDate:"วันที่",copyFrom:"คัดลอกจากปี",copyBtn:"คัดลอกมาปี",addHol:"เพิ่มวันหยุด",dup:"ซ้ำ",total:"รวม",smAm:"ตั้งแต่เช้า",smPm:"เริ่มครึ่งบ่าย",smT:"ระบุเวลา",startFrom:"เริ่มลาตั้งแต่",custom:"ระบุชม.",halfDay:"ครึ่งวัน",halfAm:"ลาครึ่งเช้า",tm:"เวลา",endT:"ถึงเวลา",dupLeave:"มีใบลาในวัน/เวลานี้อยู่แล้ว ลาซ้ำไม่ได้",halfPm:"ลาครึ่งบ่าย",pickHint:"แตะที่กล่องสิทธิ์การลาด้านบนเพื่อเลือกประเภทการลา"},
+my:{app:"ခွင့်တင်စနစ်",login:"ဝင်ရောက်ရန်",emp:"ဝန်ထမ်း",apv:"အတည်ပြုသူ",adm:"စနစ်စီမံသူ",
+ empid:"ဝန်ထမ်းကုဒ်",pwd:"စကားဝှက်",enter:"ဝင်မည်",logout:"ထွက်မည်",selApv:"အတည်ပြုသူရွေးပါ",
+ notfound:"ဤဝန်ထမ်းကုဒ်မတွေ့ပါ",wrongpw:"စကားဝှက်မှားနေသည်",
+ nodata:"ဝန်ထမ်းဒေတာမရှိသေးပါ",none:"စာရင်းမရှိပါ",
+ div:"ဌာန",unit:"ယူနစ်",name:"အမည်",photo:"ဓာတ်ပုံ",all:"အားလုံး",
+ shift:"အလုပ်ဆိုင်း",wtime:"အလုပ်ချိန်",wdays:"အလုပ်ရက်",perDay:"နာရီ/ရက်",
+ offwarn:"ရွေးထားသောရက်မှာ ဤဆိုင်း၏ပိတ်ရက်ဖြစ်သည်",
+ myright:"ကျွန်ုပ်၏ခွင့်ရပိုင်ခွင့်",otherLv:"အခြားခွင့်များ (လိုအပ်မှသာ)",
+ quota:"ခွင့်ပမာဏ",used:"သုံးပြီး",avail:"ကျန်ရှိ",day:"ရက်",usedOnly:"သုံးပြီးမှတ်တမ်း",
+ newreq:"ခွင့်လျှောက်ရန်",type:"ခွင့်အမျိုးအစား",from:"စတင်ရက်",to:"ပြီးဆုံးရက်",
+ tFrom:"စချိန်",tTo:"ဆုံးချိန်",
+ days:"ရက်အရေအတွက်",reason:"အကြောင်းပြချက်",send:"တင်ပြမည်",sending:"တင်ပြပြီး ✓",
+ sent:"တင်ပြပြီးပါပြီ။ အတည်ပြုချက်စောင့်ပါ",
+ myhist:"ကျွန်ုပ်၏ခွင့်မှတ်တမ်း",status:"အခြေအနေ",date:"ရက်စွဲ",action:"လုပ်ဆောင်ရန်",
+ wait:"စောင့်ဆိုင်းဆဲ",appr:"အတည်ပြုပြီး",rej:"ငြင်းပယ်",can:"ပယ်ဖျက်ပြီး",
+ cancel:"ပယ်ဖျက်",approve:"အတည်ပြု",reject:"ငြင်းပယ်",note:"မှတ်ချက်",
+ pending:"အတည်ပြုရန်စောင့်နေသည်",team:"ကျွန်ုပ်၏အဖွဲ့",allreq:"တောင်းဆိုမှုအားလုံး",
+ scope:"အတည်ပြုနယ်ပယ်",overview:"ခြုံငုံသုံးသပ်ချက်",emplist:"ဝန်ထမ်းစာရင်း",
+ imp:"ဒေတာသွင်းရန်",exp:"ဒေတာထုတ်ရန်",types:"ခွင့်အမျိုးအစားများ",apvmgr:"အတည်ပြုသူစီမံရန်",sys:"စနစ်ဆက်တင်",
+ impEmp:"ဝန်ထမ်း + ခွင့်ဖိုင်သွင်းရန်",impPhoto:"ဝန်ထမ်းဓာတ်ပုံသွင်းရန်",
+ pick:"ဖိုင်ရွေးရန်နှိပ်ပါ",impOK:"သွင်းယူအောင်မြင်သည်",expXls:"Excel ထုတ်ရန်",expTxt:"Text ထုတ်ရန်",print:"ပုံနှိပ်ရန်",
+ search:"ရှာရန်",add:"ထည့်ရန်",save:"သိမ်းရန်",del:"ဖျက်ရန်",edit:"ပြင်ရန်",close:"ပိတ်ရန်",
+ saved:"သိမ်းပြီးပါပြီ",deleted:"ဖျက်ပြီးပါပြီ",confirm:"အတည်ပြုပါသလား?",
+ wipeAll:"ဒေတာအားလုံးဖျက်ရန်",wipeEmp:"ဝန်ထမ်းစာရင်းဖျက်ရန်",wipeReq:"ခွင့်လျှောက်လွှာဖျက်ရန်",
+ wipeWarn:"ဖျက်ပြီးပါက ပြန်မရနိုင်ပါ",
+ chgAdm:"စီမံသူစကားဝှက်ပြောင်းရန်",newpw:"စကားဝှက်အသစ်",oldpw:"စကားဝှက်အဟောင်း",
+ totalEmp:"ဝန်ထမ်းစုစုပေါင်း",totalWait:"စောင့်ဆိုင်းဆဲ",totalAppr:"ယခုလအတည်ပြုပြီး",
+ addType:"ခွင့်အမျိုးအစားထည့်ရန်",nameTh:"အမည် (ထိုင်း)",nameMy:"အမည် (မြန်မာ)",defQ:"မူလခွင့် (ရက်)",
+ allowOver:"ခွင့်ကျော်လျှောက်ခွင့်",hideQ:"ခွင့်ပမာဏဖုံးကွယ်ရန်",warnMsg:"သတိပေးစာသား",
+ setQuota:"ခွင့်သတ်မှတ်ရန်",allUnits:"ဌာနတစ်ခုလုံး",
+ reqBy:"လျှောက်သူ",period:"ကာလ",noScope:"နယ်ပယ်မသတ်မှတ်ရသေးပါ",
+ quotaOut:"ခွင့်ရပိုင်ခွင့်ကုန်သွားပါပြီ",
+ deduct:"သတိပြုရန် - ဤခွင့်အတွက် လစာဖြတ်တောက်ခံရမည်",
+ overQ:"ကျန်ရှိခွင့်ထက်ကျော်နေသည်",pickType:"ခွင့်အမျိုးအစားရွေးပါ",pickDate:"ရက်စွဲရွေးပါ",
+ hello:"မင်္ဂလာပါ",id:"ကုဒ်",addEmp:"ဝန်ထမ်းအသစ်ထည့်ရန်",reqNo:"နံပါတ်",
+ storage:"သိုလှောင်မှု",edited:"ပြင်ဆင်ပြီး",editLog:"ပြင်ဆင်မှတ်တမ်း",
+ filter:"စစ်ထုတ်ရန်",dFrom:"မှစ၍",dTo:"အထိ",clear:"ရှင်းရန်",
+ found:"တွေ့ရှိ",items:"ခု",report:"ခွင့်အစီရင်ခံစာ",editReq:"လျှောက်လွှာပြင်ရန်",
+hol:"ရိုးရာအားလပ်ရက်",dur:"ခွင့်ကာလ",hrs:"နာရီ",mins:"မိနစ်",startD:"စတင်ခွင့်ယူမည့်ရက်",nDays:"ရက်",nHours:"နာရီ",nMins:"မိနစ်",
+after:"ခွင့်ယူပြီးကျန်",skipHol:"ကျော်သွားသော အားလပ်ရက်",zeroDur:"ရက် သို့မဟုတ် နာရီ/မိနစ် ထည့်ပါ",
+startOff:"စတင်ရက်သည် ပိတ်ရက်ဖြစ်နေသည်",year:"နှစ်",wd:"နေ့",holName:"အားလပ်ရက်အမည်",holDate:"ရက်စွဲ",
+copyFrom:"နှစ်မှ ကူးယူရန်",copyBtn:"ကူးယူရန် နှစ်",addHol:"အားလပ်ရက်ထည့်ရန်",dup:"ထပ်နေသည်",total:"စုစုပေါင်း",smAm:"မနက်ကစ၍",smPm:"နေ့လည်ခွဲမှစ၍",smT:"အချိန်သတ်မှတ်",startFrom:"စတင်ချိန်",custom:"နာရီသတ်မှတ်",halfDay:"တစ်ဝက်",halfAm:"မနက်ခွဲခွင့်",tm:"အချိန်",endT:"ထိ အချိန်",dupLeave:"ဤအချိန်တွင် ခွင့်ယူပြီးဖြစ်သည်",halfPm:"နေ့လည်ခွဲခွင့်",pickHint:"အပေါ်ရှိ ခွင့်ကတ်ကို နှိပ်၍ ရွေးပါ"}};
+let lang=localStorage.getItem('leave_lang')||'th';
+const t=k=>(L[lang][k]??L.th[k]??k);
+
+/* ============================================================
+   2) กะทำงาน / SHIFTS   (work: index 0=อาทิตย์ … 6=เสาร์)
+   ============================================================ */
+const SHIFTS={
+ normal:{id:'normal',th:'กะปกติ',my:'ပုံမှန်ဆိုင်း',start:'08:00',end:'17:00',hours:8,bs:'11:50',be:'12:50',
+         work:[0,1,1,1,1,1,1],daysTh:'จันทร์–เสาร์',daysMy:'တနင်္လာ–စနေ'},
+ shift3:{id:'shift3',th:'กะ 3',my:'ဆိုင်း ၃',start:'07:30',end:'18:06',hours:9.6,bs:'11:50',be:'12:50',
+         work:[0,1,1,1,1,1,0],daysTh:'จันทร์–ศุกร์',daysMy:'တနင်္လာ–သောကြာ'}
+};
+const shOf=e=>SHIFTS[e?.shift]||SHIFTS.normal;
+const shName=s=>lang==='my'?s.my:s.th;
+const shDays=s=>lang==='my'?s.daysMy:s.daysTh;
+const isWork=(iso,s)=>{const d=new Date(iso+'T00:00:00');return !isNaN(d)&&s.work[d.getDay()]===1;};
+function countWork(a,b,s){let n=0,d=new Date(a+'T00:00:00'),end=new Date(b+'T00:00:00'),g=0;
+  while(d<=end&&g++<400){if(s.work[d.getDay()]===1)n++;d.setDate(d.getDate()+1);}return n;}
+const toMin=x=>{const p=String(x).split(':');return (+p[0]||0)*60+(+p[1]||0);};
+const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const dayMin=s=>Math.round(s.hours*60);            /* 1 วันทำงาน = กี่นาที (ตามกะ) */
+const r4=x=>Math.round((+x||0)*1e4)/1e4;
+const holOf=d=>(DB.holidays||[]).find(h=>h.date===d);
+const isWorkDay=(d,s)=>isWork(d,s)&&!holOf(d);      /* วันทำงานของกะ และไม่ใช่วันหยุดประเพณี */
+const WD={th:['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัส','ศุกร์','เสาร์'],
+ my:['တနင်္ဂနွေ','တနင်္လာ','အင်္ဂါ','ဗုဒ္ဓဟူး','ကြာသပတေး','သောကြာ','စနေ']};
+const wdName=d=>(WD[lang]||WD.th)[new Date(d+'T00:00:00').getDay()]||'';
+function fmtDur(m,dm){m=Math.round(m);const neg=m<0;m=Math.abs(m);
+  const d=Math.floor(m/dm),r=m%dm,h=Math.floor(r/60),n=r%60,p=[];
+  if(d)p.push(d+' '+t('day'));if(h)p.push(h+' '+t('hrs'));if(n)p.push(n+' '+t('mins'));
+  return (neg?'−':'')+(p.join(' ')||'0 '+t('day'));}
+const fmtDays=(e,x)=>{const dm=dayMin(shOf(e));return fmtDur((+x||0)*dm,dm);};
+const reqSh=r=>SHIFTS[r.shift]||shOf(empById(r.empId));
+const reqMins=r=>r.mins!=null?r.mins:Math.round((+r.days||0)*dayMin(reqSh(r)));
+const durTxt=r=>fmtDur(reqMins(r),r.dm||dayMin(reqSh(r)));
+const splitDur=r=>{const dm=r.dm||dayMin(reqSh(r)),m=reqMins(r);return[Math.floor(m/dm),Math.floor(m%dm/60),m%dm%60];};
+/* พักกลางวัน 11:50-12:50 (กำหนดที่ bs/be ในแต่ละกะ) ; offset = นาทีทำงานนับจากเริ่มกะ */
+const brkOf=s=>toMin(s.be)-toMin(s.bs),preOf=s=>toMin(s.bs)-toMin(s.start);
+const mm=x=>String(Math.floor(x/60)%24).padStart(2,'0')+':'+String(Math.round(x%60)).padStart(2,'0');
+const clk=(s,o,st)=>{const h=preOf(s);return mm(toMin(s.start)+((o<h||(o===h&&!st))?o:o+brkOf(s)));};
+const offOf=(s,c)=>{const h=preOf(s),b=brkOf(s),x=toMin(c)-toMin(s.start);return Math.min(dayMin(s),Math.max(0,x<=h?x:x<=h+b?h:x-b));};
+/* เริ่มวันที่ a (offset o0 ในวันแรก) นับเวลาลา total นาที ข้ามวันหยุดกะ/วันหยุดประเพณี → วันสุดท้าย + offset สิ้นสุด */
+function planLeave(a,total,s,o0=0){const dm=dayMin(s),cur=new Date(a+'T00:00:00');let rem=total,end=a,eo=0,first=true,g=0;const hol=[];
+  while(rem>0&&g++<1500){const k=iso(cur);
+    if(isWorkDay(k,s)){const st=first?o0:0,take=Math.min(rem,dm-st);first=false;if(take>0){end=k;eo=st+take;rem-=take;}}
+    else if(isWork(k,s)&&holOf(k))hol.push(holOf(k));
+    cur.setDate(cur.getDate()+1);}
+  return{end,hol,eo};}
+
+/* ============================================================
+   3) ฐานข้อมูล
+   ============================================================ */
+const KEY='leaveapp_db_v2';
+const DEFAULT_TYPES=[
+ {id:'annual',  th:'พักร้อน',          my:'နှစ်ပတ်လည်ခွင့်',       def:6,allowOver:false,hideQ:false,warn:''},
+ {id:'sick',    th:'ลาป่วย',           my:'ဖျားနာခွင့်',           def:30,allowOver:true,hideQ:true,warn:''},
+ {id:'personal',th:'ลากิจ',            my:'ကိုယ်ရေးကိစ္စခွင့်',     def:3,allowOver:false,hideQ:false,warn:''},
+ {id:'unpaid',  th:'ลากิจ-ไม่รับเงิน',  my:'ကိုယ်ရေးခွင့် (လစာမဲ့)',def:0,allowOver:true,hideQ:false,warn:'deduct'},
+ {id:'mater',   th:'ลาคลอด',           my:'မီးဖွားခွင့်',          def:0,allowOver:false,hideQ:false,warn:''},
+ {id:'prenatal',th:'ลาตรวจครรภ์',      my:'ကိုယ်ဝန်ဆေးစစ်ခွင့်',   def:0,allowOver:false,hideQ:false,warn:''},
+ {id:'ordain',  th:'บวช',              my:'ရဟန်းခံခွင့်',          def:0,allowOver:false,hideQ:false,warn:''},
+ {id:'funeral', th:'งานศพ',            my:'စျာပနခွင့်',           def:0,allowOver:false,hideQ:false,warn:''},
+ {id:'disaster',th:'ลาภัยพิบัติ',       my:'ဘေးအန္တရာယ်ခွင့်',     def:0,allowOver:false,hideQ:false,warn:''}];
+const DEFAULT_HOLIDAYS=[['2026-01-01','วันขึ้นปีใหม่'],['2026-01-02','วันขึ้นปีใหม่'],['2026-04-13','วันสงกรานต์'],
+ ['2026-04-14','วันสงกรานต์'],['2026-04-15','วันสงกรานต์'],['2026-05-01','วันแรงงาน'],
+ ['2026-06-03','วันเฉลิมพระชนมพรรษาสมเด็จพระนางเจ้าฯ'],['2026-07-28','วันเฉลิมพระชนมพรรษา ร.10'],
+ ['2026-08-12','วันแม่แห่งชาติ'],['2026-10-13','วันคล้ายวันสวรรคต ร.9'],['2026-10-23','วันปิยมหาราช'],
+ ['2026-12-07','วันหยุดชดเชยวันพ่อแห่งชาติ'],['2026-12-31','วันสิ้นปี']];
+const mkHol=()=>DEFAULT_HOLIDAYS.map((x,i)=>({id:'h'+i,date:x[0],th:x[1],my:''}));
+let DB;
+const freshDB=()=>({employees:[],types:JSON.parse(JSON.stringify(DEFAULT_TYPES)),requests:[],approvers:[],admin:{pw:'admin123'},seq:1,holidays:mkHol(),quotaYear:new Date().getFullYear()});
+function load(){try{DB=JSON.parse(localStorage.getItem(KEY))||freshDB();}catch(e){DB=freshDB();}
+  if(!DB.types||!DB.types.length)DB.types=JSON.parse(JSON.stringify(DEFAULT_TYPES));
+  DB.employees||=[];DB.requests||=[];if(!Array.isArray(DB.holidays))DB.holidays=mkHol();if(!DB.quotaYear)DB.quotaYear=new Date().getFullYear();DB.approvers||=[];DB.admin||={pw:'admin123'};DB.seq||=1;
+  DB.employees.forEach(e=>{if(!SHIFTS[e.shift])e.shift='normal';});}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(DB));}catch(e){toast('พื้นที่จัดเก็บเต็ม');}syncQueue();}
+load();
+
+/* ============================================================
+   4) ตัวช่วย
+   ============================================================ */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const num=n=>{const v=Number(n)||0;return (Math.round(v*100)/100).toLocaleString('en-US',{maximumFractionDigits:2});};
+const today=()=>iso(new Date());
+const fmtD=iso=>{if(!iso)return'';const p=String(iso).slice(0,10).split('-');return p.length===3?`${p[2]}-${p[1]}-${p[0]}`:iso;};
+const TIMES=(()=>{const a=[];for(let h=0;h<24;h++)for(const m of['00','30'])a.push(String(h).padStart(2,'0')+':'+m);
+  Object.values(SHIFTS).forEach(s=>{[s.start,s.end].forEach(x=>{if(!a.includes(x))a.push(x);});});
+  return a.sort((x,y)=>toMin(x)-toMin(y));})();
+const timeOpts=sel=>TIMES.map(x=>`<option value="${x}"${x===sel?' selected':''}>${x}</option>`).join('');
+function toast(m){const d=document.createElement('div');d.className='toast';d.textContent=m;document.body.appendChild(d);setTimeout(()=>d.remove(),2600);}
+const tname=ty=>lang==='my'?(ty.my||ty.th):ty.th;
+const typeById=id=>DB.types.find(x=>x.id===id);
+const empById=id=>DB.employees.find(e=>String(e.id)===String(id));
+function quotaOf(e,tid){const q=e.q?.[tid]||{quota:0,used:0};return{quota:+q.quota||0,used:+q.used||0,avail:(+q.quota||0)-(+q.used||0)};}
+const pendDays=(id,tid)=>DB.requests.filter(r=>String(r.empId)===String(id)&&r.typeId===tid&&r.status==='wait').reduce((s,r)=>s+(+r.days||0),0);
+function statusPill(s){const m={wait:['p-wait','wait'],appr:['p-ok','appr'],rej:['p-no','rej'],can:['p-cancel','can']}[s]||['p-cancel','can'];return `<span class="pill ${m[0]}">${t(m[1])}</span>`;}
+const editTag=r=>r.edited?` <span class="pill p-edit">${t('edited')}</span>`:'';
+const dateTxt=r=>r.to&&r.to!==r.from?fmtD(r.from)+' → '+fmtD(r.to):fmtD(r.from);
+const timeTxt=r=>{const sh=reqSh(r)||SHIFTS.normal;
+  if(r.to===r.from&&r.tFrom&&r.tTo){
+    if(r.tFrom===sh.start&&r.tTo===sh.bs)return t('halfAm');
+    if(r.tFrom===sh.be&&r.tTo===sh.end)return t('halfPm');}
+  return r.tFrom||r.tTo?`${r.tFrom||''} – ${r.tTo||''}`:'';};
+const durMins=(v,c,sh)=>{const dm=dayMin(sh);if(v==='c')return c[0]*dm+c[1]*60+c[2];if(v[0]==='h')return +v.slice(1);const x=+v.slice(1);return Math.floor(x)*dm+(x%1?dm/2:0);};
+const sessMins=(v,sm,total,sh)=>{if(v==='c'||v[0]==='h'||!(+v.slice(1)%1))return total;const dm=dayMin(sh);return total-dm/2+(sm==='am'?preOf(sh):sm==='pm'?dm-preOf(sh):dm/2);};
+const durSel=r=>{const dm=r.dm||dayMin(reqSh(r)),m=reqMins(r);if(m>0&&m%dm===0&&m/dm<=30)return 'd'+m/dm;if(m===dm/2)return 'd0.5';if(m%30===0&&m>=60&&m<=720)return 'h'+m;return 'c';};
+const periodTxt=r=>{const sh=reqSh(r)||SHIFTS.normal;
+  if(r.to===r.from&&r.tFrom&&r.tTo){
+    if(r.tFrom===sh.start&&r.tTo===sh.bs)return fmtD(r.from)+' '+t('halfAm');
+    if(r.tFrom===sh.be&&r.tTo===sh.end)return fmtD(r.from)+' '+t('halfPm');}
+  return `${fmtD(r.from)} ${r.tFrom||''}${r.to!==r.from?' → '+fmtD(r.to)+' '+(r.tTo||''):(r.tTo?' – '+r.tTo:'')}`;};
+function dl(b,f){const u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=f;a.click();setTimeout(()=>URL.revokeObjectURL(u),1500);}
+const stamp=()=>today().replace(/-/g,'');
+const uniq=a=>[...new Set(a.filter(Boolean))].sort();
+const shiftSel=(id,cur,fn)=>`<select onchange="${fn}('${esc(id)}',this.value)">${Object.values(SHIFTS).map(s=>
+  `<option value="${s.id}"${cur===s.id?' selected':''}>${esc(shName(s))}</option>`).join('')}</select>`;
+
+/* ============================================================
+   5) SESSION
+   ============================================================ */
+let S={role:null,user:null,tab:null,q:''},loginTab='emp',sentFlag=false;
+function toggleLang(){lang=lang==='th'?'my':'th';localStorage.setItem('leave_lang',lang);document.documentElement.lang=lang;render();}
+function logout(){S={role:null,user:null,tab:null,q:''};loginTab='emp';render();}
+function render(){
+  $('#langBtn').textContent=lang==='th'?'မြန်မာ':'ไทย';
+  $('#hTitle').textContent=t('app');$('#outBtn').textContent=t('logout');
+  $('#outBtn').classList.toggle('hide',!S.role);
+  $('#app').innerHTML=!S.role?viewLogin():S.role==='emp'?viewEmp():S.role==='apv'?viewApv():viewAdm();
+  window.scrollTo(0,0);
+  if(S.role==='emp')onType();
+}
+function viewLogin(){
+  const apvOpts=DB.approvers.map(a=>`<option value="${a.id}">${esc(a.name)}</option>`).join('');
+  return `<div class="card" style="max-width:440px;margin:24px auto">
+    <h2 style="text-align:center">${t('login')}</h2>
+    <div class="tabs" style="justify-content:center">
+      ${['emp','apv','adm'].map(k=>`<button class="tab ${loginTab===k?'on':''}" onclick="loginTab='${k}';render()">${t(k)}</button>`).join('')}</div>
+    ${loginTab==='emp'?`<div class="field"><label>${t('empid')}</label>
+        <input id="li_emp" type="text" inputmode="numeric" autofocus onkeydown="if(event.key==='Enter')doLoginEmp()"></div>
+      <button class="btn go" style="width:100%" onclick="doLoginEmp()">${t('enter')}</button>
+      ${DB.employees.length?'':`<p class="note" style="margin-top:12px">${t('nodata')}</p>`}`:''}
+    ${loginTab==='apv'?`<div class="field"><label>${t('selApv')}</label><select id="li_apv">${apvOpts||'<option value="">—</option>'}</select></div>
+      <div class="field"><label>${t('pwd')}</label><input id="li_apvpw" type="password" onkeydown="if(event.key==='Enter')doLoginApv()"></div>
+      <button class="btn" style="width:100%" onclick="doLoginApv()">${t('enter')}</button>`:''}
+    ${loginTab==='adm'?`<div class="field"><label>${t('pwd')}</label><input id="li_admpw" type="password" onkeydown="if(event.key==='Enter')doLoginAdm()"></div>
+      <button class="btn" style="width:100%" onclick="doLoginAdm()">${t('enter')}</button>
+      <p class="muted" style="margin-top:10px;text-align:center">default: admin123</p>`:''}
+    <div id="li_err" class="err" style="margin-top:10px"></div></div>`;
+}
+function doLoginEmp(){const e=empById($('#li_emp').value.trim());
+  if(!e){$('#li_err').textContent=t('notfound');return;}S={role:'emp',user:e,tab:'me',q:''};sentFlag=false;render();}
+function doLoginApv(){const a=DB.approvers.find(x=>x.id===$('#li_apv').value);
+  if(!a||a.pw!==$('#li_apvpw').value){$('#li_err').textContent=t('wrongpw');return;}S={role:'apv',user:a,tab:'pending',q:''};render();}
+function doLoginAdm(){if($('#li_admpw').value!==DB.admin.pw){$('#li_err').textContent=t('wrongpw');return;}
+  S={role:'adm',user:{name:'Admin'},tab:'ov',q:''};render();}
+
+/* ============================================================
+   6) หน้าพนักงาน
+   ============================================================ */
+function splitTypes(e){const ent=[],oth=[];
+  DB.types.forEach(ty=>{const q=quotaOf(e,ty.id);(ty.hideQ||q.quota>0?ent:oth).push(ty);});return{ent,oth};}
+function viewEmp(){
+  const e=S.user,sh=shOf(e),{ent,oth}=splitTypes(e);
+  const d0=firstFree(e);CAL=null;
+  const dflt=(ent[0]||oth[0]||{}).id,QC=ty=>`<div class="qcard${ty.id===dflt?' sel':''}" data-t="${ty.id}" onclick="pickType('${ty.id}')" style="border-top:4px solid ${tc(ty)};background:${tc(ty)}14">`;
+  const qcard=ty=>{const q=quotaOf(e,ty.id);
+    if(ty.hideQ)return `${QC(ty)}<div class="qname" style="color:${tc(ty)}">${esc(tname(ty))}</div>
+      <div class="muted">${t('usedOnly')}</div><div class="qbig" style="color:#2563EB">${fmtDays(e,q.used)}</div></div>`;
+    const pct=q.quota>0?Math.min(100,q.used/q.quota*100):0;
+    return `${QC(ty)}<div class="qname" style="color:${tc(ty)}">${esc(tname(ty))}</div><div class="row" style="gap:12px">
+      <div><div class="muted">${t('quota')}</div><div class="qbig" style="color:${tc(ty)}">${fmtDays(e,q.quota)}</div></div>
+      <div><div class="muted">${t('used')}</div><div class="qbig" style="color:#2563EB">${fmtDays(e,q.used)}</div></div>
+      <div><div class="muted">${t('avail')}</div><div class="qbig" style="color:${q.avail<=0?'var(--bad)':'var(--go)'}">${fmtDays(e,q.avail)}</div></div>
+      </div><div class="bar"><i style="width:${pct}%;background:${tc(ty)}"></i></div></div>`;};
+  const othLine=ty=>{const q=quotaOf(e,ty.id);
+    return `<div class="row${ty.id===dflt?' sel':''}" data-t="${ty.id}" onclick="pickType('${ty.id}')" style="justify-content:space-between;border-bottom:1px solid var(--line);padding:6px 0">
+      <span>${esc(tname(ty))}</span><span class="muted">${t('used')} ${fmtDays(e,q.used)}</span></div>`;};
+  const opt=ty=>{const q=quotaOf(e,ty.id);return `<option value="${ty.id}">${esc(tname(ty))}${ty.hideQ?'':` — ${t('avail')} ${fmtDays(e,q.avail)}`}</option>`;};
+  const mine=DB.requests.filter(r=>String(r.empId)===String(e.id)).sort((a,b)=>b.no-a.no);
+  const rows=mine.length?mine.map(r=>`<tr>
+    <td data-l="${t('reqNo')}">#${r.no}${editTag(r)}</td>
+    <td data-l="${t('type')}">${esc(tname(typeById(r.typeId)||{th:r.typeId}))}</td>
+    <td data-l="${t('holDate')}">${dateTxt(r)}</td><td data-l="${t('tm')}">${timeTxt(r)}</td>
+    <td data-l="${t('dur')}" class="num">${durTxt(r)}</td>
+    <td data-l="${t('status')}">${statusPill(r.status)}</td>
+    <td data-l="${t('note')}">${esc(r.note||'')}</td>
+    <td data-l="${t('action')}" class="act">${r.status==='wait'?`<button class="btn sec sm" onclick="cancelReq('${r.id}')">${t('cancel')}</button>`:''}</td>
+  </tr>`).join(''):`<tr><td colspan="7" class="muted">${t('none')}</td></tr>`;
+
+  return `<div class="cmp"><div class="card"><div class="row">
+    ${e.photo?`<img class="avatar big" src="${e.photo}" style="width:38px;height:38px">`:'<div class="avatar big" style="width:38px;height:38px"></div>'}
+    <div class="sp"><b style="font-size:16px">${t('hello')}, ${esc(e.name)}</b>
+      <span class="muted"> • ${t('id')} ${esc(e.id)} • ${esc(e.div||'-')} / ${esc(e.unit||'-')}</span></div>
+    <span class="pill p-sh">${esc(shName(sh))} ${sh.start}–${sh.end} • ${esc(shDays(sh))}</span></div></div>
+
+  <div class="card"><h2>${t('myright')}</h2>
+    <div class="qgrid">${ent.map(qcard).join('')||`<p class="muted">${t('none')}</p>`}</div>
+    ${oth.length?`<div style="margin-top:6px"><details class="other"><summary>${t('otherLv')} (${oth.length})</summary>
+      <div style="margin-top:6px">${oth.map(othLine).join('')}</div></details></div>`:''}</div>
+
+  <div class="card"><h2>${t('newreq')}</h2>
+    <div class="reqgrid">
+      <div class="field"><label>${t('startD')}: <b id="f_fromTxt"></b></label><input id="f_from" type="hidden" value="${d0}"><div id="f_cal" class="cal"></div></div>
+      <div>
+        <div id="f_form" style="display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;margin-bottom:6px"><label style="margin:0">${t('type')}:</label><span id="f_tlabel" class="qbig"></span><span class="muted">${t('pickHint')}</span><input type="hidden" id="f_type" value="${dflt||''}"></div>
+        <div id="f_alert"></div>
+        <div class="r3">
+          <div class="field"><label>${t('startFrom')}</label><select id="f_sm" onchange="calcLeave()"><option value="am">${t('smAm')}</option><option value="pm">${t('smPm')}</option><option value="t">${t('smT')}</option></select></div>
+          <div class="field"><label>${t('tFrom')}</label><input id="f_st" type="time" step="300" value="${sh.start}" oninput="calcLeave()"></div>
+          <div class="field"><label>${t('dur')} <span class="muted">(1 ${t('day')}=${sh.hours} ${t('hrs')})</span></label><select id="f_dur" onchange="calcLeave()">${durOpts()}</select></div></div>
+        <div id="f_cust" style="display:none;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:6px">
+          <div><input id="f_d" type="number" inputmode="numeric" min="0" step="1" value="0" oninput="calcLeave()"><div class="muted">${t('nDays')}</div></div>
+          <div><input id="f_h" type="number" inputmode="numeric" min="0" step="1" value="0" oninput="calcLeave()"><div class="muted">${t('nHours')}</div></div>
+          <div><select id="f_m" onchange="calcLeave()">${Array.from({length:12},(_,i)=>`<option value="${i*5}">${i*5}</option>`).join('')}</select><div class="muted">${t('nMins')}</div></div></div>
+        <div class="two"><div id="f_off"></div>
+          <div class="field"><label>${t('reason')}</label><input id="f_reason" type="text" maxlength="60"></div></div>
+        <div id="f_err" class="err" style="margin:4px 0"></div>
+        <button class="btn ${sentFlag?'done':'go'}" id="f_btn" style="width:100%" onclick="submitReq()">${sentFlag?t('sending'):t('send')}</button>
+      </div></div></div>
+
+  ${holCard()}
+  <div class="card"><h2>${t('myhist')}</h2><div class="tblwrap"><table class="rt"><thead><tr>
+    <th>${t('reqNo')}</th><th>${t('type')}</th><th>${t('holDate')}</th><th>${t('tm')}</th><th class="num">${t('dur')}</th>
+    <th>${t('status')}</th><th>${t('note')}</th><th>${t('action')}</th></tr></thead>
+    <tbody>${rows}</tbody></table></div></div></div>`;
+}
+function holCard(){const y=new Date().getFullYear(),l=DB.holidays.filter(h=>+h.date.slice(0,4)===y).sort((a,b)=>a.date<b.date?-1:1);
+  return `<div class="card"><details class="other"><summary>${t('hol')} ${y} (${l.length})</summary><div style="margin-top:8px">${l.map(h=>
+    `<div class="row" style="border-bottom:1px solid var(--line);padding:5px 0"><span style="min-width:130px">${fmtD(h.date)} (${wdName(h.date)})</span><span>${esc(lang==='my'&&h.my?h.my:h.th)}</span></div>`).join('')||`<span class="muted">${t('none')}</span>`}</div></details></div>`;}
+const half=x=>(Math.floor(x)||'')+(x%1?'½':'');
+function durOpts(sel='d1'){const o=(v,l)=>`<option value="${v}"${v===sel?' selected':''}>${l}</option>`;let h=o('c',t('custom'));
+  for(let x=1;x<=12;x+=.5)h+=o('h'+x*60,half(x)+' '+t('hrs'));
+  for(let x=.5;x<=30;x+=.5)h+=o('d'+x,x===.5?t('halfDay'):half(x)+' '+t('day'));
+  return h;}
+/* ช่วงลาเป็นรายวัน [วันที่, offset เริ่ม, offset สิ้นสุด] ใช้ตรวจการลาซ้ำ */
+function segsOf(sh,from,to,tf,tt){const dm=dayMin(sh),o=[];if(!from)return o;const a=tf?offOf(sh,tf):0,z=tt?offOf(sh,tt):dm;
+  const cur=new Date(from+'T00:00:00'),last=to||from;
+  for(let g=0;g<800;g++){const k=iso(cur);if(k>last)break;if(isWorkDay(k,sh))o.push([k,k===from?a:0,k===last?z:dm]);cur.setDate(cur.getDate()+1);}
+  return o;}
+function dupOf(empId,sh,from,to,tf,tt,skip){const mine=segsOf(sh,from,to,tf,tt);if(!mine.length)return null;
+  for(const r of DB.requests){if(r.id===skip||String(r.empId)!==String(empId)||(r.status!=='wait'&&r.status!=='appr'))continue;
+    for(const x of segsOf(SHIFTS[r.shift]||sh,r.from,r.to,r.tFrom,r.tTo))for(const y of mine)if(x[0]===y[0]&&x[1]<y[2]&&y[1]<x[2])return{r,date:x[0]};}
+  return null;}
+const readDur=()=>{const v=$('#f_dur').value,sh=shOf(S.user),dm=dayMin(sh);
+  if(v==='c'){const g=i=>Math.max(0,Math.floor(+$(i).value||0));return g('#f_d')*dm+g('#f_h')*60+(+$('#f_m').value||0);}
+  if(v[0]==='h')return +v.slice(1);
+  const x=+v.slice(1),sm=$('#f_sm').value;
+  return Math.floor(x)*dm+(x%1?dm/2:0);};
+/* ครึ่งวันหักสิทธิ์ 4 ชม. แต่ลงตารางเวลาตามช่วงเช้า/บ่ายจริง (เช้า 08:00-11:50, บ่าย 12:50-เลิกงาน) */
+const readSess=total=>{const v=$('#f_dur').value;if(v==='c'||v[0]==='h'||!(+v.slice(1)%1))return total;
+  const sh=shOf(S.user),dm=dayMin(sh),sm=$('#f_sm').value;return total-dm/2+(sm==='am'?preOf(sh):sm==='pm'?dm-preOf(sh):dm/2);};
+const startOff=sh=>{const m=$('#f_sm').value;return m==='am'?0:m==='pm'?preOf(sh):offOf(sh,$('#f_st').value||sh.start);};
+const leftMin=(e,ty)=>Math.round((quotaOf(e,ty.id).avail-pendDays(e.id,ty.id))*dayMin(shOf(e)));
+const TC=['#8B5E3C','#5E8C6A','#B07A3C','#5F7F9A','#A65D5D','#8C8A3E','#7D6A99','#4F8C8A','#9A6B3F','#6B7B3A'];
+const TCN={'พักร้อน':'#1B3A8A','ลาป่วย':'#1E6B3A','ลากิจ':'#C25A0E','ลากิจ-ไม่รับเงิน':'#C0262D'};
+const tc=ty=>TCN[String(ty.th||'').trim()]||TC[Math.max(0,DB.types.findIndex(x=>x.id===ty.id))%TC.length];
+function leaveCov(e){const sh=shOf(e),m={};DB.requests.forEach(r=>{if(String(r.empId)!==String(e.id)||(r.status!=='wait'&&r.status!=='appr'))return;
+  segsOf(SHIFTS[r.shift]||sh,r.from,r.to,r.tFrom,r.tTo).forEach(x=>{m[x[0]]=(m[x[0]]||0)+Math.max(0,x[2]-x[1]);});});return m;}
+function firstFree(e){const sh=shOf(e),cv=leaveCov(e),c=new Date();for(let g=0;g<120;g++){const k=iso(c);if(isWorkDay(k,sh)&&(cv[k]||0)<dayMin(sh))return k;c.setDate(c.getDate()+1);}return today();}
+function dayState(e,k,cv){const sh=shOf(e),h=holOf(k),cm=cv[k]||0;
+  if(h)return{cl:'hol',tt:h.th,blk:1};if(!isWork(k,sh))return{cl:'off',tt:'วันหยุดประจำสัปดาห์',blk:1};
+  if(cm>=dayMin(sh))return{cl:'lv',tt:'มีใบลาแล้ว ลาซ้ำไม่ได้',blk:1};if(cm>0)return{cl:'pl',tt:'ลาบางส่วนแล้ว (เลือกช่วงที่ว่างได้)',blk:0};return{cl:'',tt:'',blk:0};}
+let CAL=null;
+function calDraw(){const box=$('#f_cal');if(!box)return;const e=S.user,cv=leaveCov(e),sel=$('#f_from').value;
+  if(!CAL){const d=new Date(sel+'T00:00:00');CAL={y:d.getFullYear(),m:d.getMonth()};}
+  const n=new Date(CAL.y,CAL.m+1,0).getDate(),SW=lang==='my'?WD.my.map(x=>x.slice(0,2)):['อา','จ','อ','พ','พฤ','ศ','ส'];
+  let c=SW.map(x=>`<div style="font-size:12px;color:#8a7a66">${x}</div>`).join('')+'<div></div>'.repeat(new Date(CAL.y,CAL.m,1).getDay());
+  for(let d=1;d<=n;d++){const k=iso(new Date(CAL.y,CAL.m,d)),st=dayState(e,k,cv);
+    c+=`<div class="cd ${st.cl}${k===sel?' sel':''}" title="${esc(st.tt)}" onclick="calPick('${k}')">${d}</div>`;}
+  box.innerHTML=`<div class="cal-h"><button class="btn sec sm" onclick="calNav(-1)">◀</button><span>${MONTHS[CAL.m]} ${CAL.y+543}</span><button class="btn sec sm" onclick="calNav(1)">▶</button></div>
+    <div class="cal-g">${c}</div>
+    <div class="cal-lg"><span><i style="background:#e3d9c8"></i>วันหยุดประจำสัปดาห์</span><span><i style="background:#f3c4be"></i>วันหยุดประเพณี</span><span><i style="background:#aecbe3"></i>ลาแล้ว</span><span><i style="background:linear-gradient(135deg,#aecbe3 50%,#f6efe4 50%)"></i>ลาบางส่วน</span><span><i style="background:#6b4a30"></i>ที่เลือก</span></div>`;
+  $('#f_fromTxt').textContent=fmtD(sel)+' ('+wdName(sel)+')';}
+function calNav(d){CAL.m+=d;if(CAL.m<0){CAL.m=11;CAL.y--;}if(CAL.m>11){CAL.m=0;CAL.y++;}calDraw();}
+function calPick(k){const st=dayState(S.user,k,leaveCov(S.user));if(st.blk){toast(st.tt);return;}$('#f_from').value=k;calDraw();calcLeave();}
+function pickType(id){const i=$('#f_type');if(!i)return;i.value=id;
+  document.querySelectorAll('[data-t]').forEach(x=>x.classList.toggle('sel',x.dataset.t===id));
+  onType();$('#f_form').scrollIntoView({behavior:'smooth',block:'center'});}
+function onType(){
+  const sel=$('#f_type');if(!sel)return;
+  const e=S.user,ty=typeById(sel.value);if(!ty)return;
+  const left=leftMin(e,ty);
+  calDraw();$('#f_tlabel').textContent=tname(ty)+(ty.hideQ?'':' — '+t('avail')+' '+fmtDays(e,quotaOf(e,ty.id).avail));
+  const box=$('#f_alert'),btn=$('#f_btn');box.innerHTML='';
+  btn.disabled=false;if(!sentFlag){btn.classList.remove('done');btn.classList.add('go');}
+  if(!ty.hideQ&&left<=0&&!ty.allowOver){box.innerHTML=`<div class="alert a-bad"><b>${t('quotaOut')}</b></div>`;
+    btn.disabled=true;btn.classList.remove('go');}
+  else if(ty.warn==='deduct')box.innerHTML=`<div class="alert a-warn">${t('deduct')}</div>`;
+  else if(ty.allowOver&&!ty.hideQ&&left<=0)box.innerHTML=`<div class="alert a-warn">${t('overQ')}</div>`;
+  calcLeave();
+}
+function calcLeave(){
+  const e=S.user,sh=shOf(e),off=$('#f_off'),a=$('#f_from')?.value;if(!off||!a)return null;
+  $('#f_cust').style.display=$('#f_dur').value==='c'?'grid':'none';$('#f_st').disabled=$('#f_sm').value!=='t';
+  {const sm=$('#f_sm').value;if(sm!=='t')$('#f_st').value=sm==='pm'?clk(sh,preOf(sh),true):sh.start;}
+  const total=readDur(),dm=dayMin(sh);
+  if(!isWorkDay(a,sh)){off.innerHTML=`<div class="alert a-warn">${t('startOff')}${holOf(a)?' — '+esc(holOf(a).th):''}</div>`;return null;}
+  if(total<=0){off.innerHTML=`<div class="alert a-warn">${t('zeroDur')}</div>`;return null;}
+  const vv=$('#f_dur').value,o00=startOff(sh);
+  if((vv==='c'||vv[0]==='h')&&total<dm&&total>dm-o00){off.innerHTML=`<div class="alert a-bad">เวลาที่ลา (${fmtDur(total,dm)}) เกินเวลาเลิกงานของวันนั้น — เหลือเวลาทำงานนับจากเวลาเริ่มนี้ ${fmtDur(dm-o00,dm)} กรุณาเลือกเวลาเริ่มให้เร็วขึ้น หรือยื่นแยกเป็น 2 ใบลา</div>`;return null;}
+  const o0=startOff(sh),p=planLeave(a,readSess(total),sh,o0),ty=typeById($('#f_type').value),tf=clk(sh,o0,true),tt=clk(sh,p.eo,false);
+  let h=`<b>${fmtDur(total,dm)}</b><br>${fmtD(a)} ${tf} → ${fmtD(p.end)} ${tt}`;
+  if(ty&&!ty.hideQ)h+=`<br>${t('after')}: ${fmtDur(leftMin(e,ty)-total,dm)}`;
+  if(p.hol.length)h+=`<br>${t('skipHol')}: ${p.hol.map(x=>fmtD(x.date)+' '+esc(lang==='my'&&x.my?x.my:x.th)).join(', ')}`;
+  const dp=dupOf(e.id,sh,a,p.end,tf,tt);
+  off.innerHTML=`<div class="alert ${dp?'a-bad':'a-info'}">${h}${dp?`<br><b>${t('dupLeave')}: #${dp.r.no} ${fmtD(dp.date)}</b>`:''}</div>`;
+  return{total,end:p.end,tf,tt,dp};
+}
+function submitReq(){
+  const e=S.user,sh=shOf(e),dm=dayMin(sh),tid=$('#f_type').value,from=$('#f_from').value,err=$('#f_err');err.textContent='';
+  if(!tid){err.textContent=t('pickType');return;}
+  if(!from){err.textContent=t('pickDate');return;}
+  const c=calcLeave();if(!c){err.textContent=($('#f_off').innerText||'').trim()||t('zeroDur');return;}
+  const ty=typeById(tid),left=leftMin(e,ty);
+  if(c.dp){err.textContent=`${t('dupLeave')}: #${c.dp.r.no} ${fmtD(c.dp.date)}`;return;}
+  if(!ty.hideQ&&!ty.allowOver&&left<=0){err.textContent=t('quotaOut');return;}
+  if(!ty.hideQ&&!ty.allowOver&&c.total>left){err.textContent=`${t('overQ')} (${t('avail')} ${fmtDur(left,dm)})`;return;}
+  if(ty.warn==='deduct'&&!confirm(t('deduct')+'\n\n'+t('confirm')))return;
+  DB.requests.push({id:'r'+Date.now()+Math.random().toString(36).slice(2,5),no:DB.seq++,empId:e.id,typeId:tid,
+    from,to:c.end,tFrom:c.tf,tTo:c.tt,mins:c.total,dm,days:+(c.total/dm).toFixed(6),reason:$('#f_reason').value.trim(),
+    shift:sh.id,status:'wait',note:'',createdAt:new Date().toISOString(),by:'',at:'',edited:false,edits:[]});
+  save();sentFlag=true;toast(t('sent'));render();
+  setTimeout(()=>{sentFlag=false;const b=$('#f_btn');if(b){b.classList.remove('done');b.classList.add('go');b.textContent=t('send');}},2500);
+}
+function cancelReq(id){if(!confirm(t('confirm')))return;const r=DB.requests.find(x=>x.id===id);if(!r)return;
+  r.status='can';save();toast(t('deleted'));render();}
+
+/* ============================================================
+   7) หน้าผู้อนุมัติ
+   ============================================================ */
+const inScope=(a,e)=>(a.scopes||[]).some(s=>s.div===e.div&&(s.unit==='*'||s.unit===e.unit));
+function viewApv(){return viewApv0()+calTeam(e=>inScope(S.user,e));}
+function viewApv0(){
+  const a=S.user,team=DB.employees.filter(e=>inScope(a,e)),ids=new Set(team.map(e=>String(e.id)));
+  const reqs=DB.requests.filter(r=>ids.has(String(r.empId))).sort((x,y)=>y.no-x.no);
+  const waiting=reqs.filter(r=>r.status==='wait');
+  const scopeTxt=(a.scopes||[]).map(s=>`${s.div} / ${s.unit==='*'?t('allUnits'):s.unit}`).join(' • ')||t('noScope');
+  const waitRows=waiting.length?waiting.map(r=>{const e=empById(r.empId)||{},ty=typeById(r.typeId)||{},q=quotaOf(e,r.typeId);
+    return `<tr><td data-l="${t('reqNo')}">#${r.no}${editTag(r)}</td>
+      <td data-l="${t('empid')}">${esc(r.empId)}</td><td data-l="${t('reqBy')}">${esc(e.name||r.empId)}<div class="muted">${esc(e.unit||'')}</div></td>
+      <td data-l="${t('type')}">${esc(tname(ty.th?ty:{th:r.typeId}))}</td>
+      <td data-l="${t('holDate')}">${dateTxt(r)}</td><td data-l="${t('tm')}">${timeTxt(r)}</td>
+      <td data-l="${t('dur')}" class="num">${durTxt(r)}</td>
+      <td data-l="${ty.hideQ?t('used'):t('avail')}" class="num">${ty.hideQ?fmtDays(e,q.used):fmtDays(e,q.avail)}</td>
+      <td data-l="${t('reason')}">${esc(r.reason||'')}</td>
+      <td data-l="${t('action')}" class="act">
+        <button class="btn go sm" onclick="decide('${r.id}','appr')">${t('approve')}</button>
+        <button class="btn bad sm" onclick="decide('${r.id}','rej')">${t('reject')}</button></td></tr>`;
+  }).join(''):`<tr><td colspan="10" class="muted">${t('none')}</td></tr>`;
+  const histRows=reqs.length?reqs.map(r=>{const e=empById(r.empId)||{};
+    return `<tr><td data-l="${t('reqNo')}">#${r.no}${editTag(r)}</td><td data-l="${t('empid')}">${esc(r.empId)}</td><td data-l="${t('reqBy')}">${esc(e.name||r.empId)}</td>
+      <td data-l="${t('type')}">${esc(tname(typeById(r.typeId)||{th:r.typeId}))}</td>
+      <td data-l="${t('holDate')}">${dateTxt(r)}</td><td data-l="${t('tm')}">${timeTxt(r)}</td><td data-l="${t('dur')}" class="num">${durTxt(r)}</td>
+      <td data-l="${t('status')}">${statusPill(r.status)}</td><td data-l="${t('apv')}">${esc(r.by||'')}</td></tr>`;
+  }).join(''):`<tr><td colspan="9" class="muted">${t('none')}</td></tr>`;
+  const teamRows=team.length?team.map(e=>`<tr>
+    <td data-l="${t('id')}">${esc(e.id)}</td><td data-l="${t('name')}">${esc(e.name)}</td>
+    <td data-l="${t('unit')}">${esc(e.unit||'')}</td><td data-l="${t('shift')}">${esc(shName(shOf(e)))}</td>
+    ${DB.types.map(ty=>{const q=quotaOf(e,ty.id);
+      return `<td data-l="${esc(tname(ty))}" class="num">${ty.hideQ?t('used')+' '+fmtDays(e,q.used):fmtDays(e,q.avail)}</td>`;}).join('')}
+  </tr>`).join(''):`<tr><td colspan="${4+DB.types.length}" class="muted">${t('none')}</td></tr>`;
+  return `<div class="card"><div class="row"><div class="sp">
+      <h2 style="margin:0">${t('apv')}: ${esc(a.name)}</h2>
+      <div class="muted">${t('scope')} — ${esc(scopeTxt)}</div></div>
+      <span class="pill p-wait">${t('totalWait')} ${waiting.length}</span></div></div>
+  <div class="tabs">${[['pending',t('pending')],['team',t('team')],['all',t('allreq')],['exp',t('exp')]]
+    .map(([k,v])=>`<button class="tab ${S.tab===k?'on':''}" onclick="S.tab='${k}';render()">${esc(v)}</button>`).join('')}</div>
+  ${S.tab==='pending'?`<div class="card"><h2>${t('pending')}</h2><div class="tblwrap"><table class="rt"><thead><tr>
+    <th>${t('reqNo')}</th><th>${t('empid')}</th><th>${t('reqBy')}</th><th>${t('type')}</th><th>${t('holDate')}</th><th>${t('tm')}</th>
+    <th class="num">${t('dur')}</th><th class="num">${t('avail')}</th><th>${t('reason')}</th><th>${t('action')}</th>
+    </tr></thead><tbody>${waitRows}</tbody></table></div></div>`:''}
+  ${S.tab==='team'?`<div class="card"><h2>${t('team')}</h2><div class="tblwrap"><table class="rt"><thead><tr>
+    <th>${t('id')}</th><th>${t('name')}</th><th>${t('unit')}</th><th>${t('shift')}</th>
+    ${DB.types.map(ty=>`<th class="num">${esc(tname(ty))}</th>`).join('')}</tr></thead>
+    <tbody>${teamRows}</tbody></table></div></div>`:''}
+  ${S.tab==='all'?`<div class="card"><h2>${t('allreq')}</h2><div class="tblwrap"><table class="rt"><thead><tr>
+    <th>${t('reqNo')}</th><th>${t('empid')}</th><th>${t('reqBy')}</th><th>${t('type')}</th><th>${t('holDate')}</th><th>${t('tm')}</th>
+    <th class="num">${t('dur')}</th><th>${t('status')}</th><th>${t('apv')}</th></tr></thead>
+    <tbody>${histRows}</tbody></table></div></div>`:''}
+  ${S.tab==='exp'?`<div class="card"><h2>${t('exp')}</h2><p class="muted">${esc(scopeTxt)}</p>
+    <div class="row"><button class="btn" onclick="exportXlsx(true)">${t('expXls')}</button>
+    <button class="btn sec" onclick="exportTxt(true)">${t('expTxt')}</button></div></div>`:''}`;
+}
+function decide(id,st){const r=DB.requests.find(x=>x.id===id);if(!r)return;
+  const note=prompt(t('note'))||'';const e=empById(r.empId);
+  if(st==='appr'&&e){e.q||={};e.q[r.typeId]||={quota:0,used:0};
+    e.q[r.typeId].used=(+e.q[r.typeId].used||0)+(+r.days||0);}
+  r.status=st;r.note=note;r.by=S.user.name;r.at=new Date().toISOString();save();toast(t('saved'));render();}
+
+/* ============================================================
+   8) ผู้ดูแลระบบ
+   ============================================================ */
+function viewAdm(){
+  const tabs=[['ov',t('overview')],['emps',t('emplist')],['imp',t('imp')],['types',t('types')],['hol',t('hol')],['dash','Dashboard'],['tcal','ปฏิทินการลาแผนก'],
+              ['apv',t('apvmgr')],['reqs',t('allreq')],['exp',t('exp')],['sys',t('sys')]];
+  const body={ov:admOverview,emps:admEmps,imp:admImport,types:admTypes,hol:admHol,dash:admDash,tcal:()=>calTeam(),apv:admApv,reqs:admReqs,exp:admExport,sys:admSys}[S.tab];
+  return `<div class="tabs" style="margin-top:10px">${tabs.map(([k,v])=>
+    `<button class="tab ${S.tab===k?'on':''}" onclick="S.tab='${k}';render()">${esc(v)}</button>`).join('')}</div>${yrBanner()}${body?body():''}`;
+}
+function admOverview(){
+  const wait=DB.requests.filter(r=>r.status==='wait').length,m=today().slice(0,7);
+  const appr=DB.requests.filter(r=>r.status==='appr'&&(r.at||'').slice(0,7)===m).length;
+  const byDiv={};DB.employees.forEach(e=>byDiv[e.div||'-']=(byDiv[e.div||'-']||0)+1);
+  const rows=Object.entries(byDiv).sort((a,b)=>b[1]-a[1]).map(([d,n])=>{
+    const ids=new Set(DB.employees.filter(e=>(e.div||'-')===d).map(e=>String(e.id)));
+    const w=DB.requests.filter(r=>ids.has(String(r.empId))&&r.status==='wait').length;
+    return `<tr><td data-l="${t('div')}">${esc(d)}</td><td data-l="${t('emp')}" class="num">${n}</td><td data-l="${t('totalWait')}" class="num">${w}</td></tr>`;
+  }).join('')||`<tr><td colspan="3" class="muted">${t('none')}</td></tr>`;
+  const shRows=Object.values(SHIFTS).map(s=>{const n=DB.employees.filter(e=>shOf(e).id===s.id).length;
+    return `<tr><td data-l="${t('shift')}">${esc(shName(s))}</td><td data-l="${t('wtime')}">${s.start}–${s.end} (${s.hours} ${t('perDay')})</td>
+    <td data-l="${t('wdays')}">${esc(shDays(s))}</td><td data-l="${t('emp')}" class="num">${n}</td></tr>`;}).join('');
+  const kb=Math.round((localStorage.getItem(KEY)||'').length/1024);
+  return `<div class="grid g3">
+    <div class="card" style="margin:0"><div class="muted">${t('totalEmp')}</div><div class="qbig" style="font-size:22px">${DB.employees.length}</div></div>
+    <div class="card" style="margin:0"><div class="muted">${t('totalWait')}</div><div class="qbig" style="font-size:22px;color:var(--warn)">${wait}</div></div>
+    <div class="card" style="margin:0"><div class="muted">${t('totalAppr')}</div><div class="qbig" style="font-size:22px;color:var(--go)">${appr}</div></div></div>
+  <div class="card"><h2>${t('shift')}</h2><div class="tblwrap"><table class="rt"><thead><tr>
+    <th>${t('shift')}</th><th>${t('wtime')}</th><th>${t('wdays')}</th><th class="num">${t('emp')}</th></tr></thead>
+    <tbody>${shRows}</tbody></table></div></div>
+  <div class="card"><h2>${t('div')}</h2><div class="tblwrap"><table class="rt"><thead><tr>
+    <th>${t('div')}</th><th class="num">${t('emp')}</th><th class="num">${t('totalWait')}</th></tr></thead>
+    <tbody>${rows}</tbody></table></div><p class="muted" style="margin-top:9px">${t('storage')}: ${kb} KB</p></div>`;
+}
+function admEmps(){
+  const q=S.q.toLowerCase();
+  const list=DB.employees.filter(e=>!q||String(e.id).includes(q)||(e.name||'').toLowerCase().includes(q)||
+    (e.div||'').toLowerCase().includes(q)||(e.unit||'').toLowerCase().includes(q));
+  const rows=list.length?list.map(e=>`<tr>
+    <td data-l="${t('photo')}">${e.photo?`<img class="avatar" style="width:34px;height:34px" src="${e.photo}">`:'<div class="avatar" style="width:34px;height:34px"></div>'}</td>
+    <td data-l="${t('id')}">${esc(e.id)}</td><td data-l="${t('name')}">${esc(e.name)}</td>
+    <td data-l="${t('div')}">${esc(e.div||'')}</td><td data-l="${t('unit')}">${esc(e.unit||'')}</td>
+    <td data-l="${t('shift')}">${shiftSel(e.id,shOf(e).id,'setShift')}</td>
+    <td data-l="${t('action')}" class="act"><button class="btn sec sm" onclick="editEmp('${esc(e.id)}')">${t('edit')}</button>
+      <button class="btn bad sm" onclick="delEmp('${esc(e.id)}')">${t('del')}</button></td></tr>`).join('')
+    :`<tr><td colspan="7" class="muted">${t('none')}</td></tr>`;
+  return `<div class="card"><div class="row" style="margin-bottom:10px">
+      <input type="text" placeholder="${t('search')}" value="${esc(S.q)}" oninput="S.q=this.value;render()" style="flex:1;min-width:170px">
+      <button class="btn sm" onclick="addEmp()">+ ${t('addEmp')}</button></div>
+    <p class="note" style="margin-bottom:10px">${Object.values(SHIFTS).map(s=>
+      `<b>${esc(shName(s))}</b> ${s.start}–${s.end} (${s.hours} ${t('perDay')}) • ${esc(shDays(s))}`).join('<br>')}</p>
+    <div class="tblwrap"><table class="rt"><thead><tr><th>${t('photo')}</th><th>${t('id')}</th><th>${t('name')}</th>
+      <th>${t('div')}</th><th>${t('unit')}</th><th>${t('shift')}</th><th>${t('action')}</th></tr></thead>
+      <tbody>${rows}</tbody></table></div>
+    <p class="muted" style="margin-top:8px">${list.length} / ${DB.employees.length}</p></div><div id="editBox"></div>`;
+}
+function setShift(id,v){const e=empById(id);if(e){e.shift=SHIFTS[v]?v:'normal';save();toast(t('saved'));}}
+function addEmp(){const id=prompt(t('empid'));if(!id)return;if(empById(id)){toast('ID ซ้ำ');return;}
+  const q={};DB.types.forEach(ty=>q[ty.id]={quota:ty.def||0,used:0});
+  DB.employees.push({id:String(id).trim(),name:prompt(t('name'))||id,div:prompt(t('div'))||'',unit:prompt(t('unit'))||'',shift:'normal',photo:'',q});
+  save();toast(t('saved'));render();}
+function delEmp(id){if(!confirm(t('confirm')))return;DB.employees=DB.employees.filter(e=>String(e.id)!==String(id));save();render();}
+function editEmp(id){const e=empById(id);if(!e)return;
+  $('#editBox').innerHTML=`<div class="card"><h2>${esc(e.name)} (${esc(e.id)})</h2>
+    <div class="grid g2">
+      <div class="field"><label>${t('name')}</label><input id="ee_name" value="${esc(e.name)}"></div>
+      <div class="field"><label>${t('div')}</label><input id="ee_div" value="${esc(e.div||'')}"></div>
+      <div class="field"><label>${t('unit')}</label><input id="ee_unit" value="${esc(e.unit||'')}"></div>
+      <div class="field"><label>${t('shift')}</label><select id="ee_sh">${Object.values(SHIFTS).map(s=>
+        `<option value="${s.id}"${shOf(e).id===s.id?' selected':''}>${esc(shName(s))} — ${s.start}–${s.end} • ${esc(shDays(s))}</option>`).join('')}</select></div>
+      <div class="field"><label>${t('photo')}</label><input type="file" accept="image/*" onchange="onePhoto('${esc(e.id)}',this)"></div></div>
+    <hr><h3>${t('setQuota')}</h3><div class="grid g3">
+      ${DB.types.map(ty=>{const q=quotaOf(e,ty.id);return `<div class="qcard"><div class="qname">${esc(tname(ty))}</div>
+        <label>${t('quota')}</label><input type="number" step="0.5" id="q_${ty.id}" value="${q.quota}">
+        <label style="margin-top:5px">${t('used')}</label><input type="number" step="0.5" id="u_${ty.id}" value="${r4(q.used)}"></div>`;}).join('')}</div>
+    <div class="row" style="margin-top:12px"><button class="btn" onclick="saveEmp('${esc(e.id)}')">${t('save')}</button>
+      <button class="btn sec" onclick="document.getElementById('editBox').innerHTML=''">${t('close')}</button></div></div>`;
+  $('#editBox').scrollIntoView({behavior:'smooth'});}
+function saveEmp(id){const e=empById(id);if(!e)return;
+  e.name=$('#ee_name').value.trim();e.div=$('#ee_div').value.trim();e.unit=$('#ee_unit').value.trim();
+  e.shift=$('#ee_sh').value;e.q||={};
+  DB.types.forEach(ty=>e.q[ty.id]={quota:+$('#q_'+ty.id).value||0,used:+$('#u_'+ty.id).value||0});
+  save();toast(t('saved'));render();}
+function onePhoto(id,inp){const f=inp.files[0];if(!f)return;
+  shrink(f,180).then(d=>{const e=empById(id);if(e){e.photo=d;save();toast(t('saved'));render();editEmp(id);}});}
+
+/* ---- นำเข้า ---- */
+function admImport(){
+  return `<div class="card"><h2>${t('impEmp')}</h2>
+    <label class="filebox" for="imp1">${t('pick')}<br><span class="muted">.xlsx .xls .csv</span>
+      <input id="imp1" type="file" accept=".xlsx,.xls,.csv" onchange="importEmp(this)"></label>
+    <p class="note" style="margin-top:11px">หัวคอลัมน์: <b>Emp ID · First Name · Div Name · หน่วย Name</b>
+      • <b>&lt;ประเภท&gt; Quota / Used</b><br>เพิ่มคอลัมน์ <b>Shift</b> หรือ <b>กะ</b> ได้ (ใส่ค่า <b>กะปกติ</b> / <b>กะ 3</b> หรือ <b>normal</b> / <b>3</b>) — ถ้าไม่มีจะตั้งเป็นกะปกติ</p>
+    <div id="imp1res"></div></div>
+  <div class="card"><h2>${t('impPhoto')}</h2>
+    <label class="filebox" for="imp2">${t('pick')}<br><span class="muted">56170.jpg …</span>
+      <input id="imp2" type="file" accept="image/*" multiple onchange="importPhotos(this)"></label>
+    <div id="imp2res"></div></div>`;
+}
+function readSheet(file){return new Promise((res,rej)=>{const fr=new FileReader();
+  fr.onload=ev=>{try{const wb=XLSX.read(ev.target.result,{type:'array'});
+    res(XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{defval:''}));}catch(e){rej(e);}};
+  fr.onerror=rej;fr.readAsArrayBuffer(file);});}
+const slug=s=>'ty_'+String(s).replace(/[^a-zA-Z0-9ก-๙]/g,'').slice(0,16)+String(s).length;
+const parseShift=v=>{const s=String(v||'').toLowerCase().replace(/\s/g,'');
+  return (s.includes('3')||s.includes('shift3')||s.includes('ဆိုင်း၃'))?'shift3':'normal';};
+async function importEmp(inp){
+  const f=inp.files[0];if(!f)return;const box=$('#imp1res');box.innerHTML='<p class="muted">…</p>';
+  try{const rows=await readSheet(f);if(!rows.length){box.innerHTML=`<p class="err">${t('none')}</p>`;return;}
+    const heads=Object.keys(rows[0]);
+    const find=(...c)=>heads.find(h=>c.some(x=>h.trim().toLowerCase()===x.toLowerCase()))||heads.find(h=>c.some(x=>h.toLowerCase().includes(x.toLowerCase())));
+    const hId=find('Emp ID','EmpID','รหัสพนักงาน','ID'),hName=find('First Name','Name','ชื่อ'),
+          hDiv=find('Div Name','Division','แผนก'),hUnit=find('หน่วย Name','Unit','หน่วยงาน'),
+          hSh=heads.find(h=>/^(shift|กะ|กะทำงาน)$/i.test(h.trim()));
+    const found=[];
+    heads.forEach(h=>{const m=h.match(/^(.*?)\s*Quota$/i);
+      if(m&&m[1].trim()){const nm=m[1].trim();
+        const hU=heads.find(x=>x.replace(/\s/g,'').toLowerCase()===(nm+'Used').replace(/\s/g,'').toLowerCase());
+        found.push({name:nm,hQ:h,hU});}});
+    found.forEach(ft=>{let ty=DB.types.find(x=>x.th===ft.name);
+      if(!ty){ty={id:slug(ft.name),th:ft.name,my:ft.name,def:0,allowOver:false,hideQ:false,warn:''};DB.types.push(ty);}ft.id=ty.id;});
+    let add=0,upd=0,s3=0;
+    rows.forEach(r=>{const id=String(r[hId]??'').trim();if(!id)return;
+      let e=empById(id);if(!e){e={id,name:'',div:'',unit:'',shift:'normal',photo:'',q:{}};DB.employees.push(e);add++;}else upd++;
+      e.name=String(r[hName]??e.name??id).trim();e.div=String(r[hDiv]??e.div??'').trim();e.unit=String(r[hUnit]??e.unit??'').trim();
+      if(hSh&&String(r[hSh]).trim()){e.shift=parseShift(r[hSh]);if(e.shift==='shift3')s3++;}
+      else if(!SHIFTS[e.shift])e.shift='normal';
+      e.q||={};found.forEach(ft=>e.q[ft.id]={quota:+r[ft.hQ]||0,used:ft.hU?(+r[ft.hU]||0):0});});
+    save();box.innerHTML=`<p class="good">${t('impOK')} — เพิ่ม ${add} / อัปเดต ${upd} คน${hSh?` • กะ 3: ${s3} คน`:' • ตั้งเป็นกะปกติทั้งหมด'}</p>`;toast(t('impOK'));
+  }catch(err){box.innerHTML=`<p class="err">${esc(err.message)}</p>`;}
+  inp.value='';}
+function shrink(file,max){return new Promise(res=>{const fr=new FileReader();
+  fr.onload=e=>{const img=new Image();img.onload=()=>{const s=Math.min(1,max/Math.max(img.width,img.height));
+    const c=document.createElement('canvas');c.width=Math.round(img.width*s);c.height=Math.round(img.height*s);
+    c.getContext('2d').drawImage(img,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',.78));};img.src=e.target.result;};
+  fr.readAsDataURL(file);});}
+async function importPhotos(inp){const box=$('#imp2res');let ok=0,miss=[];
+  for(const f of inp.files){const id=f.name.replace(/\.[^.]+$/,'').trim();const e=empById(id);
+    if(!e){miss.push(id);continue;}e.photo=await shrink(f,180);ok++;}
+  save();box.innerHTML=`<p class="good">${t('impOK')} — ${ok}</p>`+(miss.length?`<p class="err">ไม่พบรหัส: ${esc(miss.join(', '))}</p>`:'');
+  toast(t('impOK'));inp.value='';}
+
+/* ---- ประเภทการลา ---- */
+function admTypes(){
+  const rows=DB.types.map((ty,i)=>`<tr>
+    <td data-l="${t('nameTh')}"><input value="${esc(ty.th)}" onchange="DB.types[${i}].th=this.value;save()"></td>
+    <td data-l="${t('nameMy')}"><input value="${esc(ty.my||'')}" onchange="DB.types[${i}].my=this.value;save()"></td>
+    <td data-l="${t('defQ')}"><input type="number" step="0.5" value="${ty.def||0}" onchange="DB.types[${i}].def=+this.value;save()"></td>
+    <td data-l="${t('allowOver')}"><input type="checkbox" style="width:20px;height:20px" ${ty.allowOver?'checked':''} onchange="DB.types[${i}].allowOver=this.checked;save()"></td>
+    <td data-l="${t('hideQ')}"><input type="checkbox" style="width:20px;height:20px" ${ty.hideQ?'checked':''} onchange="DB.types[${i}].hideQ=this.checked;save()"></td>
+    <td data-l="${t('warnMsg')}"><select onchange="DB.types[${i}].warn=this.value;save()">
+      <option value=""${ty.warn?'':' selected'}>—</option>
+      <option value="deduct"${ty.warn==='deduct'?' selected':''}>${t('deduct')}</option></select></td>
+    <td data-l="${t('action')}" class="act"><button class="btn bad sm" onclick="delType(${i})">${t('del')}</button></td></tr>`).join('');
+  return `<div class="card"><h2>${t('types')}</h2>
+    <div class="tblwrap"><table class="rt"><thead><tr><th>${t('nameTh')}</th><th>${t('nameMy')}</th><th>${t('defQ')}</th>
+      <th>${t('allowOver')}</th><th>${t('hideQ')}</th><th>${t('warnMsg')}</th><th>${t('action')}</th></tr></thead>
+      <tbody>${rows}</tbody></table></div><hr>
+    <div class="grid g3">
+      <div class="field"><label>${t('nameTh')}</label><input id="nt_th"></div>
+      <div class="field"><label>${t('nameMy')}</label><input id="nt_my"></div>
+      <div class="field"><label>${t('defQ')}</label><input id="nt_def" type="number" step="0.5" value="0"></div></div>
+    <button class="btn" onclick="addType()">+ ${t('addType')}</button></div>`;
+}
+function addType(){const th=$('#nt_th').value.trim();if(!th){toast(t('nameTh'));return;}
+  const ty={id:slug(th)+Date.now().toString(36).slice(-3),th,my:$('#nt_my').value.trim()||th,def:+$('#nt_def').value||0,allowOver:false,hideQ:false,warn:''};
+  DB.types.push(ty);DB.employees.forEach(e=>{e.q||={};e.q[ty.id]={quota:ty.def,used:0};});save();toast(t('saved'));render();}
+function delType(i){if(!confirm(t('confirm')))return;const id=DB.types[i].id;DB.types.splice(i,1);
+  DB.employees.forEach(e=>{if(e.q)delete e.q[id];});save();render();}
+
+/* ---- ปฏิทินการลาของแผนก (ใครลาวันไหน) ---- */
+let TCAL=null;
+function calTeam(scope){const n=new Date();TCAL||={y:n.getFullYear(),m:n.getMonth(),div:'',unit:''};const f=TCAL;
+  const base=DB.employees.filter(e=>!scope||scope(e));
+  const divs=[...new Set(base.map(e=>e.div).filter(Boolean))].sort(),units=[...new Set(base.filter(e=>!f.div||e.div===f.div).map(e=>e.unit).filter(Boolean))].sort();
+  const emps=base.filter(e=>(!f.div||e.div===f.div)&&(!f.unit||e.unit===f.unit)).sort((a,b)=>(a.div||'').localeCompare(b.div||'')||(a.unit||'').localeCompare(b.unit||'')||String(a.name).localeCompare(String(b.name)));
+  const nd=new Date(f.y,f.m+1,0).getDate(),days=[...Array(nd)].map((_,i)=>iso(new Date(f.y,f.m,i+1))),lo=days[0],hi=days[nd-1],mp={};
+  DB.requests.forEach(r=>{if((r.status!=='wait'&&r.status!=='appr')||r.to<lo||r.from>hi)return;const e=empById(r.empId);if(!e)return;
+    segsOf(SHIFTS[r.shift]||shOf(e),r.from,r.to,r.tFrom,r.tTo).forEach(x=>{if(x[0]<lo||x[0]>hi)return;const o=mp[String(r.empId)]=mp[String(r.empId)]||{};(o[x[0]]=o[x[0]]||[]).push({r,m:x[2]-x[1]});});});
+  const cnt=days.map(()=>0),wk=days.map(()=>0);
+  const rows=emps.map(e=>{const sh=shOf(e),dm=dayMin(sh);return `<tr><td class="tn">${esc(e.name)}</td><td class="tn2">${esc(e.div||'')}${e.unit?' / '+esc(e.unit):''}</td>`+days.map((k,i)=>{
+    const off=!isWork(k,sh),h=holOf(k),L=(mp[String(e.id)]||{})[k];if(!off&&!h)wk[i]++;
+    if(L){cnt[i]++;const cov=L.reduce((a,x)=>a+x.m,0),x=L.slice().sort((a,b)=>b.m-a.m)[0],c=tc(typeById(x.r.typeId)||{id:''}),pend=L.every(y=>y.r.status==='wait');
+      return `<td class="tc" style="background:${cov>=dm?c:`linear-gradient(135deg,${c} 50%,#f6efe4 50%)`};${pend?'opacity:.55':''}" title="${esc(e.name)}: ${L.map(y=>esc(tname(typeById(y.r.typeId)||{th:''}))+' '+timeTxt(y.r)+(y.r.status==='wait'?' (รออนุมัติ)':'')).join(', ')}"></td>`;}
+    return `<td class="tc ${h?'hol':off?'off':''}" ${h?`title="${esc(h.th)}"`:''}></td>`;}).join('')+'</tr>';}).join('');
+  const head=days.map(k=>{const d=new Date(k+'T00:00:00');return `<th class="${d.getDay()===0||holOf(k)?'we':''}">${+k.slice(8)}<br><span style="font-weight:400">${(lang==='my'?WD.my.map(x=>x.slice(0,2)):['อา','จ','อ','พ','พฤ','ศ','ส'])[d.getDay()]}</span></th>`;}).join('');
+  const foot=(l,f2)=>`<tr><td class="tn"><b>${l}</b></td><td class="tn2"></td>${days.map((_,i)=>f2(i)).join('')}</tr>`;
+  const hot=i=>wk[i]&&cnt[i]/wk[i]>=.25;
+  return `<div class="card"><h2>ปฏิทินการลาของแผนก</h2>
+    <div class="row" style="margin-bottom:10px"><button class="btn sec sm" onclick="tcNav(-1)">◀</button><b>${MONTHS[f.m]} ${f.y+543}</b><button class="btn sec sm" onclick="tcNav(1)">▶</button>
+      <select style="width:auto" onchange="setT('div',this.value)"><option value="">ทุกแผนก</option>${divs.map(d=>`<option${d===f.div?' selected':''}>${esc(d)}</option>`).join('')}</select>
+      <select style="width:auto" onchange="setT('unit',this.value)"><option value="">ทุกหน่วยงาน</option>${units.map(d=>`<option${d===f.unit?' selected':''}>${esc(d)}</option>`).join('')}</select></div>
+    <div class="tblwrap" style="max-height:72vh;overflow:auto"><table class="tcal"><thead><tr><th class="tn">ชื่อ</th><th class="tn2">แผนก</th>${head}</tr></thead><tbody>${rows||'<tr><td class="muted">ไม่มีพนักงาน</td></tr>'}
+      ${foot('คนลา',i=>`<td style="font-weight:700;color:${hot(i)?'#B5532F':'inherit'}">${cnt[i]||''}</td>`)}${foot('คนทำงาน',i=>`<td>${wk[i]?wk[i]-cnt[i]:''}</td>`)}</tbody></table></div>
+    <div class="cal-lg">${DB.types.map(ty=>`<span><i style="background:${tc(ty)}"></i>${esc(tname(ty))}</span>`).join('')}<span><i style="background:linear-gradient(135deg,#8B5E3C 50%,#f6efe4 50%)"></i>ลาบางส่วน</span><span style="opacity:.6"><i style="background:#8B5E3C"></i>รออนุมัติ (สีจาง)</span><span><i style="background:#e3d9c8"></i>วันหยุดกะ</span><span><i style="background:#f3c4be"></i>วันหยุดประเพณี</span></div>
+    <p class="muted">"คนลา" ตัวแดง = มีคนลาตั้งแต่ 25% ของคนที่ต้องทำงานวันนั้น • "คนทำงาน" = คนที่ต้องทำงานวันนั้นลบคนที่ลา • เอาเมาส์ชี้ช่องสีเพื่อดูรายละเอียด</p></div>`;}
+function tcNav(d){TCAL.m+=d;if(TCAL.m<0){TCAL.m=11;TCAL.y--;}if(TCAL.m>11){TCAL.m=0;TCAL.y++;}keep(()=>{});}
+function setT(k,v){keep(()=>{TCAL[k]=v;if(k==='div')TCAL.unit='';});}
+
+/* ---- Dashboard + KPI ---- */
+let DASH=null;
+function admDash(){DB.kpi||={all:'',types:{}};DASH||={d1:new Date().getFullYear()+'-01-01',d2:today(),div:'',unit:''};
+  const f=DASH,emps=DB.employees.filter(e=>(!f.div||e.div===f.div)&&(!f.unit||e.unit===f.unit)),ids=new Set(emps.map(e=>String(e.id)));
+  const divs=[...new Set(DB.employees.map(e=>e.div).filter(Boolean))].sort(),units=[...new Set(DB.employees.filter(e=>!f.div||e.div===f.div).map(e=>e.unit).filter(Boolean))].sort();
+  let S0=0;const sD={},sU={};
+  emps.forEach(e=>{const sh=shOf(e),dm=dayMin(sh),c=new Date(f.d1+'T00:00:00');let m=0;
+    for(let g=0;g<800;g++){const k=iso(c);if(k>f.d2)break;if(isWorkDay(k,sh))m+=dm;c.setDate(c.getDate()+1);}
+    S0+=m;sD[e.div||'-']=(sD[e.div||'-']||0)+m;sU[e.unit||'-']=(sU[e.unit||'-']||0)+m;});
+  const A=()=>({d:0,m:0}),bT={},bD={},bU={},bM={},T=A(),who=new Set();let cnt=0;
+  const add=(o,k,x)=>{o[k]=o[k]||A();o[k].d+=x.d;o[k].m+=x.m;};
+  DB.requests.forEach(r=>{if(r.status!=='appr'||!ids.has(String(r.empId))||r.from<f.d1||r.from>f.d2)return;
+    const e=empById(r.empId)||{},x={d:+r.days||0,m:reqMins(r)};cnt++;T.d+=x.d;T.m+=x.m;who.add(String(r.empId));
+    add(bT,r.typeId,x);add(bD,e.div||'-',x);add(bU,e.unit||'-',x);const mk=r.from.slice(0,7);bM[mk]=bM[mk]||{};bM[mk][r.typeId]=(bM[mk][r.typeId]||0)+x.d;});
+  const pc=(m,s)=>s?m/s*100:0,kall=DB.kpi.all===''?null:+DB.kpi.all;
+  const stt=(p,k)=>k==null||isNaN(k)?['','#8a7a66','ไม่ได้ตั้ง KPI']:p>k?['bad','#B5532F','เกิน KPI']:p>=k*.8?['warn','#C58B1E','ใกล้เกิน KPI']:['ok','#3E7B4F','ผ่าน KPI'];
+  const bar=(l,v,mx,c,tx)=>`<div class="dbar"><span title="${esc(l)}">${esc(l)}</span><div><div style="width:${mx?v/mx*100:0}%;background:${c}"></div></div><b>${tx}</b></div>`;
+  const fx=(o,sch,col)=>{const ks=Object.keys(o).sort((a,b)=>o[b].d-o[a].d),mx=Math.max(1,...ks.map(k=>o[k].d));
+    return ks.map(k=>{const p=pc(o[k].m,sch?sch[k]:S0);return bar(k==='-'?'(ไม่ระบุ)':k,o[k].d,mx,stt(p,kall)[1]||col,`${o[k].d.toFixed(1)} วัน • ${p.toFixed(2)}%`);}).join('')||'<p class="muted">ไม่มีข้อมูล</p>';};
+  const tR=pc(T.m,S0),so=stt(tR,kall);
+  const tys=DB.types,mks=Object.keys(bM).sort(),mxM=Math.max(1,...mks.map(k=>Object.values(bM[k]).reduce((a,b)=>a+b,0)));
+  const mchart=mks.length?`<div style="display:flex;gap:6px;align-items:flex-end;height:170px">${mks.map(k=>{const tot=Object.values(bM[k]).reduce((a,b)=>a+b,0);
+    return `<div class="mcol"><span>${tot.toFixed(1)}</span>${tys.filter(ty=>bM[k][ty.id]).map(ty=>`<div title="${esc(tname(ty))}: ${bM[k][ty.id].toFixed(1)}" style="width:70%;height:${bM[k][ty.id]/mxM*130}px;background:${tc(ty)}"></div>`).join('')}<span>${MONTHS[+k.slice(5)-1].slice(0,4)}</span></div>`;}).join('')}</div>
+    <div class="cal-lg">${tys.map(ty=>`<span><i style="background:${tc(ty)}"></i>${esc(tname(ty))}</span>`).join('')}</div>`:'<p class="muted">ไม่มีข้อมูล</p>';
+  const kRows=tys.map(ty=>{const x=bT[ty.id]||A(),p=pc(x.m,S0),k=DB.kpi.types[ty.id],kk=k===''||k==null?null:+k,st=stt(p,kk);
+    return `<tr><td><i style="display:inline-block;width:12px;height:12px;border-radius:3px;background:${tc(ty)};margin-right:6px"></i>${esc(tname(ty))}</td><td class="num">${x.d.toFixed(1)}</td><td class="num">${p.toFixed(2)}%</td>
+      <td><input type="number" min="0" step="0.1" style="width:90px" value="${k??''}" onchange="setKpi('${ty.id}',this.value)"> %</td><td style="color:${st[1]};font-weight:700">${st[2]}</td></tr>`;}).join('');
+  return `<div class="card"><h2>Dashboard การลา</h2><div class="grid g3">
+      <div class="field"><label>จากวันที่ (วันที่เริ่มลา)</label><input type="date" value="${f.d1}" onchange="setDash('d1',this.value)"></div>
+      <div class="field"><label>ถึงวันที่</label><input type="date" value="${f.d2}" onchange="setDash('d2',this.value)"></div>
+      <div class="field"><label>แผนก</label><select onchange="setDash('div',this.value)"><option value="">ทั้งหมด</option>${divs.map(d=>`<option${d===f.div?' selected':''}>${esc(d)}</option>`).join('')}</select></div>
+      <div class="field"><label>หน่วยงาน</label><select onchange="setDash('unit',this.value)"><option value="">ทั้งหมด</option>${units.map(d=>`<option${d===f.unit?' selected':''}>${esc(d)}</option>`).join('')}</select></div></div>
+    <p class="note">นับเฉพาะใบลาที่อนุมัติแล้ว • อัตราการลา % = เวลาลา ÷ เวลาทำงานตามกะของพนักงานในช่วงที่เลือก (ไม่รวมวันหยุดกะ/วันหยุดประเพณี)</p></div>
+  <div class="card"><div class="grid g3">
+    <div><div class="muted">ใบลาที่อนุมัติ</div><div class="qbig">${cnt} ใบ</div></div>
+    <div><div class="muted">รวมวันลา</div><div class="qbig">${T.d.toFixed(1)} วัน</div></div>
+    <div><div class="muted">พนักงานที่ลา / ทั้งหมด</div><div class="qbig">${who.size} / ${emps.length} คน</div></div>
+    <div><div class="muted">อัตราการลา (KPI ไม่เกิน <input type="number" min="0" step="0.1" style="width:70px" value="${DB.kpi.all}" onchange="setKpi('all',this.value)"> %)</div>
+      <div class="qbig" style="color:${so[1]}">${tR.toFixed(2)}% — ${so[2]}</div></div></div></div>
+  <div class="card"><h2>KPI แยกตามประเภทการลา</h2><div class="tblwrap"><table><thead><tr><th>ประเภท</th><th class="num">วันลา</th><th class="num">อัตรา</th><th>KPI ไม่เกิน</th><th>สถานะ</th></tr></thead><tbody>${kRows}</tbody></table></div>
+    <p class="muted">เว้นว่าง = ไม่ตั้ง KPI • เหลือง = ถึง 80% ของ KPI • แดง = เกิน KPI</p></div>
+  <div class="card"><h2>วันลารายเดือน (แยกประเภท)</h2>${mchart}</div>
+  <div class="card"><h2>ตามประเภทการลา</h2>${tys.filter(ty=>bT[ty.id]).sort((a,b)=>bT[b.id].d-bT[a.id].d).map(ty=>bar(tname(ty),bT[ty.id].d,Math.max(...Object.values(bT).map(x=>x.d)),tc(ty),`${bT[ty.id].d.toFixed(1)} วัน • ${pc(bT[ty.id].m,S0).toFixed(2)}%`)).join('')||'<p class="muted">ไม่มีข้อมูล</p>'}</div>
+  <div class="card"><h2>ตามแผนก</h2>${fx(bD,sD,'#8B5E3C')}</div>
+  <div class="card"><h2>ตามหน่วยงาน</h2>${fx(bU,sU,'#8B5E3C')}</div>`;}
+function keep(fn){const y=scrollY;fn();render();scrollTo(0,y);}
+function setDash(k,v){keep(()=>{DASH[k]=v;if(k==='div')DASH.unit='';});}
+function setKpi(id,v){keep(()=>{DB.kpi||={all:'',types:{}};if(id==='all')DB.kpi.all=v===''?'':+v;else DB.kpi.types[id]=v===''?'':+v;save();});}
+
+/* ---- วันหยุดประเพณี ---- */
+let HY=new Date().getFullYear();
+const hid=()=>'h'+Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+function admHol(){
+  const cy=new Date().getFullYear();
+  const ys=[...new Set(DB.holidays.map(h=>+h.date.slice(0,4)).concat([cy,cy+1,HY]).filter(Boolean))].sort();
+  const list=DB.holidays.filter(h=>+h.date.slice(0,4)===HY).sort((a,b)=>a.date<b.date?-1:1);
+  const cnt={};DB.holidays.forEach(h=>cnt[h.date]=(cnt[h.date]||0)+1);
+  const rows=list.map((h,i)=>`<tr><td data-l="#">${i+1}</td>
+    <td data-l="${t('holDate')}"><input type="date" value="${h.date}" onchange="setHol('${h.id}','date',this.value)"></td>
+    <td data-l="${t('wd')}">${wdName(h.date)}${cnt[h.date]>1?` <span class="err">${t('dup')}</span>`:''}</td>
+    <td data-l="${t('holName')}"><input value="${esc(h.th)}" onchange="setHol('${h.id}','th',this.value)"></td>
+    <td data-l="${t('nameMy')}"><input value="${esc(h.my||'')}" onchange="setHol('${h.id}','my',this.value)"></td>
+    <td data-l="${t('action')}" class="act"><button class="btn bad sm" onclick="delHol('${h.id}')">${t('del')}</button></td></tr>`).join('')
+    ||`<tr><td colspan="6" class="muted">${t('none')}</td></tr>`;
+  const others=ys.filter(y=>y!==HY);
+  return `<div class="card"><h2>${t('hol')}</h2>
+    <div class="row" style="margin-bottom:10px"><label style="margin:0">${t('year')}</label>
+      <select style="width:auto" onchange="HY=+this.value;render()">${ys.map(y=>`<option value="${y}"${y===HY?' selected':''}>${y} (พ.ศ. ${y+543})</option>`).join('')}</select>
+      <button class="btn sec sm" onclick="HY--;render()">◀</button><button class="btn sec sm" onclick="HY++;render()">▶</button>
+      <span class="sp"></span><button class="btn sm" onclick="addHol()">+ ${t('addHol')}</button></div>
+    <div class="tblwrap"><table class="rt"><thead><tr><th>#</th><th>${t('holDate')}</th><th>${t('wd')}</th><th>${t('holName')}</th><th>${t('nameMy')}</th><th>${t('action')}</th></tr></thead>
+      <tbody>${rows}</tbody></table></div>
+    <p class="muted" style="margin-top:8px">${t('total')} ${list.length} ${t('day')}</p>
+    ${others.length?`<hr><div class="row"><label style="margin:0">${t('copyFrom')}</label>
+      <select id="hc_y" style="width:auto">${others.map(y=>`<option value="${y}">${y}</option>`).join('')}</select>
+      <button class="btn sec sm" onclick="copyHol()">${t('copyBtn')} ${HY}</button></div>`:''}
+    <p class="note" style="margin-top:10px">วันหยุดที่ตรงกับวันทำงานของกะ จะไม่ถูกนับเป็นวันลา ระบบข้ามให้อัตโนมัติ — แก้ไขได้ทันที ไม่ต้องกดบันทึก</p></div>`;
+}
+function setHol(id,k,v){const h=DB.holidays.find(x=>x.id===id);if(!h)return;
+  if(k==='date'&&!v){render();return;}h[k]=v.trim();save();
+  if(k==='date'){HY=+v.slice(0,4);render();}else toast(t('saved'));}
+function addHol(){DB.holidays.push({id:hid(),date:HY+'-01-01',th:'',my:''});save();render();}
+function delHol(id){if(!confirm(t('confirm')))return;DB.holidays=DB.holidays.filter(x=>x.id!==id);save();render();}
+function copyHol(){const y=+$('#hc_y').value,have=new Set(DB.holidays.map(h=>h.date));let n=0;
+  DB.holidays.filter(h=>+h.date.slice(0,4)===y).forEach(h=>{const d=HY+h.date.slice(4);
+    if(have.has(d)||new Date(d+'T00:00:00').getMonth()+1!==+d.slice(5,7))return;
+    DB.holidays.push({...h,id:hid(),date:d});n++;});
+  save();toast(t('saved')+' ('+n+')');render();}
+
+/* ---- ผู้อนุมัติ ---- */
+function admApv(){
+  const divs=uniq(DB.employees.map(e=>e.div));
+  const empOpts=DB.employees.map(e=>`<option value="${esc(e.name)}">${esc(e.name)} (${esc(e.div||'-')})</option>`).join('');
+  const pins=['1234','2345','3456','4567','5678','6789'];
+  const rows=DB.approvers.map((a,i)=>`<tr>
+    <td data-l="${t('name')}">${esc(a.name)}</td>
+    <td data-l="${t('pwd')}"><select onchange="DB.approvers[${i}].pw=this.value;save()">
+      ${pins.concat(pins.includes(a.pw)?[]:[a.pw]).map(p=>`<option value="${esc(p)}"${p===a.pw?' selected':''}>${esc(p)}</option>`).join('')}</select></td>
+    <td data-l="${t('scope')}" style="white-space:normal">${(a.scopes||[]).map((s,j)=>
+      `<span class="pill p-cancel" style="margin:2px 3px 2px 0">${esc(s.div)}/${esc(s.unit==='*'?t('allUnits'):s.unit)}
+       <a href="#" onclick="rmScope(${i},${j});return false" style="color:var(--bad);text-decoration:none">✕</a></span>`).join('')
+       ||`<span class="muted">${t('noScope')}</span>`}
+      <div class="row" style="margin-top:6px">
+        <select id="sd_${i}" onchange="fillUnit(${i})" style="flex:1;min-width:120px">
+          <option value="">— ${t('div')} —</option>${divs.map(d=>`<option value="${esc(d)}">${esc(d)}</option>`).join('')}</select>
+        <select id="su_${i}" style="flex:1;min-width:120px"><option value="*">${t('allUnits')}</option></select>
+        <button class="btn sec sm" onclick="addScope(${i})">+ ${t('add')}</button></div></td>
+    <td data-l="${t('action')}" class="act"><button class="btn bad sm" onclick="delApv(${i})">${t('del')}</button></td></tr>`).join('')
+    ||`<tr><td colspan="4" class="muted">${t('none')}</td></tr>`;
+  return `<div class="card"><h2>${t('apvmgr')}</h2>
+    <div class="tblwrap"><table class="rt"><thead><tr><th>${t('name')}</th><th>${t('pwd')}</th>
+      <th>${t('scope')}</th><th>${t('action')}</th></tr></thead><tbody>${rows}</tbody></table></div><hr>
+    <div class="grid g2">
+      <div class="field"><label>${t('name')}</label><select id="na_name"><option value="">—</option>${empOpts}</select></div>
+      <div class="field"><label>${t('pwd')}</label><select id="na_pw">${pins.map(p=>`<option>${p}</option>`).join('')}</select></div></div>
+    <button class="btn" onclick="newApv()">+ ${t('apv')}</button></div>`;
+}
+function fillUnit(i){const d=$('#sd_'+i).value;const units=uniq(DB.employees.filter(e=>e.div===d).map(e=>e.unit));
+  $('#su_'+i).innerHTML=`<option value="*">${t('allUnits')}</option>`+units.map(u=>`<option value="${esc(u)}">${esc(u)}</option>`).join('');}
+function addScope(i){const d=$('#sd_'+i).value;if(!d){toast(t('div'));return;}
+  DB.approvers[i].scopes.push({div:d,unit:$('#su_'+i).value||'*'});save();toast(t('saved'));render();}
+function newApv(){const n=$('#na_name').value;if(!n){toast(t('name'));return;}
+  DB.approvers.push({id:'a'+Date.now(),name:n,pw:$('#na_pw').value,scopes:[]});save();toast(t('saved'));render();}
+function delApv(i){if(!confirm(t('confirm')))return;DB.approvers.splice(i,1);save();render();}
+function rmScope(i,j){DB.approvers[i].scopes.splice(j,1);save();render();}
+
+/* ---- คำขอทั้งหมด ---- */
+let F={d1:'',d2:'',emp:'',div:'',unit:'',st:'',pd:''};
+function filtered(){return DB.requests.slice().sort((a,b)=>b.no-a.no).filter(r=>{const e=empById(r.empId)||{};
+  if(F.d1&&r.from<F.d1)return false;if(F.d2&&r.from>F.d2)return false;
+  if(F.emp&&String(r.empId)!==F.emp)return false;if(F.div&&e.div!==F.div)return false;
+  if(F.unit&&e.unit!==F.unit)return false;if(F.pd==='y'&&!r.pd)return false;if(F.pd==='n'&&r.pd)return false;if(F.st&&r.status!==F.st)return false;return true;});}
+const PAYMAP={'พักร้อน':0,'ลาป่วย':1,'ลาคลอด':2,'ลากิจ-ไม่รับเงิน':3,'ลาภัยพิบัติ':4,'บวช':5,'งานศพ':6,'ลากิจ':7,'ลาตรวจครรภ์':8,'พักงาน':9};
+const xser=d=>Math.round((Date.UTC(+d.slice(0,4),+d.slice(5,7)-1,+d.slice(8,10))-Date.UTC(1899,11,30))/864e5);
+/* ส่งออกตาม Template_Import_Payday.xls: 1 แถว/วันทำงาน, เฉพาะใบลาที่อนุมัติ (และยังไม่ Key เว้นแต่กรอง "Key แล้ว") */
+function exportPayday(){
+  const list=filtered().filter(r=>r.status==='appr'&&(F.pd==='y'||!r.pd)).reverse();
+  if(!list.length){toast('ไม่มีใบลาที่อนุมัติและยังไม่ Key ในตัวกรองนี้');return;}
+  const rows=[],errs=[],okIds=[];
+  list.forEach(r=>{const e=empById(r.empId),ty=typeById(r.typeId),sh=reqSh(r),er=m=>errs.push(`#${r.no} ${e?e.name:r.empId}: ${m}`);
+    if(!e||!String(r.empId).trim())return er('ไม่พบรหัสพนักงาน');
+    const pc=ty&&((ty.pay!=null&&ty.pay!=='')?ty.pay:PAYMAP[String(ty.th).trim()]);
+    if(pc==null)return er(`ประเภท "${ty?ty.th:r.typeId}" ไม่มีรหัส Payday`);
+    const dup=dupOf(r.empId,sh,r.from,r.to,r.tFrom,r.tTo,r.id);if(dup)return er(`ลาซ้ำกับใบ #${dup.r.no} (${fmtD(dup.date)})`);
+    const sg=segsOf(sh,r.from,r.to,r.tFrom,r.tTo).filter(x=>x[2]>x[1]);
+    if(!sg.length)return er('ไม่มีวันทำงานในช่วงที่ลา (ตรงวันหยุด)');
+    const dm=dayMin(sh),pre=preOf(sh),sum=sg.reduce((a,x)=>a+x[2]-x[1],0);
+    if(Math.abs(sum-reqMins(r))>Math.abs(dm/2-pre)+1)return er(`ระยะเวลาไม่ตรงกัน (ในใบลา ${fmtDur(reqMins(r),dm)} / คำนวณได้ ${fmtDur(sum,dm)}) กรุณาเปิดแก้ไขใบลา`);
+    sg.forEach(([k,lo,hi])=>{let st,dy='',mn='',tm='';
+      if(lo===0&&hi===dm){st=0;dy=1;}else if(lo===0&&hi===pre){st=0;dy=0.5;}else if(lo===pre&&hi===dm){st=1;dy=0.5;}
+      else{st=lo===0?0:2;mn=Math.round(hi-lo);if(st===2)tm=clk(sh,lo,true);}
+      rows.push([String(r.empId),xser(k),st,tm,dy,'',mn,pc,r.reason||'']);});
+    okIds.push(r.id);});
+  if(errs.length&&!confirm(`พบ ${errs.length} ใบที่ส่งออกไม่ได้:\n`+errs.slice(0,12).join('\n')+`\n\nส่งออกเฉพาะ ${okIds.length} ใบที่ถูกต้อง?`))return;
+  if(!rows.length){toast('ไม่มีรายการที่ส่งออกได้');return;}
+  const ws=XLSX.utils.aoa_to_sheet([['EmpID','StartDate','StartType','StartTime','LeaveDays','LeaveHours','LeaveMinutes','LeaveType','Reason'],...rows]);
+  rows.forEach((_,i)=>{const c=ws['B'+(i+2)];if(c)c.z='dd/mm/yyyy';});
+  const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'PayDay Salary Data');
+  XLSX.writeFile(wb,`Payday_Import_${stamp()}.xls`,{bookType:'biff8'});
+  if(okIds.length&&confirm(`ทำเครื่องหมาย "Key Payday แล้ว" ให้ใบลาที่ส่งออก ${okIds.length} ใบ?`)){DB.requests.forEach(r=>{if(okIds.includes(r.id))r.pd=true;});save();render();}}
+function setPd(id,v,el){const r=DB.requests.find(x=>x.id===id);if(!r)return;r.pd=v;save();toast(t('saved'));if(F.pd&&el)el.closest('tr').remove();}
+function setF(k,v){F[k]=v;if(k==='div')F.unit='';render();}
+function clearF(){F={d1:'',d2:'',emp:'',div:'',unit:'',st:'',pd:''};render();}
+function admReqs(){
+  const divs=uniq(DB.employees.map(e=>e.div));
+  const units=uniq(DB.employees.filter(e=>!F.div||e.div===F.div).map(e=>e.unit));
+  const emps=DB.employees.filter(e=>(!F.div||e.div===F.div)&&(!F.unit||e.unit===F.unit));
+  const list=filtered();
+  const rows=list.length?list.map(r=>{const e=empById(r.empId)||{};
+    return `<tr><td data-l="${t('reqNo')}">#${r.no}${editTag(r)}</td>
+      <td data-l="${t('empid')}">${esc(r.empId)}</td><td data-l="${t('reqBy')}">${esc(e.name||r.empId)}</td>
+      <td data-l="${t('div')}">${esc(e.div||'')}/${esc(e.unit||'')}</td>
+      <td data-l="${t('type')}">${esc(tname(typeById(r.typeId)||{th:r.typeId}))}</td>
+      <td data-l="${t('holDate')}">${dateTxt(r)}</td><td data-l="${t('tm')}">${timeTxt(r)}</td>
+      <td data-l="${t('dur')}" class="num">${durTxt(r)}</td>
+      <td data-l="${t('status')}">${statusPill(r.status)}</td>
+      <td data-l="Key Payday" class="act noprint"><input type="checkbox" style="width:20px;height:20px" ${r.pd?'checked':''} onchange="setPd('${r.id}',this.checked,this)"></td>
+      <td data-l="${t('action')}" class="act noprint">
+        <button class="btn sec sm" onclick="editReq('${r.id}')">${t('edit')}</button>
+        <button class="btn bad sm" onclick="delReq('${r.id}')">${t('del')}</button></td></tr>`;}).join('')
+    :`<tr><td colspan="11" class="muted">${t('none')}</td></tr>`;
+  return `<div class="card noprint"><h2>${t('filter')}</h2><div class="grid g3">
+      <div class="field"><label>${t('dFrom')}</label><input type="date" value="${F.d1}" onchange="setF('d1',this.value)"></div>
+      <div class="field"><label>${t('dTo')}</label><input type="date" value="${F.d2}" onchange="setF('d2',this.value)"></div>
+      <div class="field"><label>${t('div')}</label><select onchange="setF('div',this.value)">
+        <option value="">${t('all')}</option>${divs.map(d=>`<option${d===F.div?' selected':''}>${esc(d)}</option>`).join('')}</select></div>
+      <div class="field"><label>${t('unit')}</label><select onchange="setF('unit',this.value)">
+        <option value="">${t('all')}</option>${units.map(u=>`<option${u===F.unit?' selected':''}>${esc(u)}</option>`).join('')}</select></div>
+      <div class="field"><label>${t('name')}</label><select onchange="setF('emp',this.value)">
+        <option value="">${t('all')}</option>${emps.map(e=>`<option value="${esc(e.id)}"${String(e.id)===F.emp?' selected':''}>${esc(e.name)}</option>`).join('')}</select></div>
+      <div class="field"><label>${t('status')}</label><select onchange="setF('st',this.value)">
+        <option value="">${t('all')}</option>${['wait','appr','rej','can'].map(s=>`<option value="${s}"${F.st===s?' selected':''}>${t(s)}</option>`).join('')}</select></div>
+      <div class="field"><label>Key Payday</label><select onchange="setF('pd',this.value)"><option value="">${t('all')}</option><option value="y"${F.pd==='y'?' selected':''}>Key แล้ว</option><option value="n"${F.pd==='n'?' selected':''}>ยังไม่ Key</option></select></div></div>
+    <div class="row"><button class="btn sm" onclick="exportPayday()">ส่งออก Payday (.xls)</button> <button class="btn sec sm" onclick="clearF()">${t('clear')}</button><span class="sp"></span>
+      <button class="btn sm" onclick="printReport()">${t('print')}</button>
+      <button class="btn sm" onclick="exportXlsx(false,true)">${t('expXls')}</button>
+      <button class="btn sec sm" onclick="exportTxt(false,true)">${t('expTxt')}</button></div>
+    <p class="muted" style="margin-top:8px">${t('found')} ${list.length} ${t('items')}</p></div>
+  <div class="card"><div class="tblwrap"><table class="rt"><thead><tr>
+    <th>${t('reqNo')}</th><th>${t('empid')}</th><th>${t('reqBy')}</th><th>${t('div')}</th><th>${t('type')}</th>
+    <th>${t('holDate')}</th><th>${t('tm')}</th><th class="num">${t('dur')}</th><th>${t('status')}</th><th class="noprint">Key Payday</th><th class="noprint">${t('action')}</th></tr></thead>
+    <tbody>${rows}</tbody></table></div></div><div id="reqEdit"></div>`;
+}
+function editReq(id){
+  const r=DB.requests.find(x=>x.id===id);if(!r)return;const e=empById(r.empId)||{};
+  const sh=SHIFTS[r.shift]||shOf(e),sm0=!r.tFrom||r.tFrom===sh.start?'am':r.tFrom===sh.be?'pm':'t',ds=durSel(r);
+  $('#reqEdit').innerHTML=`<div class="card"><h2>${t('editReq')} #${r.no} — ${esc(e.name||'')}
+    <span class="pill p-sh">${t('empid')} ${esc(r.empId)}</span></h2>
+    <div class="grid g2">
+      <div class="field"><label>${t('type')}</label><select id="er_ty">${DB.types.map(ty=>`<option value="${ty.id}"${ty.id===r.typeId?' selected':''}>${esc(tname(ty))}</option>`).join('')}</select></div>
+      <div class="field"><label>${t('status')}</label><select id="er_st">${['wait','appr','rej','can'].map(s=>`<option value="${s}"${r.status===s?' selected':''}>${t(s)}</option>`).join('')}</select></div>
+      <div class="field" style="grid-column:1/-1"><label><b>${t('holDate')}</b></label>
+        <div class="grid g2"><div><input type="date" id="er_f" value="${r.from}" onchange="erCalc()"><div class="muted">${t('startD')}</div></div>
+          <div><input type="date" id="er_t" value="${r.to}" readonly><div class="muted">${t('to')}</div></div></div></div>
+      <div class="field" style="grid-column:1/-1"><label><b>${t('tm')}</b></label>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+          <div><select id="er_sm" onchange="erCalc()"><option value="am"${sm0==='am'?' selected':''}>${t('smAm')}</option><option value="pm"${sm0==='pm'?' selected':''}>${t('smPm')}</option><option value="t"${sm0==='t'?' selected':''}>${t('smT')}</option></select><div class="muted">${t('startFrom')}</div></div>
+          <div><input type="time" step="300" id="er_stt" value="${r.tFrom||sh.start}" oninput="erCalc()"><div class="muted">${t('tFrom')}</div></div>
+          <div><input type="time" id="er_ttm" value="${r.tTo||''}" readonly><div class="muted">${t('endT')}</div></div></div></div>
+      <div class="field" style="grid-column:1/-1"><label><b>${t('dur')}</b></label>
+        <select id="er_dur" onchange="erCalc()">${durOpts(ds)}</select>
+        <div id="er_cu" style="display:${ds==='c'?'grid':'none'};grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px">
+          <div><input type="number" min="0" id="er_dd" value="${splitDur(r)[0]}" oninput="erCalc()"><div class="muted">${t('nDays')}</div></div>
+          <div><input type="number" min="0" id="er_dh" value="${splitDur(r)[1]}" oninput="erCalc()"><div class="muted">${t('nHours')}</div></div>
+          <div><input type="number" min="0" max="59" id="er_dm" value="${splitDur(r)[2]}" oninput="erCalc()"><div class="muted">${t('nMins')}</div></div></div></div>
+      <div class="field"><label>${t('reason')}</label><input type="text" id="er_r" value="${esc(r.reason||'')}"></div>
+      <div class="field"><label>${t('note')}</label><input type="text" id="er_n" value="${esc(r.note||'')}"></div></div>
+    <input type="hidden" id="er_emp" value="${esc(r.empId)}"><input type="hidden" id="er_sh" value="${esc(r.shift||'')}">
+    ${(r.edits||[]).length?`<div class="note"><b>${t('editLog')}</b><br>${r.edits.map(x=>`${fmtD(x.at)} — ${esc(x.by)}: ${esc(x.what)}`).join('<br>')}</div>`:''}
+    <div class="row" style="margin-top:11px"><button class="btn" onclick="saveReq('${r.id}')">${t('save')}</button>
+      <button class="btn sec" onclick="document.getElementById('reqEdit').innerHTML=''">${t('close')}</button></div></div>`;
+  $('#reqEdit').scrollIntoView({behavior:'smooth'});
+}
+function erCalc(){const e=empById($('#er_emp').value);if(!e)return null;const sh=SHIFTS[$('#er_sh').value]||shOf(e),a=$('#er_f').value;if(!a)return null;
+  const v=$('#er_dur').value,sm=$('#er_sm').value;
+  $('#er_cu').style.display=v==='c'?'grid':'none';$('#er_stt').disabled=sm!=='t';
+  if(sm!=='t')$('#er_stt').value=sm==='pm'?clk(sh,preOf(sh),true):sh.start;
+  const total=durMins(v,[+$('#er_dd').value||0,+$('#er_dh').value||0,+$('#er_dm').value||0],sh);
+  const o0=sm==='am'?0:sm==='pm'?preOf(sh):offOf(sh,$('#er_stt').value||sh.start);
+  const p=total>0?planLeave(a,sessMins(v,sm,total,sh),sh,o0):{end:a,eo:o0};
+  const c={total,end:p.end,tf:clk(sh,o0,true),tt:clk(sh,p.eo,false),dm:dayMin(sh),over:(v==='c'||v[0]==='h')&&total<dayMin(sh)&&total>dayMin(sh)-o0};
+  $('#er_t').value=c.end;$('#er_ttm').value=c.tt;return c;}
+function saveReq(id){
+  const r=DB.requests.find(x=>x.id===id);if(!r)return;
+  const old={ty:r.typeId,f:r.from,t:r.to,d:r.days,st:r.status};
+  const c=erCalc();if(!c||c.total<=0){toast(t('zeroDur'));return;}
+  if(c.over){toast('เวลาที่ลาเกินเวลาเลิกงานของวันนั้น');return;}
+  const dm=c.dm,nm=Math.round(c.total);
+  if(['wait','appr'].includes($('#er_st').value)){const dp=dupOf(r.empId,SHIFTS[r.shift]||shOf(empById(r.empId)),$('#er_f').value,c.end,c.tf,c.tt,r.id);
+    if(dp){toast(`${t('dupLeave')}: #${dp.r.no} ${fmtD(dp.date)}`);return;}}
+  const nv={ty:$('#er_ty').value,f:$('#er_f').value,t:c.end,d:+(nm/dm).toFixed(6),st:$('#er_st').value};
+  const e=empById(r.empId);
+  if(e){if(old.st==='appr'&&e.q?.[old.ty])e.q[old.ty].used=Math.max(0,(+e.q[old.ty].used||0)-(+old.d||0));
+    if(nv.st==='appr'){e.q||={};e.q[nv.ty]||={quota:0,used:0};e.q[nv.ty].used=(+e.q[nv.ty].used||0)+nv.d;}}
+  const ch=[];
+  if(old.ty!==nv.ty)ch.push(t('type'));
+  if(old.f!==nv.f||old.t!==nv.t)ch.push(t('period'));
+  if(Math.round(old.d*dm)!==nm)ch.push(`${t('dur')} ${fmtDur(old.d*dm,dm)}→${fmtDur(nm,dm)}`);
+  if(old.st!==nv.st)ch.push(`${t('status')} ${t(old.st)}→${t(nv.st)}`);
+  Object.assign(r,{typeId:nv.ty,from:nv.f,to:nv.t,days:nv.d,status:nv.st,
+    mins:nm,dm,tFrom:c.tf,tTo:c.tt,reason:$('#er_r').value,note:$('#er_n').value});
+  if(ch.length){r.edited=true;r.edits=(r.edits||[]).concat([{by:'Admin',at:new Date().toISOString(),what:ch.join(', ')}]);}
+  save();toast(t('saved'));render();
+}
+function delReq(id){if(!confirm(t('confirm')))return;const r=DB.requests.find(x=>x.id===id);
+  if(r&&r.status==='appr'){const e=empById(r.empId);
+    if(e?.q?.[r.typeId])e.q[r.typeId].used=Math.max(0,(+e.q[r.typeId].used||0)-(+r.days||0));}
+  DB.requests=DB.requests.filter(x=>x.id!==id);save();toast(t('deleted'));render();}
+function printReport(){
+  const list=filtered();
+  const head=`<tr><th>#</th><th>${t('empid')}</th><th>${t('reqBy')}</th><th>${t('div')}</th><th>${t('unit')}</th>
+    <th>${t('type')}</th><th>${t('holDate')}</th><th>${t('tm')}</th><th>${t('dur')}</th><th>${t('status')}</th><th>${t('note')}</th></tr>`;
+  const body=list.map(r=>{const e=empById(r.empId)||{};
+    return `<tr><td>${r.no}${r.edited?' *':''}</td><td>${esc(r.empId)}</td><td>${esc(e.name||'')}</td><td>${esc(e.div||'')}</td><td>${esc(e.unit||'')}</td>
+      <td>${esc((typeById(r.typeId)||{}).th||'')}</td>
+      <td>${dateTxt(r)}</td><td>${timeTxt(r)}</td><td style="text-align:right">${durTxt(r)}</td><td>${t(r.status)}</td><td>${esc(r.note||'')}</td></tr>`;}).join('');
+  const w=window.open('','_blank');
+  w.document.write(`<html><head><meta charset="utf-8"><title>${t('report')}</title>
+    <style>body{font-family:'Noto Sans Thai',sans-serif;font-size:14px;padding:18px}h2{margin:0 0 4px}
+    table{border-collapse:collapse;width:100%;margin-top:10px}th,td{border:1px solid #999;padding:5px 7px}th{background:#eee}</style>
+    </head><body><h2>${t('report')}</h2>
+    <div>${t('period')}: ${F.d1?fmtD(F.d1):'—'} ถึง ${F.d2?fmtD(F.d2):'—'}${F.div?' • '+t('div')+': '+esc(F.div):''}${F.unit?' • '+esc(F.unit):''}</div>
+    <div>${t('found')} ${list.length} ${t('items')} — ${t('date')}: ${fmtD(today())}</div>
+    <table>${head}${body}</table><p style="margin-top:10px">* = ${t('edited')}</p></body></html>`);
+  w.document.close();setTimeout(()=>w.print(),400);
+}
+
+/* ---- ส่งออก ---- */
+function admExport(){
+  return `<div class="card"><h2>${t('exp')}</h2>
+    <p class="muted">Excel 3 ชีต: พนักงาน+สิทธิ์ / ใบลา / ผู้อนุมัติ</p>
+    <div class="row"><button class="btn" onclick="exportXlsx(false)">${t('expXls')}</button>
+      <button class="btn sec" onclick="exportTxt(false)">${t('expTxt')}</button>
+      <button class="btn sec" onclick="exportJson()">สำรองข้อมูล (.json)</button></div><hr>
+    <label class="filebox" for="rest">กู้คืนจากไฟล์สำรอง (.json)
+      <input id="rest" type="file" accept=".json" onchange="restoreJson(this)"></label></div>`;
+}
+function buildTables(limit,useFilter){
+  const emps=limit?DB.employees.filter(e=>inScope(S.user,e)):DB.employees;
+  const ids=new Set(emps.map(e=>String(e.id)));
+  const t1=emps.map(e=>{const sh=shOf(e);
+    const o={'Emp ID':e.id,'First Name':e.name,'Div Name':e.div,'หน่วย Name':e.unit,
+      'กะ':sh.th,'เวลาทำงาน':sh.start+'-'+sh.end,'ชม./วัน':sh.hours,'วันทำงาน':sh.daysTh};
+    DB.types.forEach(ty=>{const q=quotaOf(e,ty.id);
+      if(ty.hideQ)o[ty.th+' Used']=r4(q.used);
+      else{o[ty.th+' Quota']=q.quota;o[ty.th+' Used']=r4(q.used);o[ty.th+' Available']=r4(q.avail);o[ty.th+' คงเหลือ']=fmtDays(e,q.avail);}});
+    return o;});
+  const src=useFilter?filtered():DB.requests;
+  const t2=src.filter(r=>ids.has(String(r.empId))).map(r=>{const e=empById(r.empId)||{};
+    return{'เลขที่':r.no,'Emp ID':r.empId,'ชื่อ':e.name||'','แผนก':e.div||'','หน่วยงาน':e.unit||'',
+      'กะ':(SHIFTS[r.shift]||shOf(e)).th,'ประเภทการลา':(typeById(r.typeId)||{}).th||r.typeId,
+      'วันที่เริ่ม':fmtD(r.from),'เวลาเริ่ม':r.tFrom||'','วันที่สิ้นสุด':fmtD(r.to),'เวลาสิ้นสุด':r.tTo||'',
+      'จำนวนวัน':Math.round((+r.days||0)*1e3)/1e3,'ระยะเวลาลา':durTxt(r),'เหตุผล':r.reason||'','สถานะ':{wait:'รออนุมัติ',appr:'อนุมัติ',rej:'ไม่อนุมัติ',can:'ยกเลิก'}[r.status],
+      'ผู้อนุมัติ':r.by||'','แก้ไขแล้ว':r.edited?'ใช่':'','หมายเหตุ':r.note||'','ยื่นเมื่อ':fmtD(r.createdAt),'Key Payday แล้ว':r.pd?'ใช่':''};});
+  const t3=DB.approvers.map(a=>({'ชื่อผู้อนุมัติ':a.name,'ขอบเขต':(a.scopes||[]).map(s=>s.div+'/'+(s.unit==='*'?'ทั้งแผนก':s.unit)).join(' | ')}));
+  return{t1,t2,t3};
+}
+function exportXlsx(limit,useF){const{t1,t2,t3}=buildTables(limit,useF);const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(t1),'พนักงาน-สิทธิ์การลา');
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(t2),'ใบลา');
+  if(!limit)XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(t3),'ผู้อนุมัติ');
+  if(!limit)XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(DB.holidays.slice().sort((a,b)=>a.date<b.date?-1:1).map(h=>({'วันที่':fmtD(h.date),'วัน':wdName(h.date),'วันหยุด':h.th}))),'วันหยุดประเพณี');
+  XLSX.writeFile(wb,`Leave_Export_${stamp()}.xlsx`);toast(t('saved'));}
+function exportTxt(limit,useF){const{t1,t2}=buildTables(limit,useF);
+  const tsv=a=>{if(!a.length)return'(no data)';const h=Object.keys(a[0]);
+    return[h.join('\t'),...a.map(r=>h.map(k=>String(r[k]??'').replace(/[\t\r\n]/g,' ')).join('\t'))].join('\r\n');};
+  dl(new Blob(['\uFEFF'+`=== พนักงาน + สิทธิ์การลา ===\r\n${tsv(t1)}\r\n\r\n=== ใบลา ===\r\n${tsv(t2)}\r\n`],
+    {type:'text/plain;charset=utf-8'}),`Leave_Export_${stamp()}.txt`);toast(t('saved'));}
+function exportJson(){dl(new Blob([JSON.stringify(DB)],{type:'application/json'}),`Leave_Backup_${stamp()}.json`);}
+function restoreJson(inp){const f=inp.files[0];if(!f)return;const fr=new FileReader();
+  fr.onload=e=>{try{DB=JSON.parse(e.target.result);load();save();toast(t('impOK'));render();}catch(err){toast('ไฟล์ไม่ถูกต้อง');}};
+  fr.readAsText(f);inp.value='';}
+
+/* ---- ตั้งค่าระบบ ---- */
+function admSys(){const kb=Math.round((localStorage.getItem(KEY)||'').length/1024);
+  return `<div class="card"><h2>${t('chgAdm')}</h2><div class="grid g2">
+      <div class="field"><label>${t('oldpw')}</label><input id="sp_old" type="password"></div>
+      <div class="field"><label>${t('newpw')}</label><input id="sp_new" type="password"></div></div>
+    <button class="btn" onclick="chgAdmPw()">${t('save')}</button></div>
+  <div class="card"><h2>เริ่มปีสิทธิ์การลาใหม่</h2>
+    <p class="note">ปีสิทธิ์ปัจจุบัน: <b>${DB.quotaYear}</b> — ระบบ<b>ไม่ยกวันลาคงเหลือ</b>ไปปีใหม่ ล้างวันที่ใช้ไปเป็น 0 (ยกเว้นใบลาที่อนุมัติแล้วซึ่งเริ่มลาในปีใหม่ จะนับให้) และดาวน์โหลดไฟล์สำรองให้ก่อนเสมอ ใบลาเก่ายังอยู่ครบ</p>
+    <div class="grid g2"><div class="field"><label>ปีสิทธิ์ใหม่</label><input type="number" id="ny_y" value="${Math.max(DB.quotaYear+1,new Date().getFullYear())}"></div>
+      <div class="field"><label>สิทธิ์ตั้งต้นของแต่ละคน</label><select id="ny_m"><option value="def">ตั้งตามค่าเริ่มต้นของแต่ละประเภท (แนะนำ)</option><option value="keep">คงสิทธิ์รายบุคคลเดิมไว้</option></select></div></div>
+    <p class="muted">ให้สิทธิ์เพิ่มรายบุคคล: แท็บ "พนักงาน" (แก้สิทธิ์) หรือแท็บ "นำเข้า" (ไฟล์ Excel คอลัมน์ Quota/Used)</p>
+    <button class="btn bad" onclick="newYear()">เริ่มปีสิทธิ์ใหม่</button></div>
+  ${delPeriodCard()}
+  <div class="card"><h2>${t('sys')}</h2><p class="note">${t('wipeWarn')} — ${t('storage')}: ${kb} KB</p>
+    <div class="row"><button class="btn sec" onclick="wipe('req')">${t('wipeReq')}</button>
+      <button class="btn sec" onclick="wipe('emp')">${t('wipeEmp')}</button>
+      <button class="btn bad" onclick="wipe('all')">${t('wipeAll')}</button></div></div>`;}
+function yrBanner(){const y=new Date().getFullYear();if(DB.quotaYear>=y)return '';
+  return `<div class="alert a-warn" style="margin-top:10px">ปีสิทธิ์ยังเป็น <b>${DB.quotaYear}</b> แต่ตอนนี้ปี ${y} แล้ว — สิทธิ์การลายังไม่เริ่มใหม่ <button class="btn sm" onclick="S.tab='sys';render()">ไปที่ตั้งค่าระบบ</button></div>`;}
+function newYear(){const y=+$('#ny_y').value,m=$('#ny_m').value;
+  if(!y||y<2000||y>2200){toast('ระบุปีให้ถูกต้อง');return;}
+  if(y<=DB.quotaYear&&!confirm(`ปีสิทธิ์ปัจจุบันคือ ${DB.quotaYear} ปี ${y} ไม่ใหม่กว่า ต้องการทำซ้ำหรือไม่?`))return;
+  const pend=DB.requests.filter(r=>r.status==='wait').length;
+  if(!confirm(`เริ่มปีสิทธิ์ ${y}\n• ล้างวันที่ใช้ไป (ไม่ยกยอดคงเหลือ)\n• สิทธิ์ตั้งต้น: ${m==='def'?'ตามค่าเริ่มต้นของแต่ละประเภท':'คงของเดิมรายบุคคล'}\n`+(pend?`• มี ${pend} ใบที่ยังรออนุมัติ — ควรอนุมัติ/ปฏิเสธก่อน เพราะถ้าอนุมัติหลังนี้จะหักจากสิทธิ์ปีใหม่\n`:'')+'\nระบบจะดาวน์โหลดไฟล์สำรองให้ก่อน ดำเนินการต่อ?'))return;
+  exportJson();
+  const ap={};DB.requests.forEach(r=>{if(r.status==='appr'&&String(r.from).slice(0,4)===String(y)){const k=r.empId+'|'+r.typeId;ap[k]=(ap[k]||0)+(+r.days||0);}});
+  DB.employees.forEach(e=>{e.q=e.q||{};DB.types.forEach(ty=>{const o=e.q[ty.id]||{};
+    e.q[ty.id]={...o,quota:m==='def'?(+ty.def||0):(+o.quota||0),used:+(ap[e.id+'|'+ty.id]||0).toFixed(6)};});});
+  DB.quotaYear=y;(DB.yearLog=DB.yearLog||[]).push({y,at:new Date().toISOString(),m});save();toast('เริ่มปีสิทธิ์ '+y+' แล้ว');render();}
+const MONTHS=['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+function delPeriodCard(){const d=new Date(),y=d.getFullYear(),m=d.getMonth()+1;
+  return `<div class="card"><h2>ลบใบลาตามช่วงเวลา</h2>
+    <p class="note">ลบใบลาที่ "วันที่เริ่มลา" อยู่ในช่วงที่เลือก (แนะนำให้ส่งออก/สำรองข้อมูลก่อน)</p>
+    <div class="grid g3">
+      <div class="field"><label>รูปแบบ</label><select id="dp_m" onchange="dpMode()"><option value="range">ช่วงวันที่</option><option value="year">ทั้งปี</option><option value="month">ทั้งเดือน</option></select></div>
+      <div class="field" id="dp_r1"><label>จากวันที่</label><input type="date" id="dp_f"></div>
+      <div class="field" id="dp_r2"><label>ถึงวันที่</label><input type="date" id="dp_t"></div>
+      <div class="field" id="dp_y" style="display:none"><label>ปี</label><select id="dp_yy">${Array.from({length:8},(_,i)=>y-5+i).map(v=>`<option value="${v}"${v===y?' selected':''}>${v} (พ.ศ. ${v+543})</option>`).join('')}</select></div>
+      <div class="field" id="dp_mo" style="display:none"><label>เดือน</label><select id="dp_mm">${MONTHS.map((n,i)=>`<option value="${i+1}"${i+1===m?' selected':''}>${n}</option>`).join('')}</select></div></div>
+    <label style="display:flex;gap:8px;align-items:center;margin-bottom:10px"><input type="checkbox" id="dp_rs" checked style="width:auto;margin:0"> คืนสิทธิ์วันลาที่หักไปแล้ว (เฉพาะใบที่อนุมัติ)</label>
+    <button class="btn bad" onclick="delPeriod()">${t('del')}</button></div>`;}
+function dpMode(){const m=$('#dp_m').value,sh=(id,v)=>$(id).style.display=v?'block':'none';
+  sh('#dp_r1',m==='range');sh('#dp_r2',m==='range');sh('#dp_y',m!=='range');sh('#dp_mo',m==='month');}
+function delPeriod(){const m=$('#dp_m').value;let a,b,txt;
+  if(m==='range'){a=$('#dp_f').value;b=$('#dp_t').value;if(!a||!b||a>b){toast('เลือกช่วงวันที่ให้ถูกต้อง');return;}txt=fmtD(a)+' – '+fmtD(b);}
+  else{const y=+$('#dp_yy').value;
+    if(m==='year'){a=y+'-01-01';b=y+'-12-31';txt='ทั้งปี '+y;}
+    else{const mo=+$('#dp_mm').value,mm=String(mo).padStart(2,'0');a=y+'-'+mm+'-01';b=y+'-'+mm+'-'+String(new Date(y,mo,0).getDate()).padStart(2,'0');txt=MONTHS[mo-1]+' '+y;}}
+  const list=DB.requests.filter(r=>r.from>=a&&r.from<=b);
+  if(!list.length){toast(t('none'));return;}
+  if(!confirm(`ลบใบลา ${list.length} ใบ (${txt})?\n\n`+t('confirm')))return;
+  if($('#dp_rs').checked)list.forEach(r=>{if(r.status==='appr'){const e=empById(r.empId);
+    if(e?.q?.[r.typeId])e.q[r.typeId].used=Math.max(0,(+e.q[r.typeId].used||0)-(+r.days||0));}});
+  const ids=new Set(list.map(r=>r.id));DB.requests=DB.requests.filter(r=>!ids.has(r.id));
+  save();toast(t('deleted')+' ('+list.length+')');render();}
+function chgAdmPw(){if($('#sp_old').value!==DB.admin.pw){toast(t('wrongpw'));return;}
+  const n=$('#sp_new').value;if(n.length<4){toast('ขั้นต่ำ 4 ตัวอักษร');return;}
+  DB.admin.pw=n;save();toast(t('saved'));}
+function wipe(w){if(!confirm(t('wipeWarn')+'\n\n'+t('confirm')))return;
+  if(w==='req'){DB.requests=[];DB.seq=1;}if(w==='emp')DB.employees=[];if(w==='all')DB=freshDB();
+  save();toast(t('deleted'));w==='all'?logout():render();}
+
+/* ============================================================
+   Supabase sync — เก็บในเครื่อง (localStorage) + ซิงค์ขึ้น Supabase
+   พนักงานและใบลาซิงค์ทีละแถว (หลายคนใช้พร้อมกันไม่ทับกัน), ไม่ลบข้อมูลคลาวด์เองนอกจากผู้ใช้สั่งลบ
+   ============================================================ */
+const SB={url:'https://ipteomoqgzakztgxpslr.supabase.co',key:'sb_publishable_VR7RNP0FGCcfJsEBFLbEIg_AVDLWVgi'};
+const KVK=['types','approvers','admin','holidays','kpi','quotaYear','yearLog'];
+const SYNC={on:false,busy:false,again:false,tm:null,snap:{emp:{},req:{},kv:{}}};
+const jh=o=>JSON.stringify(o);
+async function sbq(path,opt={}){const r=await fetch(SB.url+'/rest/v1/'+path,{...opt,headers:{apikey:SB.key,'Content-Type':'application/json',...(opt.headers||{})}});
+  if(!r.ok)throw new Error(r.status+' '+(await r.text()).slice(0,200));const x=await r.text();return x?JSON.parse(x):null;}
+async function sbAll(path){let all=[],from=0;for(;;){const rows=await sbq(path,{headers:{Range:`${from}-${from+999}`,'Range-Unit':'items'}})||[];all=all.concat(rows);if(rows.length<1000)break;from+=1000;}return all;}
+function sbStat(m,c){let b=$('#sbStat');if(!b){b=document.createElement('div');b.id='sbStat';b.style.cssText='position:fixed;left:8px;bottom:8px;font-size:12px;padding:3px 9px;border-radius:12px;background:#fff;border:1px solid #d8cbb5;z-index:50';document.body.appendChild(b);}
+  b.textContent=m;b.style.color=c||'#6b5a48';}
+const snapFrom=R=>{const sn={emp:{},req:{},kv:{}};R.kv.forEach(x=>sn.kv[x.key]=jh(x.value));R.em.forEach(x=>sn.emp[x.id]=jh(x.data));R.rq.forEach(x=>sn.req[x.id]=jh({...x.data,no:x.no}));return sn;};
+function syncDiff(){const d={ue:[],ur:[],uk:[],de:[],dr:[]},sn=SYNC.snap,ek=new Set(),rk=new Set();
+  DB.employees.forEach(e=>{const k=String(e.id),j=jh(e);ek.add(k);if(sn.emp[k]!==j)d.ue.push({id:k,data:e,j});});
+  Object.keys(sn.emp).forEach(k=>{if(!ek.has(k))d.de.push(k);});
+  DB.requests.forEach(r=>{const k=String(r.id);rk.add(k);if(sn.req[k]!==jh(r))d.ur.push({id:k,no:(k in sn.req)?r.no:null,data:r});});
+  Object.keys(sn.req).forEach(k=>{if(!rk.has(k))d.dr.push(k);});
+  KVK.forEach(k=>{if(DB[k]!==undefined&&sn.kv[k]!==jh(DB[k]))d.uk.push({key:k,value:DB[k],j:jh(DB[k])});});return d;}
+const dirty=d=>d.ue.length||d.ur.length||d.uk.length||d.de.length||d.dr.length;
+function syncApply(R){
+  const inPlace=(arr,rows,kf,mk)=>{const m=new Map(arr.map(o=>[String(kf(o)),o]));
+    const out=rows.map(r=>{const n=mk(r),o=m.get(String(kf(n)));if(o){Object.keys(o).forEach(k=>delete o[k]);Object.assign(o,n);return o;}return n;});arr.length=0;out.forEach(o=>arr.push(o));};
+  inPlace(DB.employees,R.em,e=>e.id,r=>r.data);inPlace(DB.requests,R.rq,r=>r.id,r=>({...r.data,no:r.no}));
+  R.kv.forEach(x=>{if(!KVK.includes(x.key))return;if(Array.isArray(DB[x.key])&&Array.isArray(x.value)){DB[x.key].length=0;x.value.forEach(v=>DB[x.key].push(v));}else DB[x.key]=x.value;});
+  DB.employees.forEach(e=>{if(!SHIFTS[e.shift])e.shift='normal';});
+  DB.seq=DB.requests.reduce((a,r)=>Math.max(a,+r.no||0),0)+1;SYNC.snap=snapFrom(R);}
+const syncPull=async()=>({kv:await sbAll('app_kv?select=key,value&order=key'),em:await sbAll('app_employees?select=id,data&order=id'),rq:await sbAll('app_requests?select=id,no,data&order=no.asc,id.asc')});
+function syncQueue(){if(!SYNC.on)return;clearTimeout(SYNC.tm);SYNC.tm=setTimeout(syncPush,600);}
+async function syncPush(){if(!SYNC.on)return;if(SYNC.busy){SYNC.again=true;return;}SYNC.busy=true;
+  try{const d=syncDiff(),nDel=d.de.length+d.dr.length,nSnap=Object.keys(SYNC.snap.emp).length+Object.keys(SYNC.snap.req).length;
+    if(nDel>20&&nDel>=nSnap*.5&&!confirm(`จะลบ ${nDel} จาก ${nSnap} รายการบน Supabase ยืนยันหรือไม่?\n(กดยกเลิก = ดึงข้อมูลจากคลาวด์กลับมา)`)){syncApply(await syncPull());SYNC.busy=false;render();return;}
+    if(dirty(d)){sbStat('☁ กำลังบันทึก…');
+      const up=async(tbl,rows,on,after)=>{for(let i=0;i<rows.length;i+=200){const x=await sbq(`${tbl}?on_conflict=${on}`,{method:'POST',headers:{Prefer:'resolution=merge-duplicates,return=representation'},body:jh(rows.slice(i,i+200))});if(after)(x||[]).forEach(after);}};
+      await up('app_kv',d.uk.map(x=>({key:x.key,value:x.value})),'key');d.uk.forEach(x=>SYNC.snap.kv[x.key]=x.j);
+      await up('app_employees',d.ue.map(x=>({id:x.id,data:x.data})),'id');d.ue.forEach(x=>SYNC.snap.emp[x.id]=x.j);
+      await up('app_requests',d.ur.map(x=>({id:x.id,no:x.no,data:x.data})),'id',row=>{const r=DB.requests.find(q=>String(q.id)===row.id);if(r){r.no=row.no;SYNC.snap.req[row.id]=jh(r);}});
+      for(const [tbl,ids,key] of [['app_employees',d.de,'emp'],['app_requests',d.dr,'req']])for(let i=0;i<ids.length;i+=100){
+        await sbq(`${tbl}?id=in.(${ids.slice(i,i+100).map(x=>'"'+String(x).replace(/"/g,'')+'"').join(',')})`,{method:'DELETE'});ids.slice(i,i+100).forEach(x=>delete SYNC.snap[key][x]);}
+      DB.seq=DB.requests.reduce((a,r)=>Math.max(a,+r.no||0),0)+1;try{localStorage.setItem(KEY,jh(DB));}catch(e){}}
+    sbStat('☁ ซิงค์แล้ว','#3E7B4F');
+  }catch(e){sbStat('☁ ซิงค์ไม่สำเร็จ (จะลองใหม่)','#B5532F');console.error(e);}
+  SYNC.busy=false;if(SYNC.again){SYNC.again=false;syncQueue();}}
+async function syncTick(){if(!SYNC.on||SYNC.busy)return;if(dirty(syncDiff())){syncPush();return;}
+  try{const R=await syncPull();if(dirty(syncDiff()))return;if(jh(snapFrom(R))===jh(SYNC.snap)){sbStat('☁ ซิงค์แล้ว','#3E7B4F');return;}
+    syncApply(R);try{localStorage.setItem(KEY,jh(DB));}catch(e){}
+    const a=document.activeElement;if(S.role&&S.role!=='emp'&&!$('#er_f')&&!(a&&/INPUT|SELECT|TEXTAREA/.test(a.tagName))){const y=scrollY;render();scrollTo(0,y);}
+    sbStat('☁ อัปเดตจากคลาวด์แล้ว','#3E7B4F');}catch(e){sbStat('☁ ออฟไลน์','#B5532F');}}
+async function syncInit(){sbStat('☁ กำลังเชื่อมต่อ Supabase…');
+  try{const R=await syncPull(),empty=!R.kv.length&&!R.em.length&&!R.rq.length,hasLocal=DB.employees.length||DB.requests.length,linked=localStorage.getItem('leave_sb_linked');
+    if(empty){SYNC.snap={emp:{},req:{},kv:{}};SYNC.on=true;await syncPush();
+      toast(`อัปโหลดข้อมูลเดิมขึ้น Supabase แล้ว (พนักงาน ${DB.employees.length} คน, ใบลา ${DB.requests.length} ใบ)`);}
+    else if(hasLocal&&!linked&&!confirm('บน Supabase มีข้อมูลอยู่แล้ว\n\nOK = ใช้ข้อมูลบน Supabase (ระบบจะดาวน์โหลดไฟล์สำรองข้อมูลในเครื่องนี้ให้ก่อน)\nยกเลิก = รวมข้อมูลในเครื่องนี้ขึ้นไป (ไม่ลบข้อมูลบน Supabase)')){
+      const ie=new Set(DB.employees.map(e=>String(e.id))),ir=new Set(DB.requests.map(r=>String(r.id)));
+      R.em.forEach(x=>{if(!ie.has(x.id))DB.employees.push(x.data);});R.rq.forEach(x=>{if(!ir.has(x.id))DB.requests.push({...x.data,no:x.no});});
+      SYNC.snap=snapFrom(R);SYNC.on=true;await syncPush();}
+    else{if(hasLocal&&!linked)exportJson();syncApply(R);try{localStorage.setItem(KEY,jh(DB));}catch(e){}SYNC.on=true;}
+    localStorage.setItem('leave_sb_linked','1');sbStat('☁ ซิงค์แล้ว','#3E7B4F');if(!S.role)render();
+    setInterval(syncTick,20000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)syncTick();});
+  }catch(e){sbStat('☁ เชื่อมต่อไม่ได้ — ใช้ข้อมูลในเครื่อง','#B5532F');console.error(e);}}
+
+document.documentElement.lang=lang;
+render();syncInit();
+</script>
+</body>
+</html>
