@@ -1503,7 +1503,8 @@ function storageBox(){let u=0;const ks=[];try{for(let i=0;i<localStorage.length;
     <div class="muted">${t('storage')} รวมทั้งโดเมน: ใช้ <b>${f(u)}</b> จากทั้งหมด ~<b>${f(T)}</b> • คงเหลือ <b style="color:${c}">${f(Math.max(0,T-u))}</b> (${(100-p).toFixed(1)}%)${p>=70?' ⚠ ใกล้เต็ม ควรลบรูป/ใบลาเก่าหรือสำรองข้อมูล':''}</div>
     <div class="bar"><i style="width:${p}%;background:${c}"></i></div><div class="muted" style="font-size:11.5px">* ค่าประมาณ — เบราว์เซอร์ส่วนใหญ่จำกัด localStorage ที่ราว 5 MB ข้อมูลบน Supabase แยกต่างหาก</div></div>`;}
 const isMineKey=k=>k===KEY||/^leave/i.test(k);
-function cleanOther(){const o={};let n=0;
+function cleanOther(){if(location.protocol==='file:'){alert('ปุ่มนี้ใช้ไม่ได้เมื่อเปิดจากไฟล์ในเครื่อง (file://) เพราะทุกไฟล์ในเครื่องใช้ที่เก็บร่วมกัน อาจลบข้อมูลของแอปอื่นที่เปิดจากไฟล์\nกรุณาเปิดผ่าน ksrleave1.pages.dev แล้วใช้ปุ่มนี้');return;}
+  const o={};let n=0;
   for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(isMineKey(k))continue;const v=localStorage.getItem(k)||'';o[k]=v;n+=k.length+v.length;}
   const ks=Object.keys(o);if(!ks.length){toast('ไม่มีข้อมูลแอปอื่นค้างในเครื่องนี้');return;}
   dl(new Blob([JSON.stringify(o)],{type:'application/json'}),`Other_LocalStorage_Backup_${stamp()}.json`);
@@ -1619,7 +1620,7 @@ async function syncInit(){sbStat('☁ กำลังเชื่อมต่อ
 
 document.documentElement.lang=lang;
 /* ---- ตรวจเวอร์ชันใหม่อัตโนมัติ (เปลี่ยนเลขนี้ทุกครั้งที่ deploy ไฟล์ใหม่) ---- */
-const APP_VERSION='2026-10-20.5';
+const APP_VERSION='2026-10-20.6';
 (function updWatch(){
   const tag=document.createElement('div');tag.textContent='v'+APP_VERSION;
   tag.style.cssText='position:fixed;right:8px;bottom:3px;font-size:11px;opacity:.45;pointer-events:none;z-index:5';document.body.appendChild(tag);
