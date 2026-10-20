@@ -170,6 +170,32 @@ table.rq td.tycol .muted,table.rq td.tycol .err{font-size:12px;line-height:1.35}
   .card{border:0;box-shadow:none;margin:0;padding:0}
   th{background:#eee!important;-webkit-print-color-adjust:exact}
 }
+/* ===== compact ===== */
+body{font-size:14px;line-height:1.45}
+h1,h2,h3{font-size:15px;margin:0 0 6px}
+.wrap{padding-bottom:40px}.hbar{padding:6px 12px}.logo{font-size:15px}.hbtn{padding:4px 9px;font-size:13px;border-radius:8px}
+.card{padding:9px 11px;margin:8px 0;border-radius:10px}.grid>.card{margin:0}
+label{font-size:12.5px;margin:0 0 2px}
+input[type=text],input[type=number],input[type=date],input[type=password],input[type=time],select,textarea{padding:5px 8px;font-size:14px;border-radius:8px;min-height:30px}
+.field{margin-bottom:7px}.grid{gap:7px}.row{gap:6px}hr{margin:8px 0}
+.btn{padding:6px 12px;min-height:32px;font-size:14px;border-radius:8px}.btn.go{font-size:15px;box-shadow:0 2px 0 var(--go-d)}.btn.sm{padding:3px 9px;min-height:26px;font-size:13px}
+.tab{padding:5px 10px;font-size:13px;border-radius:8px}.tabs{margin-bottom:2px}
+th,td{padding:5px 8px;font-size:13px}.pill{font-size:12px;padding:1px 8px}
+.muted,.note,.alert{font-size:12.5px}.note{padding:6px 10px}.alert{padding:6px 10px;margin:4px 0}
+.qname{font-size:14px;margin-bottom:2px}.qbig{font-size:14px}.qcard{padding:7px 9px}
+.tyban{padding:6px 10px;font-size:14px;margin:0 0 6px}.sickbox{padding:6px 9px;margin-bottom:6px}.sopt{min-height:32px;padding:5px 8px}
+.cmp .card{padding:8px 11px;margin:6px 0}.cmp h2{margin:0 0 4px}
+.cmp .btn{padding:6px 12px;min-height:34px}.cmp input:not([type=checkbox]),.cmp select{padding:4px 7px;min-height:30px}
+.qgrid{grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:6px}.reqgrid{grid-template-columns:minmax(230px,280px) 1fr;gap:8px}.r3,.two{gap:6px}
+@media(min-width:761px){table.rt th,table.rt td{padding:4px 7px;font-size:13px}table.rt .btn.sm{padding:2px 8px;min-height:26px;font-size:13px}
+table.rt td input:not([type=checkbox]),table.rt td select{padding:2px 5px;min-height:26px;font-size:13px}}
+@media(max-width:760px){input,select,textarea{font-size:16px!important}.tblwrap.stk{max-height:none!important;overflow:visible!important}}
+.tblwrap.stk{max-height:calc(100vh - 215px);min-height:220px;overflow:auto}
+.tblwrap.stk thead th{position:sticky;top:0;z-index:3;box-shadow:0 1px 0 var(--beige-d)}
+th.sr{cursor:pointer;user-select:none;white-space:nowrap}th.sr:hover{background:var(--beige-d)}
+table.rt tr.sel td{background:#FFF3D6}
+.modal-bg{position:fixed;inset:0;background:rgba(40,25,15,.45);z-index:200;display:flex;align-items:flex-start;justify-content:center;padding:4vh 10px;overflow:auto}
+.modal{width:100%;max-width:780px}.modal .card{margin:0}
 </style>
 </head>
 <body>
@@ -289,6 +315,10 @@ startWork:"အလုပ်စတင်သည့်ရက်",impStart:"အလု
 lvlHead:"ကြီးကြပ်ရေးမှူး",lvlMgr:"မန်နေဂျာ",waitHead:"ကြီးကြပ်ရေးမှူး စောင့်ဆိုင်း",waitMgr:"မန်နေဂျာ စောင့်ဆိုင်း",fwdMgr:"အတည်ပြု → မန်နေဂျာသို့",
 chgPw:"စကားဝှက်ပြောင်းရန်",pwCur:"လက်ရှိစကားဝှက်",pwNew:"စကားဝှက်အသစ် (အနည်းဆုံး ၄ လုံး)",pwNew2:"စကားဝှက်အသစ် အတည်ပြု",needPw:"ဤအကောင့်တွင် စကားဝှက်သတ်မှတ်ထားသည် — ထည့်ပါ",pwBad:"လက်ရှိစကားဝှက် မမှန်ပါ",pwShort:"စကားဝှက်အသစ် အနည်းဆုံး ၄ လုံး",pwMis:"စကားဝှက်အသစ်နှစ်ခု မတူပါ",pwDone:"စကားဝှက်ပြောင်းပြီး",pwRevert:"ဝန်ထမ်းကုဒ်သို့ ပြန်ထားရန်",pwHint:"လက်ရှိ ဝန်ထမ်းကုဒ်ကို စကားဝှက်အဖြစ် သုံးနေသည်",selOpt:"— ရွေးပါ —",addNew:"➕ အသစ်ထည့်ရန်…",skipHead:"ကြီးကြပ်ရေးမှူးအဆင့် ကျော်",skipHeadNote:"ကြီးကြပ်ရေးမှူး ကိုယ်တိုင်ခွင့်တင် — အဆင့်ကျော်",newVer:"စနစ်အသစ် ရှိပါပြီ",updNow:"အပ်ဒိတ်လုပ်ရန်",
 cxBtn:"ဖျက်သိမ်းရန် တောင်းဆိုမည်",cxReq:"ဖျက်သိမ်းရန် စောင့်ဆိုင်း",cxWhy:"ဖျက်သိမ်းလိုသည့် အကြောင်းရင်း",cxPrompt:"ခွင့်ဖျက်သိမ်းလိုသည့် အကြောင်းရင်း ရေးပါ",cxNeed:"အကြောင်းရင်း ရေးပါ",cxPast:"ခွင့်ရက်ကျော်လွန်ပြီးဖြစ်၍ ဖျက်သိမ်း၍မရပါ",cxSent:"ဖျက်သိမ်းရန် တောင်းဆိုပြီး — အတည်ပြုချက် စောင့်ပါ",cxAppr:"ဖျက်သိမ်းမှု အတည်ပြု",cxRej:"ဖျက်သိမ်းမှု ပယ်ချ",cxDone:"ဖျက်သိမ်းမှု အတည်ပြုပြီး — ခွင့်ရက် ပြန်ပေးပြီး",cxOk:"ဖျက်သိမ်းပြီး",cxBy:"ဖြင့်"}};
+Object.assign(L.th,{maintBtnOn:'ปิดปรับปรุงระบบ',maintBtnOff:'เปิดระบบ',maintT:'ระบบปิดปรับปรุงชั่วคราว',maintMsg:'ขออภัยในความไม่สะดวก กรุณากลับมาใช้งานใหม่ภายหลัง',
+ maintBan:'ขณะนี้ระบบปิดปรับปรุง — พนักงานและผู้อนุมัติเข้าใช้งานไม่ได้',maintAsk1:'ปิดปรับปรุงระบบ?\nพนักงานและผู้อนุมัติ (รวมถึงผู้ที่กำลังใช้งานอยู่) จะเข้าใช้งานไม่ได้ จนกว่าจะเปิดระบบอีกครั้ง',maintAsk0:'เปิดระบบให้พนักงานและผู้อนุมัติใช้งานตามปกติ?',retry:'ลองใหม่'});
+Object.assign(L.my,{maintBtnOn:'စနစ်ပြုပြင်ရန် ပိတ်မည်',maintBtnOff:'စနစ်ပြန်ဖွင့်မည်',maintT:'စနစ်ကို ယာယီပိတ်ထားပါသည်',maintMsg:'အဆင်မပြေမှုအတွက် ဝမ်းနည်းပါသည်။ နောက်မှ ပြန်လည်ကြိုးစားပါ။',
+ maintBan:'စနစ်ပြုပြင်နေသဖြင့် ဝန်ထမ်းနှင့် အတည်ပြုသူများ ဝင်၍မရပါ',maintAsk1:'စနစ်ကို ပိတ်မည်လား?',maintAsk0:'စနစ်ကို ပြန်ဖွင့်မည်လား?',retry:'ပြန်ကြိုးစားရန်'});
 let lang=localStorage.getItem('leave_lang')||'th';
 const t=k=>(L[lang][k]??L.th[k]??k);
 
@@ -418,10 +448,17 @@ function render(){
   $('#langBtn').textContent=lang==='th'?'မြန်မာ':'ไทย';
   $('#hTitle').textContent=t('app');$('#outBtn').textContent=t('logout');
   $('#outBtn').classList.toggle('hide',!S.role);
-  $('#app').innerHTML=!S.role?viewLogin():S.role==='emp'?viewEmp():S.role==='apv'?viewApv():viewAdm();
+  $('#app').innerHTML=!S.role?viewLogin():(S.role!=='adm'&&maintOn())?viewMaint():S.role==='emp'?viewEmp():S.role==='apv'?viewApv():viewAdm();
   window.scrollTo(0,0);
-  if(S.role==='emp')onType();
+  if(S.role==='emp'&&!maintOn())onType();
 }
+const maintOn=()=>!!(DB.maint&&DB.maint.on);
+function viewMaint(){return `<div class="card maintv" style="max-width:440px;margin:40px auto;text-align:center"><div style="font-size:40px">🛠️</div><h2>${t('maintT')}</h2><p class="muted">${t('maintMsg')}</p><button class="btn" onclick="maintRetry()">${t('retry')}</button></div>`;}
+async function maintFresh(){if(typeof SYNC!=='undefined'&&SYNC.on){try{const r=await sbq('app_kv?key=eq.maint&select=value');
+  if(r&&r[0]&&r[0].value){DB.maint=r[0].value;SYNC.snap.kv.maint=jh(r[0].value);try{localStorage.setItem(KEY,jh(DB));}catch(e){}}}catch(e){}}return maintOn();}
+async function maintRetry(){await maintFresh();render();}
+function toggleMaint(){const on=!maintOn();if(!confirm(t(on?'maintAsk1':'maintAsk0')))return;DB.maint={on,at:new Date().toISOString()};save();toast(t('saved'));render();}
+const maintBtn=()=>`<button class="btn sm ${maintOn()?'go':'bad'}" style="white-space:nowrap;flex:none" onclick="toggleMaint()">${maintOn()?'▶ '+t('maintBtnOff'):'⏸ '+t('maintBtnOn')}</button>`;
 function viewLogin(){
   const apvOpts=DB.approvers.map(a=>`<option value="${a.id}">${esc(a.name)}</option>`).join('');
   return `<div class="card" style="max-width:440px;margin:24px auto">
@@ -441,7 +478,7 @@ function viewLogin(){
       <p class="muted" style="margin-top:10px;text-align:center">default: admin123</p>`:''}
     <div id="li_err" class="err" style="margin-top:10px"></div></div>`;
 }
-function doLoginEmp(){const e=empById($('#li_emp').value.trim());
+async function doLoginEmp(){if(await maintFresh()){$('#li_err').textContent=t('maintT')+' — '+t('maintMsg');return;}const e=empById($('#li_emp').value.trim());
   if(!e){$('#li_err').textContent=t('notfound');return;}
   if(e.pw){const w=$('#li_emppw_wrap');
     if(w.classList.contains('hide')){w.classList.remove('hide');$('#li_emppw').focus();$('#li_err').textContent=t('needPw');return;}
@@ -458,7 +495,7 @@ function revertEmpPw(){const e=S.user;
   if($('#pw_cur').value!==(e.pw||String(e.id))){$('#pw_msg').textContent=t('pwBad');return;}
   delete e.pw;save();toast(t('pwDone'));render();}
 function resetEmpPw(id){const e=empById(id);if(!e||!confirm(t('confirm')))return;delete e.pw;save();toast(t('pwDone'));editEmp(id);}
-function doLoginApv(){const a=DB.approvers.find(x=>x.id===$('#li_apv').value);
+async function doLoginApv(){if(await maintFresh()){$('#li_err').textContent=t('maintT')+' — '+t('maintMsg');return;}const a=DB.approvers.find(x=>x.id===$('#li_apv').value);
   if(!a){$('#li_err').textContent=t('selApv');return;}
   if(a.pw!==$('#li_apvpw').value){$('#li_err').textContent=t('wrongpw');return;}S={role:'apv',user:a,tab:'pending',q:''};render();}
 function doLoginAdm(){if($('#li_admpw').value!==DB.admin.pw){$('#li_err').textContent=t('wrongpw');return;}
@@ -503,13 +540,13 @@ function viewEmp(){
       <span class="muted"> • ${t('id')} ${esc(e.id)} • ${esc(e.div||'-')} / ${esc(e.unit||'-')}</span></div>
     <span class="pill p-sh">${esc(shName(sh))} ${sh.start}–${sh.end} • ${esc(shDays(sh))}</span></div></div>
 
-  <div class="card" style="padding:10px 16px"><details class="other" id="pw_box"><summary>🔑 ${t('chgPw')}${e.pw?' ✓':''}</summary>
+  <div class="grid g2" style="align-items:start"><div class="card"><details class="other" id="pw_box"><summary>🔑 ${t('chgPw')}${e.pw?' ✓':''}</summary>
     <div class="grid g3" style="margin-top:10px">
       <div class="field"><label>${t('pwCur')}</label><input id="pw_cur" type="password" autocomplete="off"></div>
       <div class="field"><label>${t('pwNew')}</label><input id="pw_n1" type="password" autocomplete="new-password"></div>
       <div class="field"><label>${t('pwNew2')}</label><input id="pw_n2" type="password" autocomplete="new-password"></div></div>
     <div class="row"><button class="btn sm" onclick="chgEmpPw()">${t('save')}</button>${e.pw?`<button class="btn sec sm" onclick="revertEmpPw()">${t('pwRevert')}</button>`:''}<span id="pw_msg" class="err"></span></div>
-    ${e.pw?'':`<p class="muted" style="margin-top:6px">${t('pwHint')}</p>`}</details></div>
+    ${e.pw?'':`<p class="muted" style="margin-top:6px">${t('pwHint')}</p>`}</details></div>${holCard()}</div>
 
   <div class="card" id="f_rights"><h2>${t('myright')}</h2>
     <div class="qgrid">${ent.map(qcard).join('')||`<p class="muted">${t('none')}</p>`}</div>
@@ -537,7 +574,6 @@ function viewEmp(){
         <button class="btn ${sentFlag?'done':'go'}" id="f_btn" style="width:100%" onclick="submitReq()">${sentFlag?t('sending'):t('send')}</button>
       </div></div></div>
 
-  ${holCard()}
   <div class="card"><h2>${t('myhist')}</h2><div class="tblwrap"><table class="rt"><thead><tr>
     <th>${t('reqNo')}</th><th>${t('type')}</th><th>${t('holDate')}</th><th>${t('tm')}</th><th class="num">${t('dur')}</th>
     <th>${t('status')}</th><th>${t('note')}</th><th>${t('action')}</th></tr></thead>
@@ -607,7 +643,7 @@ const sickTag=(r,e)=>{const m=SICKT[r.sickDoc];if(!m)return'';e=e||empById(r.emp
 function pickType(id){const i=$('#f_type');if(!i)return;if(i.value!==id)SICK='';i.value=id;
   document.querySelectorAll('[data-t]').forEach(x=>x.classList.toggle('sel',x.dataset.t===id));
   $('#f_rights')?.classList.add('hasT');
-  onType();$('#f_banner').scrollIntoView({behavior:'smooth',block:'center'});}
+  onType();$('#f_banner').scrollIntoView({behavior:'smooth',block:'nearest'});}
 function pickSick(v){SICK=v;onType();$('#f_wrap')?.scrollIntoView({behavior:'smooth',block:'nearest'});}
 function onType(){
   const sel=$('#f_type');if(!sel)return;
@@ -805,13 +841,13 @@ function viewAdm(){
   const tabs=[['ov',t('overview')],['emps',t('emplist')],['imp',t('imp')],['types',t('types')],['hol',t('hol')],['dash','Dashboard'],['tcal','ปฏิทินการลาแผนก'],
               ['apv',t('apvmgr')],['reqs',t('allreq')],['exp',t('exp')],['sys',t('sys')]];
   const body={ov:admOverview,emps:admEmps,imp:admImport,types:admTypes,hol:admHol,dash:admDash,tcal:()=>calTeam(),apv:admApv,reqs:admReqs,exp:admExport,sys:admSys}[S.tab];
-  return `<div class="tabs" style="margin-top:10px">${tabs.map(([k,v])=>
-    `<button class="tab ${S.tab===k?'on':''}" onclick="S.tab='${k}';render()">${esc(v)}</button>`).join('')}</div>${yrBanner()}${body?body():''}`;
+  return `${maintOn()?`<div class="alert a-bad" style="margin-top:8px">🛠 <b>${t('maintBan')}</b></div>`:''}<div class="row" style="margin-top:6px;flex-wrap:nowrap;align-items:flex-start"><div class="tabs" style="flex:1;min-width:0;margin:0">${tabs.map(([k,v])=>
+    `<button class="tab ${S.tab===k?'on':''}" onclick="S.tab='${k}';render()">${esc(v)}</button>`).join('')}</div>${maintBtn()}</div>${yrBanner()}${body?body():''}`;
 }
 function admOverview(){
   const wait=DB.requests.filter(r=>r.status==='wait').length,m=today().slice(0,7);
   const appr=DB.requests.filter(r=>r.status==='appr'&&(r.at||'').slice(0,7)===m).length;
-  const byDiv={};DB.employees.forEach(e=>byDiv[e.div||'-']=(byDiv[e.div||'-']||0)+1);
+  const byDiv={};DB.employees.filter(e=>!isExec(e)).forEach(e=>byDiv[e.div||'-']=(byDiv[e.div||'-']||0)+1);
   const rows=Object.entries(byDiv).sort((a,b)=>b[1]-a[1]).map(([d,n])=>{
     const ids=new Set(DB.employees.filter(e=>(e.div||'-')===d).map(e=>String(e.id)));
     const w=DB.requests.filter(r=>ids.has(String(r.empId))&&r.status==='wait').length;
@@ -822,7 +858,7 @@ function admOverview(){
     <td data-l="${t('wdays')}">${esc(shDays(s))}</td><td data-l="${t('emp')}" class="num">${n}</td></tr>`;}).join('');
   const kb=Math.round((localStorage.getItem(KEY)||'').length/1024);
   return `<div class="grid g3">
-    <div class="card" style="margin:0"><div class="muted">${t('totalEmp')}</div><div class="qbig" style="font-size:22px">${DB.employees.length}</div></div>
+    <div class="card" style="margin:0"><div class="muted">${t('totalEmp')}</div><div class="qbig" style="font-size:22px">${DB.employees.filter(e=>!isExec(e)).length}</div></div>
     <div class="card" style="margin:0"><div class="muted">${t('totalWait')}</div><div class="qbig" style="font-size:22px;color:var(--warn)">${wait}</div></div>
     <div class="card" style="margin:0"><div class="muted">${t('totalAppr')}</div><div class="qbig" style="font-size:22px;color:var(--go)">${appr}</div></div></div>
   <div class="card"><h2>${t('shift')}</h2><div class="tblwrap"><table class="rt"><thead><tr>
@@ -830,57 +866,69 @@ function admOverview(){
     <tbody>${shRows}</tbody></table></div></div>
   <div class="card"><h2>${t('div')}</h2><div class="tblwrap"><table class="rt"><thead><tr>
     <th>${t('div')}</th><th class="num">${t('emp')}</th><th class="num">${t('totalWait')}</th></tr></thead>
-    <tbody>${rows}</tbody></table></div><p class="muted" style="margin-top:9px">${t('storage')}: ${kb} KB</p></div>`;
+    <tbody>${rows}</tbody></table></div>${storageBox()}</div>`;
 }
-function admEmps(){
-  const q=S.q.toLowerCase();
-  const list=DB.employees.filter(e=>!q||String(e.id).includes(q)||(e.name||'').toLowerCase().includes(q)||
-    (e.div||'').toLowerCase().includes(q)||(e.unit||'').toLowerCase().includes(q));
-  const rows=list.length?list.map(e=>`<tr>
-    <td data-l="${t('photo')}">${e.photo?`<img class="avatar" style="width:34px;height:34px" src="${e.photo}">`:'<div class="avatar" style="width:34px;height:34px"></div>'}</td>
-    <td data-l="${t('id')}">${esc(e.id)}</td><td data-l="${t('name')}">${esc(e.name)}${probBadge(e)}</td>
-    <td data-l="${t('div')}"><select style="min-width:130px" onchange="setOrg('${esc(e.id)}','div',this.value)">${orgOpts('div',e.div||'')}</select></td>
-    <td data-l="${t('unit')}"><select style="min-width:130px" onchange="setOrg('${esc(e.id)}','unit',this.value)">${orgOpts('unit',e.unit||'',e.div||'')}</select></td>
-    <td data-l="${t('startWork')}"><input type="date" style="min-width:140px" value="${esc(e.startDate||'')}" onchange="setStart('${esc(e.id)}',this.value)">${e.startDate?`<div class="muted">${tenureTxt(e.startDate)}</div>`:''}</td>
+let ESORT=null,ESEL=null,EQT=null;
+const EMPCOLS={id:e=>String(e.id),name:e=>e.name||'',div:e=>e.div||'',unit:e=>e.unit||'',startDate:e=>e.startDate||'',tenure:e=>e.startDate?String(30000000-parseInt(e.startDate.replace(/-/g,''))):'',shift:e=>shName(shOf(e))};
+const cmpv=(a,b)=>String(a).localeCompare(String(b),'th',{numeric:true});
+function empList(){const ws=(S.q||'').trim().toLowerCase().split(/\s+/).filter(Boolean);
+  let l=DB.employees.filter(e=>{if(!ws.length)return true;const sh=shOf(e),h=[e.id,e.name,e.div,e.unit,e.startDate,fmtD(e.startDate),tenureTxt(e.startDate),sh.th,sh.my].map(v=>String(v??'')).join(' ').toLowerCase();return ws.every(w=>h.includes(w));});
+  if(ESORT){const f=EMPCOLS[ESORT.k],d=ESORT.d;l=l.slice().sort((a,b)=>{const x=f(a),y=f(b);if(!x&&y)return 1;if(x&&!y)return -1;return d*cmpv(x,y);});}
+  return l;}
+function orgCtx(){const u={},a=new Set(),dv=new Set();DB.employees.forEach(e=>{if(e.div)dv.add(e.div);if(e.unit){a.add(e.unit);(u[e.div||'']||=new Set()).add(e.unit);}});return{dv:[...dv].sort(),u,a:[...a].sort()};}
+function ooF(kind,cur,cx,d){let v=kind==='div'?cx.dv:(d?[...(cx.u[d]||[])].sort():cx.a);if(cur&&!v.includes(cur))v=[...v,cur].sort();
+  return `<option value="">${t('selOpt')}</option>`+v.map(x=>`<option value="${esc(x)}"${x===cur?' selected':''}>${esc(x)}</option>`).join('')+`<option value="${NEWV}">${t('addNew')}</option>`;}
+function empRow(e,cx){const id=esc(e.id);
+  return `<tr data-id="${id}"${String(e.id)===ESEL?' class="sel"':''}>
+    <td data-l="${t('photo')}">${e.photo?`<img class="avatar" style="width:26px;height:26px" src="${e.photo}">`:'<div class="avatar" style="width:26px;height:26px"></div>'}</td>
+    <td data-l="${t('id')}">${id}</td><td data-l="${t('name')}">${esc(e.name)}${probBadge(e)}</td>
+    <td data-l="${t('div')}"><select style="min-width:110px" onchange="setOrg('${id}','div',this.value)">${ooF('div',e.div||'',cx)}</select></td>
+    <td data-l="${t('unit')}"><select style="min-width:110px" onchange="setOrg('${id}','unit',this.value)">${ooF('unit',e.unit||'',cx,e.div||'')}</select></td>
+    <td data-l="${t('startWork')}"><input type="date" style="width:128px" value="${esc(e.startDate||'')}" onchange="setStart('${id}',this.value)"></td>
+    <td data-l="อายุงาน" style="white-space:nowrap">${tenureTxt(e.startDate)||'-'}</td>
     <td data-l="${t('shift')}">${shiftSel(e.id,shOf(e).id,'setShift')}</td>
-    <td data-l="${t('action')}" class="act"><button class="btn sec sm" onclick="editEmp('${esc(e.id)}')">${t('edit')}</button>
-      <button class="btn bad sm" onclick="delEmp('${esc(e.id)}')">${t('del')}</button></td></tr>`).join('')
-    :`<tr><td colspan="8" class="muted">${t('none')}</td></tr>`;
-  return `<div class="card"><div class="row" style="margin-bottom:10px">
-      <input type="text" placeholder="${t('search')}" value="${esc(S.q)}" oninput="S.q=this.value;render()" style="flex:1;min-width:170px">
+    <td data-l="${t('action')}" class="act"><button class="btn sec sm" onclick="editEmp('${id}')">${t('edit')}</button> <button class="btn bad sm" onclick="delEmp('${id}')">${t('del')}</button></td></tr>`;}
+const sth=(k,l)=>`<th class="sr" onclick="empSort('${k}')" title="คลิกเพื่อเรียง น้อย→มาก / มาก→น้อย">${l}${ESORT&&ESORT.k===k?(ESORT.d>0?' ▲':' ▼'):' <span style="opacity:.3">⇅</span>'}</th>`;
+function empTblHtml(l){const cx=orgCtx();
+  return `<table class="rt"><thead><tr><th>${t('photo')}</th>${sth('id',t('id'))}${sth('name',t('name'))}${sth('div',t('div'))}${sth('unit',t('unit'))}${sth('startDate',t('startWork'))}${sth('tenure','อายุงาน')}${sth('shift',t('shift'))}<th>${t('action')}</th></tr></thead>
+    <tbody>${l.length?l.map(e=>empRow(e,cx)).join(''):`<tr><td colspan="9" class="muted">${t('none')}</td></tr>`}</tbody></table>`;}
+function empRefresh(keep){const w=$('#empTbl');if(!w)return;const st=w.scrollTop,l=empList();w.innerHTML=empTblHtml(l);$('#empCnt').textContent=l.length+' / '+DB.employees.length;if(keep)w.scrollTop=st;}
+function empSort(k){ESORT=!ESORT||ESORT.k!==k?{k,d:1}:ESORT.d===1?{k,d:-1}:null;empRefresh();}
+const empTr=id=>[...document.querySelectorAll('#empTbl tr[data-id]')].find(r=>r.dataset.id===String(id));
+function empRowRefresh(id){const e=empById(id),tr=empTr(id);if(e&&tr)tr.outerHTML=empRow(e,orgCtx());}
+function empMark(){document.querySelectorAll('#empTbl tr.sel').forEach(r=>r.classList.remove('sel'));const tr=empTr(ESEL);if(tr)tr.classList.add('sel');}
+function empScroll(){const tr=empTr(ESEL);if(tr)tr.scrollIntoView({block:'nearest'});}
+function closeEdit(){const b=$('#editBox');if(b)b.innerHTML='';}
+function admEmps(){const l=empList();
+  return `<div class="card"><div class="row" style="margin-bottom:6px">
+      <input type="text" id="empQ" autocomplete="off" placeholder="🔍 ${t('search')} — รหัส / ชื่อ / แผนก / หน่วยงาน / วันเริ่มงาน / กะ (พิมพ์หลายคำได้)" value="${esc(S.q)}" oninput="S.q=this.value;clearTimeout(EQT);EQT=setTimeout(()=>empRefresh(),120)" style="flex:1;min-width:170px">
       <button class="btn sm" onclick="addEmp()">+ ${t('addEmp')}</button></div>
-    <p class="note" style="margin-bottom:10px">${Object.values(SHIFTS).map(s=>
-      `<b>${esc(shName(s))}</b> ${s.start}–${s.end} (${s.hours} ${t('perDay')}) • ${esc(shDays(s))}`).join('<br>')}</p>
-    <div class="tblwrap"><table class="rt"><thead><tr><th>${t('photo')}</th><th>${t('id')}</th><th>${t('name')}</th>
-      <th>${t('div')}</th><th>${t('unit')}</th><th>${t('startWork')}</th><th>${t('shift')}</th><th>${t('action')}</th></tr></thead>
-      <tbody>${rows}</tbody></table></div>
-    <p class="muted" style="margin-top:8px">${list.length} / ${DB.employees.length}</p></div><div id="editBox"></div>`;
-}
+    <div class="muted" style="margin-bottom:5px">${Object.values(SHIFTS).map(s=>`<b>${esc(shName(s))}</b> ${s.start}–${s.end} (${s.hours} ${t('perDay')}) • ${esc(shDays(s))}`).join(' &nbsp;|&nbsp; ')}</div>
+    <div class="tblwrap stk" id="empTbl">${empTblHtml(l)}</div>
+    <div class="muted" id="empCnt" style="margin-top:4px">${l.length} / ${DB.employees.length}</div></div><div id="editBox"></div>`;}
 const NEWV='__new__';
 function orgOpts(kind,cur,d){let v=kind==='div'?uniq(DB.employees.map(e=>e.div)):uniq(DB.employees.filter(e=>!d||e.div===d).map(e=>e.unit));
   if(cur&&!v.includes(cur))v=[...v,cur].sort();
   return `<option value="">${t('selOpt')}</option>`+v.map(x=>`<option value="${esc(x)}"${x===cur?' selected':''}>${esc(x)}</option>`).join('')+`<option value="${NEWV}">${t('addNew')}</option>`;}
 function setOrg(id,kind,v){const e=empById(id);if(!e)return;
-  let cancel=false;if(v===NEWV){v=(prompt(t(kind))||'').trim();if(!v)cancel=true;}
-  keep(()=>{if(cancel)return;
-    if(kind==='div'){if(v!==e.div){const ok=DB.employees.some(x=>x.div===v&&x.unit===e.unit);e.div=v;if(!ok)e.unit='';}}
-    else e.unit=v;
-    save();toast(t('saved'));});}
+  if(v===NEWV){v=(prompt(t(kind))||'').trim();if(!v){empRowRefresh(id);return;}}
+  if(kind==='div'){if(v!==e.div){const ok=DB.employees.some(x=>x.div===v&&x.unit===e.unit);e.div=v;if(!ok)e.unit='';}}else e.unit=v;
+  save();toast(t('saved'));ESEL=String(id);empRowRefresh(id);empMark();}
 function eeOrg(kind,sel){
   if(sel.value===NEWV){const n=(prompt(t(kind))||'').trim();
     if(n){sel.insertBefore(new Option(n,n),sel.options[sel.options.length-1]);sel.value=n;}else sel.value=sel.dataset.prev||'';}
   sel.dataset.prev=sel.value;
   if(kind==='div'){const u=$('#ee_unit'),cu=u.value,has=DB.employees.some(x=>x.div===sel.value&&x.unit===cu);
     u.innerHTML=orgOpts('unit',has?cu:'',sel.value);u.dataset.prev=has?cu:'';}}
-function setStart(id,v){const e=empById(id);if(!e)return;keep(()=>{e.startDate=v||'';save();toast(t('saved'));});}
+function setStart(id,v){const e=empById(id);if(!e)return;e.startDate=v||'';save();toast(t('saved'));ESEL=String(id);empRowRefresh(id);empMark();}
 function setShift(id,v){const e=empById(id);if(e){e.shift=SHIFTS[v]?v:'normal';save();toast(t('saved'));}}
 function addEmp(){const id=prompt(t('empid'));if(!id)return;if(empById(id)){toast('ID ซ้ำ');return;}
   const q={};DB.types.forEach(ty=>q[ty.id]={quota:ty.def||0,used:0});
   const nid=String(id).trim();DB.employees.push({id:nid,name:prompt(t('name'))||id,div:'',unit:'',shift:'normal',photo:'',q});
-  save();toast(t('saved'));render();editEmp(nid);}
-function delEmp(id){if(!confirm(t('confirm')))return;DB.employees=DB.employees.filter(e=>String(e.id)!==String(id));save();render();}
-function editEmp(id){const e=empById(id);if(!e)return;
-  $('#editBox').innerHTML=`<div class="card"><h2>${esc(e.name)} (${esc(e.id)})</h2>
+  save();toast(t('saved'));ESEL=nid;S.q='';render();editEmp(nid);}
+function delEmp(id){if(!confirm(t('confirm')))return;DB.employees=DB.employees.filter(e=>String(e.id)!==String(id));save();empRefresh(true);}
+function editEmp(id){const e=empById(id);if(!e)return;ESEL=String(id);
+  $('#editBox').innerHTML=`<div class="modal-bg" onclick="if(event.target===this)closeEdit()"><div class="modal"><div class="card"><h2>${esc(e.name)} (${esc(e.id)})</h2>
     <div class="grid g2">
       <div class="field"><label>${t('name')}</label><input id="ee_name" value="${esc(e.name)}"></div>
       <div class="field"><label>${t('div')}</label><select id="ee_div" data-prev="${esc(e.div||'')}" onchange="eeOrg('div',this)">${orgOpts('div',e.div||'')}</select></div>
@@ -895,15 +943,14 @@ function editEmp(id){const e=empById(id);if(!e)return;
         <label style="margin-top:5px">${t('used')}</label><input type="number" step="0.5" id="u_${ty.id}" value="${r4(q.used)}"></div>`;}).join('')}</div>
     ${e.pw?`<div class="row" style="margin-top:10px"><span class="pill p-new">🔑 ${t('pwCustom')}</span><button class="btn sec sm" onclick="resetEmpPw('${esc(e.id)}')">${t('pwReset')}</button></div>`:''}
     <div class="row" style="margin-top:12px"><button class="btn" onclick="saveEmp('${esc(e.id)}')">${t('save')}</button>
-      <button class="btn sec" onclick="document.getElementById('editBox').innerHTML=''">${t('close')}</button></div></div>`;
-  $('#editBox').scrollIntoView({behavior:'smooth'});}
+      <button class="btn sec" onclick="closeEdit()">${t('close')}</button></div></div></div></div>`;empMark();}
 function saveEmp(id){const e=empById(id);if(!e)return;
   e.name=$('#ee_name').value.trim();e.div=$('#ee_div').value.trim();e.unit=$('#ee_unit').value.trim();
   e.shift=$('#ee_sh').value;e.startDate=$('#ee_start').value||'';e.q||={};
   DB.types.forEach(ty=>e.q[ty.id]={quota:+$('#q_'+ty.id).value||0,used:+$('#u_'+ty.id).value||0});
-  save();toast(t('saved'));render();}
+  save();toast(t('saved'));ESEL=String(id);closeEdit();empRefresh(true);empMark();empScroll();}
 function onePhoto(id,inp){const f=inp.files[0];if(!f)return;
-  shrink(f,180).then(d=>{const e=empById(id);if(e){e.photo=d;save();toast(t('saved'));render();editEmp(id);}});}
+  shrink(f,180).then(d=>{const e=empById(id);if(e){e.photo=d;save();toast(t('saved'));empRowRefresh(id);}});}
 
 /* ---- นำเข้า ---- */
 function admImport(){
@@ -1007,10 +1054,11 @@ function admTypes(){
     <td data-l="${t('warnMsg')}"><select onchange="DB.types[${i}].warn=this.value;save()">
       <option value=""${ty.warn?'':' selected'}>—</option>
       <option value="deduct"${ty.warn==='deduct'?' selected':''}>${t('deduct')}</option></select></td>
+    <td data-l="ไม่นับ KPI"><input type="checkbox" style="width:20px;height:20px" ${kpiSkip(ty)?'checked':''} onchange="DB.types[${i}].noKpi=this.checked;save()"></td>
     <td data-l="${t('action')}" class="act"><button class="btn bad sm" onclick="delType(${i})">${t('del')}</button></td></tr>`).join('');
   return `<div class="card"><h2>${t('types')}</h2>
     <div class="tblwrap"><table class="rt"><thead><tr><th>${t('nameTh')}</th><th>${t('nameMy')}</th><th>${t('defQ')}</th>
-      <th>${t('allowOver')}</th><th>${t('hideQ')}</th><th>${t('warnMsg')}</th><th>${t('action')}</th></tr></thead>
+      <th>${t('allowOver')}</th><th>${t('hideQ')}</th><th>${t('warnMsg')}</th><th>ไม่นับ KPI</th><th>${t('action')}</th></tr></thead>
       <tbody>${rows}</tbody></table></div><hr>
     <div class="grid g3">
       <div class="field"><label>${t('nameTh')}</label><input id="nt_th"></div>
@@ -1054,10 +1102,12 @@ function tcNav(d){TCAL.m+=d;if(TCAL.m<0){TCAL.m=11;TCAL.y--;}if(TCAL.m>11){TCAL.
 function setT(k,v){keep(()=>{TCAL[k]=v;if(k==='div')TCAL.unit='';});}
 
 /* ---- Dashboard + KPI ---- */
+const isExec=e=>[e.div,e.unit].some(x=>String(x||'').includes('ผู้บริหาร'));
+const kpiSkip=ty=>ty.noKpi!==undefined?!!ty.noKpi:['พักร้อน','ลากิจ'].includes(String(ty.th||'').trim());
 let DASH=null;
 function admDash(){DB.kpi||={all:'',types:{}};DASH||={d1:new Date().getFullYear()+'-01-01',d2:today(),div:'',unit:''};
-  const f=DASH,emps=DB.employees.filter(e=>(!f.div||e.div===f.div)&&(!f.unit||e.unit===f.unit)),ids=new Set(emps.map(e=>String(e.id)));
-  const divs=[...new Set(DB.employees.map(e=>e.div).filter(Boolean))].sort(),units=[...new Set(DB.employees.filter(e=>!f.div||e.div===f.div).map(e=>e.unit).filter(Boolean))].sort();
+  const f=DASH,emps=DB.employees.filter(e=>!isExec(e)&&(!f.div||e.div===f.div)&&(!f.unit||e.unit===f.unit)),ids=new Set(emps.map(e=>String(e.id)));
+  const divs=[...new Set(DB.employees.filter(e=>!isExec(e)).map(e=>e.div).filter(Boolean))].sort(),units=[...new Set(DB.employees.filter(e=>!isExec(e)&&(!f.div||e.div===f.div)).map(e=>e.unit).filter(Boolean))].sort();
   let S0=0;const sD={},sU={};
   emps.forEach(e=>{const sh=shOf(e),dm=dayMin(sh),c=new Date(f.d1+'T00:00:00');let m=0;
     for(let g=0;g<800;g++){const k=iso(c);if(k>f.d2)break;if(isWorkDay(k,sh))m+=dm;c.setDate(c.getDate()+1);}
@@ -1065,8 +1115,8 @@ function admDash(){DB.kpi||={all:'',types:{}};DASH||={d1:new Date().getFullYear(
   const A=()=>({d:0,m:0}),bT={},bD={},bU={},bM={},T=A(),who=new Set();let cnt=0;
   const add=(o,k,x)=>{o[k]=o[k]||A();o[k].d+=x.d;o[k].m+=x.m;};
   DB.requests.forEach(r=>{if(r.status!=='appr'||!ids.has(String(r.empId))||r.from<f.d1||r.from>f.d2)return;
-    const e=empById(r.empId)||{},x={d:+r.days||0,m:reqMins(r)};cnt++;T.d+=x.d;T.m+=x.m;who.add(String(r.empId));
-    add(bT,r.typeId,x);add(bD,e.div||'-',x);add(bU,e.unit||'-',x);const mk=r.from.slice(0,7);bM[mk]=bM[mk]||{};bM[mk][r.typeId]=(bM[mk][r.typeId]||0)+x.d;});
+    const e=empById(r.empId)||{},x={d:+r.days||0,m:reqMins(r)};add(bT,r.typeId,x);if(kpiSkip(typeById(r.typeId)||{}))return;cnt++;T.d+=x.d;T.m+=x.m;who.add(String(r.empId));
+    add(bD,e.div||'-',x);add(bU,e.unit||'-',x);const mk=r.from.slice(0,7);bM[mk]=bM[mk]||{};bM[mk][r.typeId]=(bM[mk][r.typeId]||0)+x.d;});
   const pc=(m,s)=>s?m/s*100:0,kall=DB.kpi.all===''?null:+DB.kpi.all;
   const stt=(p,k)=>k==null||isNaN(k)?['','#8a7a66','ไม่ได้ตั้ง KPI']:p>k?['bad','#B5532F','เกิน KPI']:p>=k*.8?['warn','#C58B1E','ใกล้เกิน KPI']:['ok','#3E7B4F','ผ่าน KPI'];
   const bar=(l,v,mx,c,tx)=>`<div class="dbar"><span title="${esc(l)}">${esc(l)}</span><div><div style="width:${mx?v/mx*100:0}%;background:${c}"></div></div><b>${tx}</b></div>`;
@@ -1077,7 +1127,7 @@ function admDash(){DB.kpi||={all:'',types:{}};DASH||={d1:new Date().getFullYear(
   const mchart=mks.length?`<div style="display:flex;gap:6px;align-items:flex-end;height:170px">${mks.map(k=>{const tot=Object.values(bM[k]).reduce((a,b)=>a+b,0);
     return `<div class="mcol"><span>${tot.toFixed(1)}</span>${tys.filter(ty=>bM[k][ty.id]).map(ty=>`<div title="${esc(tname(ty))}: ${bM[k][ty.id].toFixed(1)}" style="width:70%;height:${bM[k][ty.id]/mxM*130}px;background:${tc(ty)}"></div>`).join('')}<span>${MONTHS[+k.slice(5)-1].slice(0,4)}</span></div>`;}).join('')}</div>
     <div class="cal-lg">${tys.map(ty=>`<span><i style="background:${tc(ty)}"></i>${esc(tname(ty))}</span>`).join('')}</div>`:'<p class="muted">ไม่มีข้อมูล</p>';
-  const kRows=tys.map(ty=>{const x=bT[ty.id]||A(),p=pc(x.m,S0),k=DB.kpi.types[ty.id],kk=k===''||k==null?null:+k,st=stt(p,kk);
+  const kRows=tys.map(ty=>{const x=bT[ty.id]||A(),p=pc(x.m,S0),k=DB.kpi.types[ty.id],kk=k===''||k==null?null:+k,sk=kpiSkip(ty),st=sk?['','#8a7a66','ไม่นับ KPI']:stt(p,kk);
     return `<tr><td><i style="display:inline-block;width:12px;height:12px;border-radius:3px;background:${tc(ty)};margin-right:6px"></i>${esc(tname(ty))}</td><td class="num">${x.d.toFixed(1)}</td><td class="num">${p.toFixed(2)}%</td>
       <td><input type="number" min="0" step="0.1" style="width:90px" value="${k??''}" onchange="setKpi('${ty.id}',this.value)"> %</td><td style="color:${st[1]};font-weight:700">${st[2]}</td></tr>`;}).join('');
   return `<div class="card"><h2>Dashboard การลา</h2><div class="grid g3">
@@ -1165,7 +1215,7 @@ function admApv(){
     <td data-l="${t('action')}" class="act"><button class="btn bad sm" onclick="delApv(${i})">${t('del')}</button></td></tr>`).join('')
     ||`<tr><td colspan="6" class="muted">${t('none')}</td></tr>`;
   return `<div class="card"><h2>${t('apvmgr')}</h2>
-    <div class="tblwrap"><table class="rt"><thead><tr><th>${t('name')}</th><th>${t('lvl')}</th><th>${t('pwd')}</th>
+    <div class="tblwrap stk"><table class="rt"><thead><tr><th>${t('name')}</th><th>${t('lvl')}</th><th>${t('pwd')}</th>
       <th>${t('scope')}</th><th>${t('lineId')}</th><th>${t('action')}</th></tr></thead><tbody>${rows}</tbody></table></div><hr>
     <div class="grid g2">
       <div class="field"><label>${t('name')}</label><select id="na_name"><option value="">—</option>${empOpts}</select></div>
@@ -1442,10 +1492,23 @@ function admSys(){const kb=Math.round((localStorage.getItem(KEY)||'').length/102
     <p class="muted">ให้สิทธิ์เพิ่มรายบุคคล: แท็บ "พนักงาน" (แก้สิทธิ์) หรือแท็บ "นำเข้า" (ไฟล์ Excel คอลัมน์ Quota/Used)</p>
     <button class="btn bad" onclick="newYear()">เริ่มปีสิทธิ์ใหม่</button></div>
   ${delPeriodCard()}
-  <div class="card"><h2>${t('sys')}</h2><p class="note">${t('wipeWarn')} — ${t('storage')}: ${kb} KB</p>
+  <div class="card"><h2>${t('sys')}</h2><p class="note">${t('wipeWarn')}</p>${storageBox()}<div class="row" style="margin:8px 0"><button class="btn sec sm" onclick="cleanOther()">🧹 ล้างข้อมูลแอปอื่นที่ค้างในเครื่องนี้ (สำรองไฟล์ให้ก่อน)</button></div>
     <div class="row"><button class="btn sec" onclick="wipe('req')">${t('wipeReq')}</button>
       <button class="btn sec" onclick="wipe('emp')">${t('wipeEmp')}</button>
       <button class="btn bad" onclick="wipe('all')">${t('wipeAll')}</button></div></div>`;}
+function storageBox(){let u=0;const ks=[];try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i),n=k.length+(localStorage.getItem(k)||'').length;u+=n;ks.push([k,n]);}}catch(e){}
+  const mine=(ks.find(x=>x[0]===KEY)||[0,0])[1],other=ks.filter(x=>x[0]!==KEY).sort((a,b)=>b[1]-a[1]);
+  const T=5*1024*1024,p=Math.min(100,u/T*100),c=p>=90?'#C62828':p>=70?'#C58B1E':'#3E7B4F',f=x=>Math.round(x/1024).toLocaleString('en-US')+' KB';
+  return `<div style="margin-top:8px"><div class="muted">ข้อมูลระบบลางาน: <b>${f(mine)}</b> • ข้อมูลอื่นในโดเมนเดียวกัน: <b>${f(u-mine)}</b>${other.length?' ('+other.slice(0,4).map(x=>esc(x[0].slice(0,28))+' '+f(x[1])).join(', ')+')':''}</div>
+    <div class="muted">${t('storage')} รวมทั้งโดเมน: ใช้ <b>${f(u)}</b> จากทั้งหมด ~<b>${f(T)}</b> • คงเหลือ <b style="color:${c}">${f(Math.max(0,T-u))}</b> (${(100-p).toFixed(1)}%)${p>=70?' ⚠ ใกล้เต็ม ควรลบรูป/ใบลาเก่าหรือสำรองข้อมูล':''}</div>
+    <div class="bar"><i style="width:${p}%;background:${c}"></i></div><div class="muted" style="font-size:11.5px">* ค่าประมาณ — เบราว์เซอร์ส่วนใหญ่จำกัด localStorage ที่ราว 5 MB ข้อมูลบน Supabase แยกต่างหาก</div></div>`;}
+const isMineKey=k=>k===KEY||/^leave/i.test(k);
+function cleanOther(){const o={};let n=0;
+  for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(isMineKey(k))continue;const v=localStorage.getItem(k)||'';o[k]=v;n+=k.length+v.length;}
+  const ks=Object.keys(o);if(!ks.length){toast('ไม่มีข้อมูลแอปอื่นค้างในเครื่องนี้');return;}
+  dl(new Blob([JSON.stringify(o)],{type:'application/json'}),`Other_LocalStorage_Backup_${stamp()}.json`);
+  if(!confirm(`ดาวน์โหลดไฟล์สำรองแล้ว (ตรวจว่าไฟล์ลงเครื่องก่อนกดตกลง)\n\nจะลบข้อมูลแอปอื่นที่ค้างในเครื่องนี้ ${ks.length} รายการ (${Math.round(n/1024).toLocaleString('en-US')} KB):\n${ks.map(k=>'• '+k).join('\n')}\n\nไม่แตะข้อมูลระบบลางาน และไม่แตะข้อมูลบน Supabase`))return;
+  ks.forEach(k=>localStorage.removeItem(k));toast('ลบแล้ว '+ks.length+' รายการ');render();}
 function yrBanner(){const y=new Date().getFullYear();if(DB.quotaYear>=y)return '';
   return `<div class="alert a-warn" style="margin-top:10px">ปีสิทธิ์ยังเป็น <b>${DB.quotaYear}</b> แต่ตอนนี้ปี ${y} แล้ว — สิทธิ์การลายังไม่เริ่มใหม่ <button class="btn sm" onclick="S.tab='sys';render()">ไปที่ตั้งค่าระบบ</button></div>`;}
 function newYear(){const y=+$('#ny_y').value,m=$('#ny_m').value;
@@ -1496,7 +1559,7 @@ function wipe(w){if(!confirm(t('wipeWarn')+'\n\n'+t('confirm')))return;
    พนักงานและใบลาซิงค์ทีละแถว (หลายคนใช้พร้อมกันไม่ทับกัน), ไม่ลบข้อมูลคลาวด์เองนอกจากผู้ใช้สั่งลบ
    ============================================================ */
 const SB={url:'https://ipteomoqgzakztgxpslr.supabase.co',key:'sb_publishable_VR7RNP0FGCcfJsEBFLbEIg_AVDLWVgi'};
-const KVK=['types','approvers','admin','holidays','kpi','quotaYear','yearLog','flows','line'];
+const KVK=['types','approvers','admin','holidays','kpi','quotaYear','yearLog','flows','line','maint'];
 const SYNC={on:false,busy:false,again:false,tm:null,snap:{emp:{},req:{},kv:{}}};
 const jh=o=>JSON.stringify(o);
 async function sbq(path,opt={}){const r=await fetch(SB.url+'/rest/v1/'+path,{...opt,headers:{apikey:SB.key,'Content-Type':'application/json',...(opt.headers||{})}});
@@ -1538,6 +1601,7 @@ async function syncPush(){if(!SYNC.on)return;if(SYNC.busy){SYNC.again=true;retur
 async function syncTick(){if(!SYNC.on||SYNC.busy)return;if(dirty(syncDiff())){syncPush();return;}
   try{const R=await syncPull();if(dirty(syncDiff()))return;if(jh(snapFrom(R))===jh(SYNC.snap)){sbStat('☁ ซิงค์แล้ว','#3E7B4F');return;}
     syncApply(R);try{localStorage.setItem(KEY,jh(DB));}catch(e){}
+    if(S.role&&S.role!=='adm'&&(maintOn()||$('#app .maintv')))render();
     const a=document.activeElement;if(S.role&&S.role!=='emp'&&!$('#er_f')&&!(a&&/INPUT|SELECT|TEXTAREA/.test(a.tagName))){const y=scrollY;render();scrollTo(0,y);}
     sbStat('☁ อัปเดตจากคลาวด์แล้ว','#3E7B4F');}catch(e){sbStat('☁ ออฟไลน์','#B5532F');}}
 async function syncInit(){sbStat('☁ กำลังเชื่อมต่อ Supabase…');
@@ -1555,7 +1619,7 @@ async function syncInit(){sbStat('☁ กำลังเชื่อมต่อ
 
 document.documentElement.lang=lang;
 /* ---- ตรวจเวอร์ชันใหม่อัตโนมัติ (เปลี่ยนเลขนี้ทุกครั้งที่ deploy ไฟล์ใหม่) ---- */
-const APP_VERSION='2026-10-16.2';
+const APP_VERSION='2026-10-20.5';
 (function updWatch(){
   const tag=document.createElement('div');tag.textContent='v'+APP_VERSION;
   tag.style.cssText='position:fixed;right:8px;bottom:3px;font-size:11px;opacity:.45;pointer-events:none;z-index:5';document.body.appendChild(tag);
