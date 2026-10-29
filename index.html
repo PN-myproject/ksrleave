@@ -1958,10 +1958,13 @@ viewLogin=function(){return _viewLogin0().replace(/(<input id="(li_apvpw|li_admp
 /* ---------- 6) โหมดทดสอบ (แยกข้อมูลจากระบบจริง ไม่ซิงค์ Supabase ไม่ส่ง LINE มีเวลาหมดอายุแล้วล้างเอง) ---------- */
 const TMETA='leaveapp_test_meta',TKEY='leaveapp_test_v1';
 const testMeta=()=>{try{return JSON.parse(localStorage.getItem(TMETA)||'null');}catch(e){return null;}};
-if(TESTMODE){document.body.classList.add('testmode');if(!testMeta())localStorage.setItem(TMETA,JSON.stringify({exp:Date.now()+3*864e5}));
-  window.lineOn=()=>false;if(window.__testExpired)setTimeout(()=>toast('หมดเวลาทดสอบ — ล้างข้อมูลทดสอบแล้ว'),600);}
-function testStart(){const d=+($('#ts_d')||{}).value||3;localStorage.setItem(TMETA,JSON.stringify({exp:Date.now()+d*864e5}));location.href=location.pathname+'?test=1';}
-function testClear(){if(!confirm('ล้างข้อมูลทดสอบทั้งหมด? (ไม่กระทบระบบจริง)'))return;localStorage.removeItem(TKEY);localStorage.removeItem(TMETA);if(TESTMODE)location.href=location.pathname+'?test=1';else{toast('ล้างข้อมูลทดสอบแล้ว');render();}}
+if(TESTMODE){document.body.classList.add('testmode');
+  window.lineOn=()=>false;}
+function testStart(){const d=+($('#ts_d')||{}).value||3;
+  if(!localStorage.getItem(TKEY)){const cp=x=>JSON.parse(JSON.stringify(x)),n=freshDB();n.employees=DB.employees.map(e=>{const c=cp(e);delete c.photo;delete c.pw;return c;});n.approvers=DB.approvers.map(a=>({...cp(a),lineId:''}));n.types=cp(DB.types);n.holidays=cp(DB.holidays);n.flows=cp(DB.flows);n.admin=cp(DB.admin);n.line={on:false,url:''};
+    try{localStorage.setItem(TKEY,JSON.stringify(n));}catch(e){}}
+  localStorage.setItem(TMETA,JSON.stringify({exp:Date.now()+d*864e5}));location.href=location.pathname+'?test=1';}
+function testClear(){if(!confirm('ล้างข้อมูลทดสอบทั้งหมด? (ไม่กระทบระบบจริง)'))return;localStorage.removeItem(TKEY);localStorage.removeItem(TMETA);if(TESTMODE)render();else{toast('ล้างข้อมูลทดสอบแล้ว');render();}}
 function testExit(){location.href=location.pathname;}
 function testExtend(){const m=testMeta()||{exp:Date.now()};m.exp=Math.max(m.exp,Date.now())+864e5;localStorage.setItem(TMETA,JSON.stringify(m));render();}
 function testCopy(){let o=null;try{o=JSON.parse(localStorage.getItem('leaveapp_db_v2')||'null');}catch(e){}
@@ -1969,13 +1972,14 @@ function testCopy(){let o=null;try{o=JSON.parse(localStorage.getItem('leaveapp_d
   if(!confirm('คัดลอกพนักงาน ผู้อนุมัติ ประเภทลา วันหยุด จากระบบจริงมาทดสอบ? (อ่านอย่างเดียว ไม่แก้ระบบจริง • ไม่คัดลอกรูปภาพ/ใบลา/LINE ID)'))return;
   const cp=x=>JSON.parse(JSON.stringify(x));DB.employees=o.employees.map(e=>{const c=cp(e);delete c.photo;delete c.pw;return c;});
   DB.approvers=(o.approvers||[]).map(a=>({...cp(a),lineId:''}));if(o.types&&o.types.length)DB.types=cp(o.types);if(o.holidays)DB.holidays=cp(o.holidays);if(o.flows)DB.flows=cp(o.flows);
-  DB.requests=[];DB.seq=1;DB.mand=[];DB.line={on:false,url:''};save();toast('คัดลอกแล้ว');render();}
+  if(o.admin)DB.admin=cp(o.admin);DB.requests=[];DB.seq=1;DB.mand=[];DB.line={on:false,url:''};save();toast('คัดลอกแล้ว');render();}
 function testLeft(){const m=testMeta();if(!m)return'';const ms=m.exp-Date.now(),d=Math.floor(ms/864e5),h=Math.floor(ms%864e5/36e5),mi=Math.floor(ms%36e5/6e4);return `หมดอายุ ${fmtDT(new Date(m.exp).toISOString())} (เหลือ ${d} วัน ${h} ชม. ${mi} นาที)`;}
 const _render0=render;
-render=function(){_render0();if(!TESTMODE)return;const a=$('#app');if(!a)return;$('#hTitle').textContent+=' (ทดสอบ)';
-  a.insertAdjacentHTML('afterbegin',`<div class="tbanner">🧪 <b>โหมดทดสอบ</b> — ข้อมูลแยกจากระบบจริง ไม่ซิงค์ ไม่ส่ง LINE • รหัสผู้ดูแลเริ่มต้น admin123<br><span>${testLeft()}</span>
-   <div class="row" style="margin-top:6px"><button class="btn sec sm" onclick="testCopy()">คัดลอกรายชื่อจากระบบจริง</button><button class="btn sec sm" onclick="testExtend()">+1 วัน</button><button class="btn sec sm" onclick="testClear()">🗑 ล้างข้อมูลทดสอบ</button><button class="btn sm" onclick="testExit()">↩ กลับระบบจริง</button></div></div>`);};
-setInterval(()=>{const m=testMeta();if(m&&m.exp&&Date.now()>m.exp){localStorage.removeItem(TKEY);localStorage.removeItem(TMETA);if(TESTMODE)location.href=location.pathname;}},30000);
+render=function(){if(TESTMODE&&!testMeta()){const a=$('#app');if(a)a.innerHTML=`<div class="card" style="text-align:center;margin-top:30px"><h2>🧪 ระบบทดสอบปิดอยู่</h2><p>หมดเวลาทดสอบหรือยังไม่ได้เปิด ข้อมูลทดสอบถูกล้างแล้ว</p><p class="muted">หากต้องการทดสอบอีกครั้ง ให้ผู้ดูแลระบบเปิดจากระบบจริง</p></div>`;return;}
+  _render0();if(!TESTMODE)return;const a=$('#app');if(!a)return;$('#hTitle').textContent+=' (ทดสอบ)';const adm=S.role==='adm';
+  a.insertAdjacentHTML('afterbegin',`<div class="tbanner">🧪 <b>โหมดทดสอบ</b> — ข้อมูลแยกจากระบบจริง ไม่ซิงค์ ไม่ส่ง LINE<br><span>${testLeft()}</span>${adm?`
+   <div class="row" style="margin-top:6px"><button class="btn sec sm" onclick="testCopy()">คัดลอกรายชื่อจากระบบจริง</button><button class="btn sec sm" onclick="testExtend()">+1 วัน</button><button class="btn sec sm" onclick="testClear()">🗑 ล้างข้อมูลทดสอบ</button><button class="btn sm" onclick="testExit()">↩ กลับระบบจริง</button></div>`:''}</div>`);};
+setInterval(()=>{const m=testMeta();if(m&&m.exp&&Date.now()>m.exp){localStorage.removeItem(TKEY);localStorage.removeItem(TMETA);if(TESTMODE)render();}},30000);
 const _admSys0=admSys;
 admSys=function(){const m=testMeta(),kb=Math.round((localStorage.getItem(TKEY)||'').length/1024);
   const card=TESTMODE?'':`<div class="card"><h2>🧪 ระบบทดสอบก่อนใช้งานจริง</h2><p class="note">เปิดหน้าทดสอบที่แยกข้อมูลจากระบบจริงโดยสิ้นเชิง (ที่เก็บคนละชุด • ไม่ซิงค์ Supabase • ไม่ส่ง LINE) ครบเวลาแล้วระบบ<b>ล้างข้อมูลทดสอบให้เอง</b>เพื่อไม่กินหน่วยความจำ</p>
