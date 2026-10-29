@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<meta name="theme-color" content="#6F4E37">
+<meta name="theme-color" content="#5A3A24">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="ลางาน">
@@ -200,6 +200,39 @@ table.rt tr.sel td{background:#FFF3D6}
 .pflist{max-height:320px;overflow:auto;border:1px solid var(--line);border-radius:10px;padding:4px 10px;margin:8px 0;background:#fff}
 .pfrow{display:flex;gap:8px;align-items:center;padding:5px 0;border-bottom:1px dashed var(--line);cursor:pointer;margin:0;font-weight:400}
 .pfrow input{width:18px;height:18px;flex:none}
+/* ===== v2026-10-29 : ความคมชัด / มือถือ / แป้นตัวเลข / โหมดทดสอบ ===== */
+:root{--bg:#EDE0CD;--card:#FFFFFF;--line:#C4AA88;--beige-d:#A88C68;--txt:#1A110A;--muted:#46362A;--mocha:#5A3A24;--mocha-d:#3A2314}
+body{color:var(--txt);font-size:15px;font-weight:500;line-height:1.5}
+h1,h2,h3{color:#24160B;font-weight:700;font-size:17px}
+label{color:#2E2016;font-size:14px;font-weight:600}
+.muted,.note,.alert{color:#2E2016}.muted{font-size:13.5px}
+.card{border:1.5px solid var(--line);box-shadow:0 2px 8px rgba(60,35,15,.14)}
+input[type=text],input[type=number],input[type=date],input[type=password],input[type=time],select,textarea{border:1.5px solid #8C7152;color:#1A110A;font-size:15px;font-weight:500}
+th{background:#DCC9AC;color:#24160B;font-weight:700}td{color:#1A110A}
+.hbar .logo{font-weight:800}.hbtn{border-color:rgba(255,255,255,.6);font-weight:600}
+.btn{font-weight:700}.btn.sec{background:#E3D2B6;color:#2E1B0E;border:1.5px solid #A88C68}
+.tab{background:#E3D2B6;color:#2E1B0E;border:1.5px solid #A88C68;font-weight:600}.tab.on{background:var(--mocha);color:#fff}
+.pill{font-weight:700}.p-wait{color:#6B4A0A}.p-ok{color:#1B5E36}.p-no{color:#7A2616}.p-sh{color:#24465F}
+.cd{color:#1A110A;font-weight:600;background:#F1E6D4}.cd.off{color:#5E5140}.cd.hol{color:#7A1F16}.cd.lv{color:#143A57}
+.cal-g>div[style]{color:#2E2016!important;font-weight:700}.cal-lg{color:#2E2016;font-size:13px}
+.qcard .muted{color:#3A2C20}.tyban{font-size:16px}
+.kp{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:2px 0 12px}
+.kp button{font:inherit;font-size:22px;font-weight:700;min-height:54px;border-radius:12px;border:1.5px solid #8C7152;background:#F6ECDC;color:#24160B;cursor:pointer}
+.kp button:active{background:#D9C3A0}.kp button.k2{font-size:16px;background:#E3D2B6}
+body.testmode header{background:#B3261E}
+.tbanner{background:#FFF1C9;border:2px solid #B3261E;color:#5B1410;border-radius:12px;padding:10px 12px;margin:8px 0;font-size:14px}
+.tbanner span{font-weight:700}
+@media(max-width:760px){
+  body{font-size:16px}
+  .reqgrid,.two,.r3{grid-template-columns:1fr!important}
+  .reqgrid>div{min-width:0}
+  #f_wrap select,#f_wrap input{min-height:50px;font-size:18px!important}
+  #f_wrap input[type=time]{width:100%;min-width:0;font-size:22px!important;font-weight:700;letter-spacing:1px}
+  #f_wrap label{font-size:15px}
+  #f_cust{grid-template-columns:repeat(3,1fr)!important}
+  .cd{padding:11px 0;font-size:16px}
+  .btn{min-height:48px;font-size:16px}.tab{font-size:15px;padding:8px 12px}
+}
 </style>
 </head>
 <body>
@@ -375,7 +408,9 @@ function planLeave(a,total,s,o0=0){const dm=dayMin(s),cur=new Date(a+'T00:00:00'
 /* ============================================================
    3) ฐานข้อมูล
    ============================================================ */
-const KEY='leaveapp_db_v2';
+const TESTMODE=/[?&]test=1/.test(location.search);
+(function(){try{const m=JSON.parse(localStorage.getItem('leaveapp_test_meta')||'null');if(m&&m.exp&&Date.now()>m.exp){localStorage.removeItem('leaveapp_test_v1');localStorage.removeItem('leaveapp_test_meta');window.__testExpired=1;}}catch(e){}})();
+const KEY=TESTMODE?'leaveapp_test_v1':'leaveapp_db_v2';
 const DEFAULT_TYPES=[
  {id:'annual',  th:'พักร้อน',          my:'နှစ်ပတ်လည်ခွင့်',       def:6,allowOver:false,hideQ:false,warn:''},
  {id:'sick',    th:'ลาป่วย',           my:'ဖျားနာခွင့်',           def:30,allowOver:true,hideQ:true,warn:''},
@@ -462,7 +497,7 @@ const maintOn=()=>!!(DB.maint&&DB.maint.on);
 /* ปิดปรับปรุง: พนักงาน/ผู้อนุมัติ เข้าระบบดูข้อมูลได้ แต่ทำรายการไม่ได้ (ผู้ดูแลระบบใช้งานได้ปกติ) */
 const roMode=()=>!!S.role&&S.role!=='adm'&&maintOn();
 let SHOWN_RO=false;
-const RO_RE=/submitReq|cancelReq|reqCancel|decide\(|chgEmpPw|revertEmpPw|pickType|pickSick/;
+const RO_RE=/submitReq|cancelReq|reqCancel|decide\(|chgEmpPw|revertEmpPw|pickType|pickSick|approveAll/;
 function applyRO(){SHOWN_RO=roMode();if(!SHOWN_RO)return;const app=$('#app');if(!app)return;
   app.querySelectorAll('[onclick]').forEach(x=>{if(RO_RE.test(x.getAttribute('onclick')||''))x.classList.add('ro-off');});
   app.querySelectorAll('#f_wrap input,#f_wrap select,#f_wrap button,#f_btn,#pw_box input').forEach(x=>{x.disabled=true;});
@@ -574,7 +609,7 @@ function viewEmp(){
         <div id="f_alert"></div>
         <div class="r3">
           <div class="field"><label>${t('startFrom')}</label><select id="f_sm" onchange="calcLeave()"><option value="am">${t('smAm')}</option><option value="pm">${t('smPm')}</option><option value="t">${t('smT')}</option></select></div>
-          <div class="field"><label>${t('tFrom')}</label><input id="f_st" type="time" step="300" value="${sh.start}" oninput="calcLeave()"></div>
+          <div class="field"><label>${t('tFrom')}</label><input id="f_st" type="time" step="300" value="${sh.start}" oninput="$('#f_sm').value='t';calcLeave()"></div>
           <div class="field"><label>${t('dur')} <span class="muted">(1 ${t('day')}=${sh.hours} ${t('hrs')})</span></label><select id="f_dur" onchange="calcLeave()">${durOpts()}</select></div></div>
         <div id="f_cust" style="display:none;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:6px">
           <div><input id="f_d" type="number" inputmode="numeric" min="0" step="1" value="0" oninput="calcLeave()"><div class="muted">${t('nDays')}</div></div>
@@ -684,7 +719,7 @@ function onType(){
 }
 function calcLeave(){
   const e=S.user,sh=shOf(e),off=$('#f_off'),a=$('#f_from')?.value;if(!off||!a)return null;
-  $('#f_cust').style.display=$('#f_dur').value==='c'?'grid':'none';$('#f_st').disabled=$('#f_sm').value!=='t';
+  $('#f_cust').style.display=$('#f_dur').value==='c'?'grid':'none';$('#f_st').disabled=false;
   {const sm=$('#f_sm').value;if(sm!=='t')$('#f_st').value=sm==='pm'?clk(sh,preOf(sh),true):sh.start;}
   const total=readDur(),dm=dayMin(sh);
   if(!isWorkDay(a,sh)){off.innerHTML=`<div class="alert a-warn">${t('startOff')}${holOf(a)?' — '+esc(holOf(a).th):''}</div>`;return null;}
@@ -764,7 +799,7 @@ const isSelfApv=(a,e)=>a.empId?String(a.empId)===String(e.id):(!!a.name&&a.name=
 const selfHead=e=>DB.approvers.some(a=>lvlOf(a)==='head'&&isSelfApv(a,e)); /* ผู้ยื่นเป็นหัวหน้า(ผู้อนุมัติ)เอง */
 const apvChain=r=>[r.skipHead?t('skipHead'):r.headBy,r.by].filter(Boolean).join(' → ');
 /* ---- แจ้งเตือน LINE (ผ่านฟังก์ชันตัวกลางบน Supabase) ---- */
-const lineOn=()=>!!(DB.line&&DB.line.on&&/^https?:\/\//.test(DB.line.url||''));
+const lineOn=()=>!TESTMODE&&!!(DB.line&&DB.line.on&&/^https?:\/\//.test(DB.line.url||''));
 function lineSend(ids,text){ids=[...new Set((ids||[]).filter(Boolean))];if(!lineOn()||!ids.length)return Promise.resolve(null);
   return fetch(DB.line.url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to:ids,text})})
     .then(r=>r.json().catch(()=>({}))).catch(err=>{console.warn('LINE',err);return null;});}
@@ -819,7 +854,7 @@ function viewApv0(){
       <span class="pill ${waiting.length?'p-urgent':'p-clear'}">${t('totalWait')} ${waiting.length}</span></div></div>
   <div class="tabs">${[['pending',t('pending')],['team',t('team')],['all',t('allreq')],['exp',t('exp')]]
     .map(([k,v])=>`<button class="tab ${S.tab===k?'on':''}${k==='pending'?(waiting.length?' t-urgent':' t-clear'):''}" onclick="S.tab='${k}';render()">${esc(v)}${k==='pending'?' ('+waiting.length+')':''}</button>`).join('')}</div>
-  ${S.tab==='pending'?`<div class="card"><h2>${t('pending')}</h2><div class="tblwrap"><table class="rt"><thead><tr>
+  ${S.tab==='pending'?`<div class="card"><div class="row"><h2 class="sp" style="margin:0">${t('pending')}</h2>${waiting.length?`<label class="row" style="margin:0;gap:6px;cursor:pointer;font-weight:700"><input type="checkbox" id="aa_chk" style="width:24px;height:24px" onchange="$('#aa_btn').disabled=!this.checked">ติ๊กเพื่อเปิดใช้ปุ่ม</label><button class="btn go" id="aa_btn" disabled onclick="approveAll()">✅ อนุมัติทั้งหมด (${waiting.length})</button>`:''}</div><div class="tblwrap" style="margin-top:8px"><table class="rt"><thead><tr>
     <th>${t('reqNo')}</th><th>${t('photo')}</th><th>${t('empid')}</th><th>${t('reqBy')}</th><th>${t('type')}</th><th>${t('holDate')}</th><th>${t('tm')}</th>
     <th class="num">${t('dur')}</th><th class="num">${t('avail')}</th><th>${t('reason')}</th><th>${t('action')}</th>
     </tr></thead><tbody>${waitRows}</tbody></table></div></div>`:''}
@@ -851,8 +886,8 @@ function decide(id,st){const r=DB.requests.find(x=>x.id===id);if(!r)return;
    ============================================================ */
 function viewAdm(){
   const tabs=[['ov',t('overview')],['emps',t('emplist')],['imp',t('imp')],['types',t('types')],['hol',t('hol')],['dash','Dashboard'],['tcal','ปฏิทินการลาแผนก'],
-              ['apv',t('apvmgr')],['reqs',t('allreq')],['form','พิมพ์ใบลา'],['exp',t('exp')],['sys',t('sys')]];
-  const body={ov:admOverview,emps:admEmps,imp:admImport,types:admTypes,hol:admHol,dash:admDash,tcal:()=>calTeam(),apv:admApv,reqs:admReqs,form:admForm,exp:admExport,sys:admSys}[S.tab];
+              ['apv',t('apvmgr')],['reqs',t('allreq')],['mand','วันหยุดบังคับ'],['hrep','รายงานประวัติลา'],['form','พิมพ์ใบลา'],['exp',t('exp')],['sys',t('sys')]];
+  const body={ov:admOverview,emps:admEmps,imp:admImport,types:admTypes,hol:admHol,dash:admDash,tcal:()=>calTeam(),apv:admApv,reqs:admReqs,form:admForm,mand:admMand,hrep:admHrep,exp:admExport,sys:admSys}[S.tab];
   return `${maintOn()?`<div class="alert a-bad" style="margin-top:8px">🛠 <b>${t('maintBan')}</b></div>`:''}<div class="row" style="margin-top:6px;flex-wrap:nowrap;align-items:flex-start"><div class="tabs" style="flex:1;min-width:0;margin:0">${tabs.map(([k,v])=>
     `<button class="tab ${S.tab===k?'on':''}" onclick="S.tab='${k}';render()">${esc(v)}</button>`).join('')}</div>${maintBtn()}</div>${yrBanner()}${body?body():''}`;
 }
@@ -1790,7 +1825,7 @@ async function syncInit(){sbStat('☁ กำลังเชื่อมต่อ
 
 document.documentElement.lang=lang;
 /* ---- ตรวจเวอร์ชันใหม่อัตโนมัติ (เปลี่ยนเลขนี้ทุกครั้งที่ deploy ไฟล์ใหม่) ---- */
-const APP_VERSION='2026-10-21.1';
+const APP_VERSION='2026-10-29.1';
 (function updWatch(){
   const tag=document.createElement('div');tag.textContent='v'+APP_VERSION;
   tag.style.cssText='position:fixed;right:8px;bottom:3px;font-size:11px;opacity:.45;pointer-events:none;z-index:5';document.body.appendChild(tag);
@@ -1808,13 +1843,153 @@ const APP_VERSION='2026-10-21.1';
   setTimeout(chk,4000);setInterval(chk,600000);
   document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});
 })();
+/* ============================================================
+   ★ ส่วนเพิ่มเติม v2026-10-29 : วันหยุดบังคับ / อนุมัติทั้งหมด / พิมพ์ใบลา+ประวัติ / รายงานประวัติ /
+     แป้นตัวเลข / โหมดทดสอบ  (ไม่แตะโครงสร้างข้อมูลเดิม)
+   ============================================================ */
+KVK.push('mand');
+const fmt0=x=>x;
+/* ---------- 1) วันหยุดบังคับ (หักวันลาอัตโนมัติ: พักร้อน → ลากิจ → ลากิจหักเงิน) ---------- */
+let MD={name:'',d1:'',d2:'',div:'',unit:''};
+const MDT={annual:'พักร้อน',personal:'ลากิจ',unpaid:'ลากิจ-ไม่รับเงิน'};
+const mandTypes=()=>Object.keys(MDT).map(id=>typeById(id)||DB.types.find(x=>String(x.th||'').trim()===MDT[id])).filter(Boolean);
+const mandScope=()=>DB.employees.filter(e=>!isExec(e)&&(!MD.div||e.div===MD.div)&&(!MD.unit||e.unit===MD.unit));
+function mandPlan(e){const sh=shOf(e),dm=dayMin(sh),cv=leaveCov(e),ts=mandTypes(),
+  av=ts.map(ty=>(ty.allowOver&&ty.warn==='deduct')||ty.id==='unpaid'?1e9:Math.max(0,leftMin(e,ty))),out=[],skip=[];
+  const d=new Date(MD.d1+'T00:00:00');
+  for(let g=0;g<400;g++){const k=iso(d);if(k>MD.d2)break;d.setDate(d.getDate()+1);
+    if(!isWorkDay(k,sh))continue;if((cv[k]||0)>0){skip.push(k);continue;}
+    let o=0;for(let i=0;i<ts.length&&o<dm;i++){const take=Math.min(av[i],dm-o);if(take>0){out.push({k,ty:ts[i],o,take,dm,sh});av[i]-=take;o+=take;}}}
+  return{out,skip};}
+function mandPreview(){if(!MD.d1||!MD.d2||MD.d2<MD.d1)return'';const sc=mandScope();if(!sc.length)return'<div class="alert a-warn">ไม่พบพนักงานในขอบเขตที่เลือก</div>';
+  const tot={},up=[];let sk=0;
+  sc.forEach(e=>{const p=mandPlan(e);sk+=p.skip.length;let u=0;p.out.forEach(c=>{tot[c.ty.id]=(tot[c.ty.id]||0)+c.take/c.dm;if(c.ty.id==='unpaid'||c.ty.warn==='deduct')u+=c.take/c.dm;});if(u>0)up.push(e.name+' ('+num(u)+' วัน)');});
+  return `<div class="alert a-info"><b>ตัวอย่างผลการหักวันลา — ${sc.length} คน</b><br>${mandTypes().map(ty=>esc(ty.th)+': <b>'+num(tot[ty.id]||0)+'</b> วัน').join(' • ')}
+   ${sk?`<br>ข้ามวันที่มีใบลาอยู่แล้ว ${sk} วัน`:''}${up.length?`<br><span class="err">⚠ ต้องใช้ลากิจหักเงิน ${up.length} คน: ${esc(up.slice(0,25).join(', '))}${up.length>25?' …':''}</span>`:''}</div>`;}
+function mandSet(k,v){keep(()=>{MD[k]=v;if(k==='div')MD.unit='';});}
+function mandRun(){if(!MD.name.trim()){toast('กรุณาตั้งชื่อวันหยุด');return;}if(!MD.d1||!MD.d2||MD.d2<MD.d1){toast('กรุณาเลือกช่วงวันที่');return;}
+  const sc=mandScope();if(!sc.length){toast('ไม่พบพนักงาน');return;}
+  if(!confirm(`หักวันลา "${MD.name}" ${fmtD(MD.d1)} – ${fmtD(MD.d2)} ให้ ${sc.length} คน\nลำดับ: พักร้อน → ลากิจ → ลากิจหักเงิน (อนุมัติอัตโนมัติ)\n\nยืนยัน?`))return;
+  DB.mand||=[];const id='m'+Date.now().toString(36),now=new Date().toISOString();let nr=0,ne=0;
+  sc.forEach(e=>{const p=mandPlan(e);if(!p.out.length)return;ne++;let last=null;
+    p.out.forEach(c=>{const tf=clk(c.sh,c.o,true),tt=clk(c.sh,c.o+c.take,false);
+      if(last&&last.typeId===c.ty.id&&last.eo===c.dm&&c.o===0){last.to=c.k;last.tTo=tt;last.mins+=c.take;last.eo=c.o+c.take;last.days=+(last.mins/c.dm).toFixed(6);return;}
+      last={id:'r'+Date.now()+Math.random().toString(36).slice(2,6)+nr,no:DB.seq++,empId:e.id,typeId:c.ty.id,from:c.k,to:c.k,tFrom:tf,tTo:tt,mins:c.take,dm:c.dm,days:+(c.take/c.dm).toFixed(6),
+        reason:MD.name.trim(),shift:c.sh.id,sickDoc:'',steps:1,stage:'mgr',status:'appr',note:'บริษัทกำหนดหยุด',createdAt:now,by:'ผู้ดูแลระบบ (อัตโนมัติ)',at:now,edited:false,mand:id,eo:c.o+c.take};
+      DB.requests.push(last);nr++;});
+    DB.requests.filter(r=>r.mand===id&&String(r.empId)===String(e.id)).forEach(r=>{delete r.eo;e.q||={};e.q[r.typeId]||={quota:0,used:0};e.q[r.typeId].used=r4((+e.q[r.typeId].used||0)+(+r.days||0));});});
+  DB.mand.push({id,name:MD.name.trim(),d1:MD.d1,d2:MD.d2,div:MD.div,unit:MD.unit,at:now,ne,nr});save();MD.name='';toast(`หักวันลาแล้ว ${ne} คน (${nr} ใบ)`);render();}
+function mandUndo(id){if(!confirm('ยกเลิกชุดนี้ — ลบใบลาอัตโนมัติและคืนวันลาให้พนักงานทุกคน?'))return;
+  DB.requests.filter(r=>r.mand===id).forEach(r=>{const e=empById(r.empId);if(e&&e.q&&e.q[r.typeId])e.q[r.typeId].used=Math.max(0,r4((+e.q[r.typeId].used||0)-(+r.days||0)));});
+  DB.requests=DB.requests.filter(r=>r.mand!==id);DB.mand=(DB.mand||[]).filter(m=>m.id!==id);save();toast(t('saved'));render();}
+function admMand(){const divs=uniq(DB.employees.map(e=>e.div)),units=uniq(DB.employees.filter(e=>!MD.div||e.div===MD.div).map(e=>e.unit));
+  const op=(a,c,ph)=>`<option value="">${ph}</option>`+a.map(x=>`<option${x===c?' selected':''}>${esc(x)}</option>`).join('');
+  const hist=(DB.mand||[]).slice().reverse().map(m=>`<tr><td data-l="ชื่อ">${esc(m.name)}</td><td data-l="ช่วงวันที่">${fmtD(m.d1)} – ${fmtD(m.d2)}</td><td data-l="ขอบเขต">${esc(m.div||'ทั้งบริษัท')}${m.unit?' / '+esc(m.unit):''}</td><td data-l="จำนวน" class="num">${m.ne} คน / ${m.nr} ใบ</td><td class="act"><button class="btn bad sm" onclick="mandUndo('${m.id}')">ยกเลิกชุดนี้</button></td></tr>`).join('')||`<tr><td colspan="5" class="muted">ยังไม่มีรายการ</td></tr>`;
+  return `<div class="card"><h2>📅 วันหยุดบังคับ (บริษัทกำหนดให้หยุด ใช้วันลาแทน)</h2>
+   <p class="note">เช่น วันหยุดต่อเนื่องสงกรานต์ — ผู้ดูแลระบบกำหนดครั้งเดียว ระบบสร้างใบลาและ<b>อนุมัติให้อัตโนมัติ</b> พนักงานไม่ต้องคีย์เอง ลำดับการหัก: <b>1) พักร้อน (ถ้ามี) → 2) ลากิจ → 3) ลากิจหักเงิน</b> (ข้ามวันหยุดประจำสัปดาห์/ประเพณี และวันที่มีใบลาอยู่แล้ว • ไม่รวมกลุ่มผู้บริหาร)</p>
+   <div class="grid g2"><div class="field"><label>ชื่อวันหยุด</label><input type="text" value="${esc(MD.name)}" oninput="MD.name=this.value" placeholder="เช่น หยุดต่อเนื่องสงกรานต์"></div>
+    <div class="field"><label>ขอบเขต (แผนก)</label><select onchange="mandSet('div',this.value)">${op(divs,MD.div,'ทั้งบริษัท')}</select></div>
+    <div class="field"><label>วันที่เริ่ม</label><input type="date" value="${MD.d1}" onchange="mandSet('d1',this.value)"></div>
+    <div class="field"><label>ถึงวันที่</label><input type="date" value="${MD.d2}" onchange="mandSet('d2',this.value)"></div>
+    <div class="field"><label>หน่วยงาน</label><select onchange="mandSet('unit',this.value)">${op(units,MD.unit,'ทุกหน่วยงาน')}</select></div></div>
+   ${mandPreview()}<button class="btn go" onclick="mandRun()">✅ หักวันลา + อนุมัติอัตโนมัติ</button></div>
+  <div class="card"><h2>ประวัติวันหยุดบังคับ</h2><div class="tblwrap"><table class="rt"><thead><tr><th>ชื่อ</th><th>ช่วงวันที่</th><th>ขอบเขต</th><th class="num">จำนวน</th><th></th></tr></thead><tbody>${hist}</tbody></table></div></div>`;}
+
+/* ---------- 2) อนุมัติทั้งหมด ---------- */
+function approveAll(){if(roMode()){toast(t('maintBlock'));return;}if(!($('#aa_chk')||{}).checked){toast('กรุณาติ๊กช่องเปิดใช้ปุ่มก่อน');return;}
+  const a=DB.approvers.find(x=>x.id===S.user.id)||S.user,l=DB.requests.filter(r=>canAct(a,r));if(!l.length)return;
+  const note=prompt(`อนุมัติทั้งหมด ${l.length} รายการ\nหมายเหตุ (ถ้ามี):`);if(note===null)return;
+  const R0=render,T0=toast;render=()=>{};toast=()=>{};let n=0;
+  try{l.forEach(r=>{if(!canAct(a,r))return;const e=empById(r.empId),now=new Date().toISOString();
+    if(isCx(r))decideCx(r,'appr',a,note,e,now);
+    else if(reqStage(r)==='head'){r.stage='mgr';r.headBy=a.name;r.headAt=now;r.headNote=note;lineAfterHead(r);}
+    else{if(e){e.q||={};e.q[r.typeId]||={quota:0,used:0};e.q[r.typeId].used=(+e.q[r.typeId].used||0)+(+r.days||0);}r.status='appr';r.note=note;r.by=a.name;r.at=now;}
+    n++;});}finally{render=R0;toast=T0;}
+  save();toast(`อนุมัติแล้ว ${n} รายการ`);render();}
+
+/* ---------- 3) พิมพ์ใบลา: เปล่า / พร้อมประวัติ ---------- */
+PF.fill='blank';
+const _admForm0=admForm;
+admForm=function(){return _admForm0().replace('<div class="note" id="pf_sum"',`<div class="field" style="max-width:460px"><label>รูปแบบใบลา</label><select onchange="PF.fill=this.value"><option value="blank"${PF.fill==='blank'?' selected':''}>พิมพ์แบบฟอร์มเปล่า (เขียนเอง)</option><option value="hist"${PF.fill==='hist'?' selected':''}>พิมพ์พร้อมประวัติการลา (ดึงใบลาที่อนุมัติแล้วของปีนั้นลงตาราง)</option></select></div><div class="note" id="pf_sum"`);};
+const _lfp0=leaveFormPage,LF_EMPTY=('<tr>'+'<td></td>'.repeat(14)+'</tr>').repeat(18);
+leaveFormPage=function(e,yr,no){if(PF.fill!=='hist')return _lfp0(e,yr,no);
+  const y=(+yr||0)-543,rs=DB.requests.filter(r=>String(r.empId)===String(e.id)&&r.status==='appr'&&String(r.from).slice(0,4)==String(y)).sort((a,b)=>a.from<b.from?-1:a.from>b.from?1:0);
+  const col=r=>{const ty=typeById(r.typeId)||{},n=String(ty.th||'').trim();return r.typeId==='personal'||n==='ลากิจ'?2:r.typeId==='annual'||n==='พักร้อน'?3:r.typeId==='sick'||n==='ลาป่วย'?4:r.typeId==='unpaid'||n==='ลากิจ-ไม่รับเงิน'?5:6;};
+  const row=r=>{const c=Array(14).fill(''),k=col(r),dm=r.dm||dayMin(reqSh(r)),v=reqMins(r)%dm===0?num(reqMins(r)/dm):durTxt(r);
+    c[0]=dateTxt(r);c[1]=timeTxt(r);c[k]=k===6?((typeById(r.typeId)||{}).th||'')+' '+v:v;c[7]=r.reason||'';c[9]=fmtD((r.createdAt||'').slice(0,10));c[10]='✓';c[12]=r.by||'';
+    return '<tr>'+c.map(x=>`<td style="font-size:8.5px;line-height:1.15;padding:1px">${esc(x)}</td>`).join('')+'</tr>';};
+  const pg=[];for(let i=0;i<Math.max(1,rs.length);i+=18){const rows=rs.slice(i,i+18).map(row).join('')+('<tr>'+'<td></td>'.repeat(14)+'</tr>').repeat(Math.max(0,18-rs.slice(i,i+18).length));
+    pg.push(_lfp0(e,yr,no).replace(LF_EMPTY,()=>rows));}
+  return pg.join('');};
+
+/* ---------- 4) รายงานประวัติการลา (ต่อคน / ต่อแผนก-หน่วยงาน / ช่วงเวลา) ---------- */
+let HR={mode:'one',emp:'',div:'',unit:'',d1:new Date().getFullYear()+'-01-01',d2:today(),st:'appr'};
+function hrSet(k,v){keep(()=>{HR[k]=v;if(k==='div')HR.unit='';});}
+function admHrep(){const divs=uniq(DB.employees.map(e=>e.div)),units=uniq(DB.employees.filter(e=>!HR.div||e.div===HR.div).map(e=>e.unit));
+  const op=(a,c,ph)=>`<option value="">${ph}</option>`+a.map(x=>`<option${x===c?' selected':''}>${esc(x)}</option>`).join('');
+  const who=HR.mode==='one'?`<div class="field"><label>พนักงาน (พิมพ์รหัสหรือชื่อ แล้วเลือกจากรายการ)</label><input type="text" list="hr_dl" value="${esc(HR.emp)}" oninput="HR.emp=this.value" placeholder="รหัส / ชื่อ"><datalist id="hr_dl">${DB.employees.map(e=>`<option value="${esc(e.id+' '+e.name)}">`).join('')}</datalist></div>`
+    :`<div class="field"><label>แผนก</label><select onchange="hrSet('div',this.value)">${op(divs,HR.div,'ทุกแผนก')}</select></div><div class="field"><label>หน่วยงาน</label><select onchange="hrSet('unit',this.value)">${op(units,HR.unit,'ทุกหน่วยงาน')}</select></div>`;
+  return `<div class="card"><h2>🖨 รายงานประวัติการลา</h2><p class="note">เลือกพิมพ์เป็นรายบุคคล หรือทั้งแผนก/หน่วยงาน (แยกหน้าละคน + หน้าสรุปรวม) ตามช่วงวันที่ลา</p>
+   <div class="grid g2"><div class="field"><label>รูปแบบ</label><select onchange="hrSet('mode',this.value)"><option value="one"${HR.mode==='one'?' selected':''}>รายบุคคล</option><option value="div"${HR.mode==='div'?' selected':''}>ตามแผนก / หน่วยงาน</option></select></div>${who}
+    <div class="field"><label>ตั้งแต่วันที่</label><input type="date" value="${HR.d1}" onchange="HR.d1=this.value"></div><div class="field"><label>ถึงวันที่</label><input type="date" value="${HR.d2}" onchange="HR.d2=this.value"></div>
+    <div class="field"><label>สถานะใบลา</label><select onchange="HR.st=this.value"><option value="appr"${HR.st==='appr'?' selected':''}>อนุมัติแล้วเท่านั้น</option><option value="wa"${HR.st==='wa'?' selected':''}>อนุมัติแล้ว + รออนุมัติ</option><option value="all"${HR.st==='all'?' selected':''}>ทุกสถานะ</option></select></div></div>
+   <button class="btn" onclick="hrepPrint()">🖨 พิมพ์รายงาน</button></div>`;}
+function hrepPrint(){const list=HR.mode==='one'?[empById((HR.emp||'').trim().split(/\s+/)[0])].filter(Boolean):DB.employees.filter(e=>(!HR.div||e.div===HR.div)&&(!HR.unit||e.unit===HR.unit)).sort(empSortKey);
+  if(!list.length){toast('ไม่พบพนักงาน');return;}if(!HR.d1||!HR.d2||HR.d2<HR.d1){toast('ช่วงวันที่ไม่ถูกต้อง');return;}
+  const ok=r=>HR.st==='all'?true:HR.st==='wa'?(r.status==='appr'||r.status==='wait'):r.status==='appr';
+  const tn=id=>(typeById(id)||{th:id}).th,data=list.map(e=>{const dm=dayMin(shOf(e)),rs=DB.requests.filter(r=>String(r.empId)===String(e.id)&&ok(r)&&r.from<=HR.d2&&(r.to||r.from)>=HR.d1).sort((a,b)=>a.from<b.from?-1:1),tot={};
+    rs.forEach(r=>{if(r.status==='appr')tot[r.typeId]=(tot[r.typeId]||0)+reqMins(r);});return{e,dm,rs,tot};});
+  const per=`ช่วงวันที่ ${fmtD(HR.d1)} ถึง ${fmtD(HR.d2)}`,tys=DB.types.filter(ty=>data.some(d=>d.tot[ty.id]));
+  const sum=list.length>1?`<section><h2>สรุปรวมการลา (เฉพาะที่อนุมัติแล้ว)</h2><div>${per}${HR.div?' • แผนก '+esc(HR.div):''}${HR.unit?' • '+esc(HR.unit):''} • ${list.length} คน</div>
+    <table><tr><th>รหัส</th><th>ชื่อ</th><th>หน่วยงาน</th>${tys.map(ty=>`<th>${esc(ty.th)}</th>`).join('')}</tr>${data.map(d=>`<tr><td>${esc(d.e.id)}</td><td>${esc(d.e.name)}</td><td>${esc(d.e.unit||'')}</td>${tys.map(ty=>`<td style="text-align:right">${d.tot[ty.id]?fmtDur(d.tot[ty.id],d.dm):'-'}</td>`).join('')}</tr>`).join('')}</table></section>`:'';
+  const secs=data.map(d=>`<section><h2>รายงานประวัติการลา</h2><div><b>${esc(d.e.name)}</b> (รหัส ${esc(d.e.id)}) • ${esc(d.e.div||'-')} / ${esc(d.e.unit||'-')} • ${per}</div>
+    <table><tr><th>เลขที่</th><th>ประเภท</th><th>วันที่ลา</th><th>เวลา</th><th>ระยะเวลา</th><th>สถานะ</th><th>ผู้อนุมัติ</th><th>เหตุผล</th></tr>
+    ${d.rs.map(r=>`<tr><td>#${r.no}</td><td>${esc(tn(r.typeId))}</td><td>${dateTxt(r)}</td><td>${timeTxt(r)}</td><td style="text-align:right">${durTxt(r)}</td><td>${L.th[r.status]||r.status}</td><td>${esc(apvChain(r)||r.by||'')}</td><td>${esc(r.reason||'')}</td></tr>`).join('')||'<tr><td colspan="8" style="text-align:center">ไม่มีรายการในช่วงเวลานี้</td></tr>'}</table>
+    <div style="margin-top:8px"><b>รวมที่อนุมัติแล้ว:</b> ${DB.types.filter(ty=>d.tot[ty.id]).map(ty=>esc(ty.th)+' '+fmtDur(d.tot[ty.id],d.dm)).join(' • ')||'-'}</div></section>`).join('');
+  const w=window.open('','_blank');if(!w){alert('เบราว์เซอร์บล็อกป๊อปอัป กรุณาอนุญาตแล้วลองใหม่');return;}
+  w.document.write(`<html><head><meta charset="utf-8"><title>รายงานประวัติการลา</title><style>@page{size:A4 landscape;margin:10mm}body{font-family:'Noto Sans Thai',sans-serif;font-size:13px;color:#000}section{page-break-after:always}section:last-child{page-break-after:auto}h2{margin:0 0 4px}table{border-collapse:collapse;width:100%;margin-top:8px}th,td{border:1px solid #444;padding:4px 6px}th{background:#e5e5e5}</style></head><body>${sum}${secs}<script>setTimeout(function(){print()},400)<\/script></body></html>`);w.document.close();}
+
+/* ---------- 5) แป้นตัวเลขรหัสผ่านผู้อนุมัติ / ผู้ดูแล ---------- */
+const kpHtml=id=>`<div class="kp">${[1,2,3,4,5,6,7,8,9].map(n=>`<button type="button" onclick="kpP('${id}','${n}')">${n}</button>`).join('')}<button type="button" class="k2" onclick="kpC('${id}')">ล้าง</button><button type="button" onclick="kpP('${id}','0')">0</button><button type="button" class="k2" onclick="kpB('${id}')">⌫</button></div>`;
+const kpP=(id,d)=>{const i=document.getElementById(id);if(i)i.value+=d;},kpC=id=>{const i=document.getElementById(id);if(i)i.value='';},kpB=id=>{const i=document.getElementById(id);if(i)i.value=i.value.slice(0,-1);};
+const _viewLogin0=viewLogin;
+viewLogin=function(){return _viewLogin0().replace(/(<input id="(li_apvpw|li_admpw)"[^>]*>)(<\/div>)/g,(m,i,id,c)=>i+kpHtml(id)+c);};
+
+/* ---------- 6) โหมดทดสอบ (แยกข้อมูลจากระบบจริง ไม่ซิงค์ Supabase ไม่ส่ง LINE มีเวลาหมดอายุแล้วล้างเอง) ---------- */
+const TMETA='leaveapp_test_meta',TKEY='leaveapp_test_v1';
+const testMeta=()=>{try{return JSON.parse(localStorage.getItem(TMETA)||'null');}catch(e){return null;}};
+if(TESTMODE){document.body.classList.add('testmode');if(!testMeta())localStorage.setItem(TMETA,JSON.stringify({exp:Date.now()+3*864e5}));
+  window.lineOn=()=>false;if(window.__testExpired)setTimeout(()=>toast('หมดเวลาทดสอบ — ล้างข้อมูลทดสอบแล้ว'),600);}
+function testStart(){const d=+($('#ts_d')||{}).value||3;localStorage.setItem(TMETA,JSON.stringify({exp:Date.now()+d*864e5}));location.href=location.pathname+'?test=1';}
+function testClear(){if(!confirm('ล้างข้อมูลทดสอบทั้งหมด? (ไม่กระทบระบบจริง)'))return;localStorage.removeItem(TKEY);localStorage.removeItem(TMETA);if(TESTMODE)location.href=location.pathname+'?test=1';else{toast('ล้างข้อมูลทดสอบแล้ว');render();}}
+function testExit(){location.href=location.pathname;}
+function testExtend(){const m=testMeta()||{exp:Date.now()};m.exp=Math.max(m.exp,Date.now())+864e5;localStorage.setItem(TMETA,JSON.stringify(m));render();}
+function testCopy(){let o=null;try{o=JSON.parse(localStorage.getItem('leaveapp_db_v2')||'null');}catch(e){}
+  if(!o||!(o.employees||[]).length){alert('ไม่พบข้อมูลระบบจริงในเครื่องนี้ — ให้นำเข้าไฟล์พนักงานในโหมดทดสอบ (แท็บ นำเข้า) แทน');return;}
+  if(!confirm('คัดลอกพนักงาน ผู้อนุมัติ ประเภทลา วันหยุด จากระบบจริงมาทดสอบ? (อ่านอย่างเดียว ไม่แก้ระบบจริง • ไม่คัดลอกรูปภาพ/ใบลา/LINE ID)'))return;
+  const cp=x=>JSON.parse(JSON.stringify(x));DB.employees=o.employees.map(e=>{const c=cp(e);delete c.photo;delete c.pw;return c;});
+  DB.approvers=(o.approvers||[]).map(a=>({...cp(a),lineId:''}));if(o.types&&o.types.length)DB.types=cp(o.types);if(o.holidays)DB.holidays=cp(o.holidays);if(o.flows)DB.flows=cp(o.flows);
+  DB.requests=[];DB.seq=1;DB.mand=[];DB.line={on:false,url:''};save();toast('คัดลอกแล้ว');render();}
+function testLeft(){const m=testMeta();if(!m)return'';const ms=m.exp-Date.now(),d=Math.floor(ms/864e5),h=Math.floor(ms%864e5/36e5),mi=Math.floor(ms%36e5/6e4);return `หมดอายุ ${fmtDT(new Date(m.exp).toISOString())} (เหลือ ${d} วัน ${h} ชม. ${mi} นาที)`;}
+const _render0=render;
+render=function(){_render0();if(!TESTMODE)return;const a=$('#app');if(!a)return;$('#hTitle').textContent+=' (ทดสอบ)';
+  a.insertAdjacentHTML('afterbegin',`<div class="tbanner">🧪 <b>โหมดทดสอบ</b> — ข้อมูลแยกจากระบบจริง ไม่ซิงค์ ไม่ส่ง LINE • รหัสผู้ดูแลเริ่มต้น admin123<br><span>${testLeft()}</span>
+   <div class="row" style="margin-top:6px"><button class="btn sec sm" onclick="testCopy()">คัดลอกรายชื่อจากระบบจริง</button><button class="btn sec sm" onclick="testExtend()">+1 วัน</button><button class="btn sec sm" onclick="testClear()">🗑 ล้างข้อมูลทดสอบ</button><button class="btn sm" onclick="testExit()">↩ กลับระบบจริง</button></div></div>`);};
+setInterval(()=>{const m=testMeta();if(m&&m.exp&&Date.now()>m.exp){localStorage.removeItem(TKEY);localStorage.removeItem(TMETA);if(TESTMODE)location.href=location.pathname;}},30000);
+const _admSys0=admSys;
+admSys=function(){const m=testMeta(),kb=Math.round((localStorage.getItem(TKEY)||'').length/1024);
+  const card=TESTMODE?'':`<div class="card"><h2>🧪 ระบบทดสอบก่อนใช้งานจริง</h2><p class="note">เปิดหน้าทดสอบที่แยกข้อมูลจากระบบจริงโดยสิ้นเชิง (ที่เก็บคนละชุด • ไม่ซิงค์ Supabase • ไม่ส่ง LINE) ครบเวลาแล้วระบบ<b>ล้างข้อมูลทดสอบให้เอง</b>เพื่อไม่กินหน่วยความจำ</p>
+   <div class="row"><div class="field" style="min-width:170px"><label>อายุข้อมูลทดสอบ</label><select id="ts_d"><option value="1">1 วัน</option><option value="3" selected>3 วัน</option><option value="7">7 วัน</option><option value="14">14 วัน</option></select></div>
+   <button class="btn go" onclick="testStart()">🧪 เข้าโหมดทดสอบ</button></div>${m?`<p class="muted" style="margin-top:8px">มีข้อมูลทดสอบค้างอยู่ ${kb} KB — ${testLeft()} <button class="btn sec sm" onclick="testClear()">ล้างทันที</button></p>`:''}</div>`;
+  return _admSys0()+card;};
+
 /* ---- ปิดปรับปรุง: กันการทำรายการทุกชนิดของพนักงาน/ผู้อนุมัติ (ตรวจสถานะล่าสุดจากคลาวด์ก่อนทุกครั้ง) ---- */
-['submitReq','cancelReq','reqCancel','decide','chgEmpPw','revertEmpPw'].forEach(n=>{
+['submitReq','cancelReq','reqCancel','decide','approveAll','chgEmpPw','revertEmpPw'].forEach(n=>{
   const f=window[n];if(typeof f!=='function')return;
   window[n]=async function(...a){
     if(S.role&&S.role!=='adm'){const on=maintOn()||await maintFresh();if(on){toast(t('maintBlock'));render();return;}}
     return f.apply(this,a);};});
-render();syncInit();
+render();if(!TESTMODE)syncInit();
 </script>
 </body>
 </html>
